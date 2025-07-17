@@ -1,0 +1,172 @@
+/* General styles */
+.header-nav {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo styles */
+.header-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-decoration: none;
+}
+
+.header-logo:hover {
+  color: #1a252f;
+}
+
+/* Toggle button for mobile */
+.header-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.toggle-icon {
+  display: block;
+}
+
+/* Navigation links */
+.header-menu {
+  display: flex;
+  align-items: center;
+}
+
+.header-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.header-item {
+  position: relative;
+  margin: 0 0.5rem;
+}
+
+.header-link {
+  color: #333;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.header-link:hover {
+  background-color: #e9ecef;
+  color: #0056b3;
+}
+
+.header-link.active {
+  color: #0056b3;
+  font-weight: bold;
+}
+
+/* Dropdown styles */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  list-style: none;
+  padding: 0.5rem 0;
+  z-index: 1;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #333;
+  text-decoration: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #e9ecef;
+  margin: 0.5rem 0;
+}
+
+/* Search form styles */
+.header-search {
+  display: flex;
+  margin-left: 1rem;
+}
+
+.search-input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+}
+
+.search-button {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background-color: #218838;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .header-toggle {
+    display: block;
+  }
+  
+  .header-menu {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .header-links {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .header-item {
+    margin: 0.5rem 0;
+  }
+  
+  .header-search {
+    margin: 1rem 0 0 0;
+    width: 100%;
+  }
+  
+  .search-input {
+    width: 100%;
+  }
+  
+  .header-menu.active {
+    display: flex;
+  }
+}
