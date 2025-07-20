@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSetGo Services</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+        .main-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            gap: 40px;
+            align-items: center;
+        }
+        .content {
+            flex: 1;
+        }
+        .image-container {
+            flex: 1;
+        }
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 2px 2px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        h2 {
+            font-size: 24px;
+            color: #666;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: flex-start;
+        }
+        .skill {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            width: 160px;
+            padding: 20px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.06);
+            transition: transform 0.2s ease;
+        }
+        .skill:hover {
+            transform: scale(1.05);
+        }
+        .skill img {
+            width: 50px;
+            height: 50px;
+        }
+        .skill p {
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .skills {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    <div class="main-container">
+        <div class="content">
+            <h1>Our Services</h1>
+            <h2>Your Skills.Your Schedule</h2>
+            <div class="skills">
+                <div class="skill"> <!-- Adjust 200px to your desired height -->
+                    <img style="width: 120px; height:120px" src="{% static 'coding.webp' %}" alt="Technical">
+                    <p>Technical(Computer Science)</p>
+                </div>
+                <div class="skill">
+                    <img style="width: 120px; height:120px" src="{% static 'teaching.webp' %}" alt="Teaching">
+                    <p>Teaching</p>
+                </div>
+                <div class="skill">
+                    <img style="width: 120px; height:120px" src="{% static 'editing.jpg' %}" alt="Editing">
+                    <p>Editing</p>
+                </div>
+                <div class="skill">
+                    <img style="width: 120px; height:120px" src="{% static 'technicianrepair.jpg' %}" alt="Technical Repairs">
+                    <p>Technical Repairs</p>
+                </div>
+                <div class="skill">
+                    <img style="width: 120px; height:120px" src="{% static 'plumbing.jpg' %}" alt="">
+                    <p>Plumbing</p>
+                </div>
+                <div class="skill">
+                    <img style="width: 120px; height:120px" src="{% static 'cleaning.jpg' %}" alt="AI & Machine Learning">
+                    <p>Cleaning</p>
+                </div>
+                <div class="skill">
+                    <img style="width: 120px; height:120px" src="{% static 'carpenter.jpg' %}" alt="Cybersecurity">
+                    <p>Carpenter</p>
+                </div>
+                <div class="skill">
+                    <img style="width: 120px; height:120px" src="{% static 'communication.jpg' %}" alt="Communication Skills">
+                    <p>Communication Skills</p>
+                </div>
+                <div class="skill">
+                    <img style="width: 120px; height:120px" src="{% static 'orthers.jpg' %}" alt="Communication Skills">
+                    <p>Others</p>
+                </div>
+            </div>
+        </div>
+        <div class="image-container">
+            <!-- Replace with your actual image path -->
+            <img src="{% static 'main.webp' %}" alt="Person working on laptop">
+        </div>
+    </div>
+</body>
+</html>

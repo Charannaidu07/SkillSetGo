@@ -1,0 +1,54 @@
+{% load i18n %}
+{% load account %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Email</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f7f9fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .confirm-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 100%;
+        }
+        .btn-primary {
+            background-color: #d63031;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #c0392b;
+        }
+        .user-email {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="confirm-box text-center">
+        <h2 class="mb-4 fw-bold">Confirm Email Address</h2>
+        <p class="mb-4">
+            Please confirm that
+            <span class="user-email">{{ email_address.email }}</span>
+            is an email address for user
+            <span class="user-email">{{ email_address.user.username }}</span>.
+        </p>
+        <form method="post" action=".">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary px-4 py-2">Confirm</button>
+        </form>
+    </div>
+</body>
+</html>
