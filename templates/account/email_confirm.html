@@ -1,54 +1,209 @@
 {% load i18n %}
 {% load account %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Confirm Email</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Email | SkillSetGo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background: #f7f9fc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            --primary-dark: #6a11cb;
+            --primary-light: #2575fc;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --light-gray: #f8f9fa;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        .confirm-box {
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        
+        body {
+            background-color: var(--light-gray);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: url('https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+            background-size: cover;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(106, 17, 203, 0.85);
+            z-index: 0;
+        }
+        
+        .confirm-container {
+            position: relative;
+            z-index: 1;
+            background: var(--white);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
             max-width: 600px;
             width: 100%;
+            padding: 4rem;
+            text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
         }
-        .btn-primary {
-            background-color: #d63031;
-            border: none;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .btn-primary:hover {
-            background-color: #c0392b;
+        
+        .confirm-icon {
+            font-size: 4rem;
+            color: var(--primary-dark);
+            margin-bottom: 2rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
         }
+        
+        .confirm-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .confirm-message {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+        
         .user-email {
-            font-weight: bold;
-            color: #2c3e50;
+            font-weight: 600;
+            color: var(--primary-dark);
+            background: rgba(106, 17, 203, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            display: inline-block;
+        }
+        
+        .btn-confirm {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            height: 50px;
+            border-radius: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+        
+        .btn-confirm:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(106, 17, 203, 0.3);
+        }
+        
+        .btn-confirm:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-confirm::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .btn-confirm:hover::before {
+            left: 100%;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .confirm-container {
+                padding: 2rem;
+            }
+            
+            .confirm-title {
+                font-size: 1.8rem;
+            }
+            
+            .confirm-message {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="confirm-box text-center">
-        <h2 class="mb-4 fw-bold">Confirm Email Address</h2>
-        <p class="mb-4">
-            Please confirm that
-            <span class="user-email">{{ email_address.email }}</span>
-            is an email address for user
-            <span class="user-email">{{ email_address.user.username }}</span>.
+    <div class="confirm-container">
+        <div class="confirm-icon">
+            <i class="fas fa-envelope-open-text"></i>
+        </div>
+        <h1 class="confirm-title pulse">Confirm Your Email</h1>
+        
+        <p class="confirm-message">
+            Please confirm that <span class="user-email">{{ email_address.email }}</span>
+            is an email address for user <span class="user-email">{{ email_address.user.username }}</span>.
         </p>
+        
         <form method="post" action=".">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary px-4 py-2">Confirm</button>
+            <button type="submit" class="btn btn-confirm">
+                <i class="fas fa-check-circle me-2"></i> Confirm
+            </button>
         </form>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add hover effect to button
+        const btn = document.querySelector('.btn-confirm');
+        btn.addEventListener('mouseenter', () => {
+            btn.querySelector('i').style.transform = 'rotate(15deg)';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.querySelector('i').style.transform = 'rotate(0)';
+        });
+        
+        // Add animation to elements
+        document.querySelectorAll('.confirm-message span').forEach((el, index) => {
+            el.style.animationDelay = `${index * 0.2}s`;
+            el.classList.add('fade-in');
+        });
+    </script>
 </body>
 </html>
