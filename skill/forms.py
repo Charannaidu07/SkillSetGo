@@ -1,7 +1,8 @@
 # yourapp/forms.py
 from allauth.account.forms import SignupForm
 from django import forms
-from .models import Book_Appointment
+from .models import Book_Appointment,ServiceProviderBankDetails,ServiceProviderDetails
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 
 class CustomSignupForm(SignupForm):
     user_type = forms.ChoiceField(
@@ -42,3 +43,34 @@ class BookAppointmentForm(forms.ModelForm):
             raise forms.ValidationError("Please specify the issue when selecting 'Others'.")
         
         return cleaned_data
+    
+
+class ServiceProviderForm(forms.ModelForm):
+    mobile_number = forms.CharField(
+        validators=[MinLengthValidator(10)],
+        widget=forms.TextInput(attrs={'pattern': '[0-9]{10,}', 'title': '10 digit mobile number'})
+    )
+    
+    class Meta:
+        model = ServiceProviderDetails
+        fields = [
+            'full_name', 'profile_photo', 'mobile_number', 
+            'whatsapp_number', 'alternate_number', 'address',
+            'city', 'state', 'pincode', 'aadhar_number'
+        ]
+        widgets = {
+            'aadhar_number': forms.TextInput(attrs={'pattern': '[0-9]{12}', 'title': '12 digit Aadhar number'}),
+            'pincode': forms.TextInput(attrs={'pattern': '[0-9]{6}', 'title': '6 digit pincode'}),
+        }
+
+class ServiceProviderBankForm(forms.ModelForm):
+    class Meta:
+        model = ServiceProviderBankDetails
+        fields = [
+            'pan_number', 'bank_account_number', 
+            'bank_name', 'ifsc_code', 'upi_id', 'upi_mobile_number'
+        ]
+        widgets = {
+            'pan_number': forms.TextInput(attrs={'pattern': '[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}', 'title': 'PAN format: ABCDE1234F'}),
+            'ifsc_code': forms.TextInput(attrs={'pattern': '[A-Za-z]{4}0[A-Za-z0-9]{6}', 'title': 'IFSC format: ABCD0123456'}),
+        }

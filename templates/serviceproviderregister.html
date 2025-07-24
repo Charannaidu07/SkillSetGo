@@ -1,0 +1,61 @@
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>Service Provider Registration</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <h4 class="mb-3">Personal Details</h4>
+                        {{ form|crispy }}
+                        
+                        <h4 class="mb-3 mt-4">Bank Details</h4>
+                        {{ bank_form|crispy }}
+                        
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                Complete Registration
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Google Maps Address Autocomplete -->
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
+<script>
+    function initAutocomplete() {
+        const addressField = document.getElementById("id_address");
+        if (addressField) {
+            const autocomplete = new google.maps.places.Autocomplete(addressField, {
+                types: ["geocode"],
+                componentRestrictions: {country: "in"}
+            });
+            
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                const components = {};
+                
+                for (const component of place.address_components) {
+                    const componentType = component.types[0];
+                    components[componentType] = component.long_name;
+                }
+                
+                // Update form fields
+                document.getElementById("id_city").value = components.locality || '';
+                document.getElementById("id_state").value = components.administrative_area_level_1 || '';
+                document.getElementById("id_pincode").value = components.postal_code || '';
+            });
+        }
+    }
+</script>
+{% endblock %}
