@@ -100,7 +100,7 @@ class ServiceProviderDetails(models.Model):
         unique=True
     )
     service_provider_id = models.CharField(
-        max_length=8,
+        max_length=10,
         unique=True,
         editable=False  # Will be auto-generated
     )
@@ -113,9 +113,20 @@ class ServiceProviderDetails(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.service_provider_id:
-            # Generate unique 8-digit ID when first created
-            from random import randint
-            self.service_provider_id = f"SP{randint(100000, 999999)}"
+        # Get the last service provider ID
+            last_provider = ServiceProviderDetails.objects.order_by('-service_provider_id').first()
+        
+            if last_provider and last_provider.service_provider_id:
+            # Extract the numeric part, increment by 1
+                last_number = int(last_provider.service_provider_id[2:])
+                new_number = last_number + 1
+            else:
+            # If no providers exist yet, start from 11111111
+                new_number = 11111111
+            
+        # Format as SP followed by 8 digits
+            self.service_provider_id = f"SP{new_number:08d}"
+    
         super().save(*args, **kwargs)
 
     def get_full_address(self):

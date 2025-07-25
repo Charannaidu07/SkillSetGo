@@ -1,7 +1,7 @@
 # yourapp/admin.py
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser,Book_Appointment
+from .models import *
 
 #admin.site.register(CustomUser, UserAdmin)
 class CustomUserAdmin(UserAdmin):
@@ -12,3 +12,5 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Book_Appointment)
+admin.site.register(ServiceProviderDetails)
+admin.site.register(ServiceProviderBankDetails)
