@@ -19,7 +19,7 @@
         <p><strong>Email:</strong> {{ user.email }}</p>
         <p><strong>Account Type:</strong> {{ user_type_display }}</p>
         
-        {% if user.user_type == 'worker' %}
+        {% if user.user_type == 'servicer' %}
             <div class="worker-features">
                 <h3>Worker Features</h3>
                 <!-- Special content for workers -->

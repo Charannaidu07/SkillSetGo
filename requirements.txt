@@ -3,3 +3,4 @@ pillow
 django-allauth
 python-decouple
 mysqlclient
+django-crispy-forms

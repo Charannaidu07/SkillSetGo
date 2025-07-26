@@ -1,0 +1,52 @@
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3>Service Provider Dashboard</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {% if provider.profile_photo %}
+                                <img src="{{ provider.profile_photo.url }}" class="img-fluid rounded-circle">
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <h4>{{ provider.full_name }}</h4>
+                            <p class="text-muted">Service Provider ID: {{ provider.service_provider_id }}</p>
+                            
+                            <div class="mt-4">
+                                <h5>Contact Information</h5>
+                                <p>Mobile: {{ provider.mobile_number }}</p>
+                                {% if provider.whatsapp_number %}
+                                    <p>WhatsApp: {{ provider.whatsapp_number }}</p>
+                                {% endif %}
+                                <p>Address: {{ provider.get_full_address }}</p>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h5>Verification Status</h5>
+                                <p>
+                                    Profile: 
+                                    <span class="badge {% if provider.is_verified %}bg-success{% else %}bg-warning{% endif %}">
+                                        {% if provider.is_verified %}Verified{% else %}Pending Verification{% endif %}
+                                    </span>
+                                </p>
+                                <p>
+                                    Bank Details: 
+                                    <span class="badge {% if provider.bank_details.is_verified %}bg-success{% else %}bg-warning{% endif %}">
+                                        {% if provider.bank_details.is_verified %}Verified{% else %}Pending Verification{% endif %}
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
