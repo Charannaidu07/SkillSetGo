@@ -64,6 +64,16 @@ class ServiceProviderDetails(models.Model):
     """
     Model to store service provider's personal and professional details
     """
+    PREFERENCE_CHOICES = [
+        ('plumbing', 'Plumbing'),
+        ('cleaning', 'Cleaning'),
+        ('teaching', 'Teaching'),
+        ('technical', 'Technical Support'),
+        ('medical', 'Medical'),
+        ('electrical', 'Electrical'),
+        ('carpentry', 'Carpentry'),
+        ('others', 'Others'),
+    ]
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -71,9 +81,7 @@ class ServiceProviderDetails(models.Model):
     )
     full_name = models.CharField(max_length=100)
     profile_photo = models.ImageField(
-        upload_to='service_providers/profile_photos/',
-        blank=True,
-        null=True
+        upload_to='service_providers/profile_photos/'
     )
     mobile_number = models.CharField(
         max_length=15,
@@ -82,14 +90,14 @@ class ServiceProviderDetails(models.Model):
     whatsapp_number = models.CharField(
         max_length=15,
         validators=[MinLengthValidator(10)],
-        blank=True,
-        null=True
+        null=False,  # Already the default
+        blank=False,  # Add this to make it required in forms
     )
     alternate_number = models.CharField(
         max_length=15,
         validators=[MinLengthValidator(10)],
-        blank=True,
-        null=True
+        null=False,  # Already the default
+        blank=False,  # Add this to make it required in forms
     )
     address = models.TextField()
     city = models.CharField(max_length=50)
@@ -108,7 +116,10 @@ class ServiceProviderDetails(models.Model):
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    Preference1 = models.CharField(max_length=20, choices=PREFERENCE_CHOICES, null=False, blank=False)
+    other_preference1 = models.CharField(max_length=50, blank=True, null=True)
+    Preference2 = models.CharField(max_length=20, choices=PREFERENCE_CHOICES, null=True, blank=True)
+    other_preference2 = models.CharField(max_length=50, blank=True, null=True)
     def __str__(self):
         return f"{self.full_name} (ID: {self.service_provider_id})"
 
@@ -165,14 +176,14 @@ class ServiceProviderBankDetails(models.Model):
     )
     upi_id = models.CharField(
         max_length=50,
-        blank=True,
-        null=True
+        null=False,  # Already the default
+        blank=False,  # Add this to make it required in forms
     )
     upi_mobile_number = models.CharField(
         max_length=15,
         validators=[MinLengthValidator(10)],
-        blank=True,
-        null=True
+        null=False,  # Already the default
+        blank=False,  # Add this to make it required in forms
     )
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -188,3 +199,29 @@ class ServiceProviderBankDetails(models.Model):
             f"IFSC: {self.ifsc_code}"
         )
     
+class ServiceInitialRegistrationPayment(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='service_payments'
+    )
+    service_provider = models.ForeignKey(
+        ServiceProviderDetails,
+        on_delete=models.CASCADE,
+        related_name='payments'
+    )
+    amount_paid = models.PositiveIntegerField()
+    payment_date = models.DateField(auto_now_add=True)
+    payment_proof = models.ImageField(upload_to="payments/")
+    verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Payment of ₹{self.amount_paid} by {self.user.username}"
+
+    def save(self, *args, **kwargs):
+        # Automatically set service_provider if not set
+        if not self.service_provider_id and self.user_id:
+            self.service_provider = ServiceProviderDetails.objects.get(user=self.user)
+        super().save(*args, **kwargs)
