@@ -4,7 +4,8 @@ from django.db import models
 #from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.conf import settings
-
+from django.db import transaction
+from datetime import datetime
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (
         ('user', 'Regular User'),
@@ -113,21 +114,27 @@ class ServiceProviderDetails(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.service_provider_id:
-        # Get the last service provider ID
-            last_provider = ServiceProviderDetails.objects.order_by('-service_provider_id').first()
-        
-            if last_provider and last_provider.service_provider_id:
-            # Extract the numeric part, increment by 1
-                last_number = int(last_provider.service_provider_id[2:])
-                new_number = last_number + 1
-            else:
-            # If no providers exist yet, start from 11111111
-                new_number = 11111111
+            with transaction.atomic():
+            # Get current year's last 2 digits
+                year_suffix = datetime.now().strftime('%y')
             
-        # Format as SP followed by 8 digits
-            self.service_provider_id = f"SP{new_number:08d}"
-    
-        super().save(*args, **kwargs)
+            # Lock the table to prevent concurrent inserts
+                last_provider = ServiceProviderDetails.objects.select_for_update()\
+                    .filter(service_provider_id__startswith=f'SP{year_suffix}')\
+                    .order_by('-service_provider_id').first()
+            
+                if last_provider and last_provider.service_provider_id:
+                # Extract the 6-digit sequence part
+                    last_sequence = int(last_provider.service_provider_id[4:])
+                    new_sequence = last_sequence + 1
+                else:
+                # Start new sequence for the year
+                    new_sequence = 111111
+                
+                self.service_provider_id = f"SP{year_suffix}{new_sequence:06d}"
+                return super().save(*args, **kwargs)
+        else:
+            return super().save(*args, **kwargs)
 
     def get_full_address(self):
         return f"{self.address}, {self.city}, {self.state} - {self.pincode}"
