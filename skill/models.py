@@ -4,7 +4,8 @@ from django.db import models
 #from django.contrib.auth.models import User
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.conf import settings
-
+from django.db import transaction
+from datetime import datetime
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (
         ('user', 'Regular User'),
@@ -100,7 +101,7 @@ class ServiceProviderDetails(models.Model):
         unique=True
     )
     service_provider_id = models.CharField(
-        max_length=8,
+        max_length=10,
         unique=True,
         editable=False  # Will be auto-generated
     )
@@ -113,10 +114,27 @@ class ServiceProviderDetails(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.service_provider_id:
-            # Generate unique 8-digit ID when first created
-            from random import randint
-            self.service_provider_id = f"SP{randint(100000, 999999)}"
-        super().save(*args, **kwargs)
+            with transaction.atomic():
+            # Get current year's last 2 digits
+                year_suffix = datetime.now().strftime('%y')
+            
+            # Lock the table to prevent concurrent inserts
+                last_provider = ServiceProviderDetails.objects.select_for_update()\
+                    .filter(service_provider_id__startswith=f'SP{year_suffix}')\
+                    .order_by('-service_provider_id').first()
+            
+                if last_provider and last_provider.service_provider_id:
+                # Extract the 6-digit sequence part
+                    last_sequence = int(last_provider.service_provider_id[4:])
+                    new_sequence = last_sequence + 1
+                else:
+                # Start new sequence for the year
+                    new_sequence = 111111
+                
+                self.service_provider_id = f"SP{year_suffix}{new_sequence:06d}"
+                return super().save(*args, **kwargs)
+        else:
+            return super().save(*args, **kwargs)
 
     def get_full_address(self):
         return f"{self.address}, {self.city}, {self.state} - {self.pincode}"

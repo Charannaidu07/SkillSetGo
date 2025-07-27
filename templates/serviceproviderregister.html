@@ -1,61 +1,641 @@
-{% load crispy_forms_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Provider Registration | SkillSetGo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --primary-light: #8e2de2;
+            --primary-dark: #4a0d8a;
+            --secondary: #2575fc;
+            --accent: #00c6ff;
+            --white: #ffffff;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-500: #64748b;
+            --gray-700: #334155;
+            --gray-900: #0f172a;
+            --error: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-{% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h3>Service Provider Registration</h3>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
+        body {
+            background-color: var(--gray-50);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .form-container {
+            max-width: 950px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Card Styling */
+        .form-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid var(--gray-200);
+        }
+
+        .form-card:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            transform: rotate(30deg);
+        }
+
+        .form-header h2 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.875rem;
+            position: relative;
+            letter-spacing: -0.5px;
+        }
+
+        .form-header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.9;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        .form-body {
+            padding: 2.5rem;
+        }
+
+        /* Form Section Styling */
+        .form-section {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .form-section:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: -1.5rem;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--gray-200), transparent);
+        }
+
+        .section-title {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 1.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--gray-100);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            font-size: 1.25rem;
+            color: var(--primary);
+            background: rgba(106, 17, 203, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Field Grid Layout */
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.75rem;
+        }
+
+        /* Form Field Styling */
+        .form-field {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--gray-700);
+            font-size: 0.9375rem;
+        }
+
+        .form-label.required::after {
+            content: '*';
+            color: var(--error);
+            margin-left: 0.25rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            font-size: 0.9375rem;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--border-radius-sm);
+            background-color: var(--white);
+            transition: var(--transition);
+            height: 48px;
+            box-sizing: border-box;
+            color: var(--gray-900);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-300);
+        }
+
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.5;
+            padding: 1rem 1.25rem;
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        /* File Input Styling */
+        .file-upload-wrapper {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .file-upload-btn {
+            border: 2px dashed var(--gray-200);
+            border-radius: var(--border-radius-sm);
+            padding: 0.75rem 1.25rem;
+            background-color: var(--gray-50);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition);
+            height: 48px;
+        }
+
+        .file-upload-btn:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(106, 17, 203, 0.05);
+        }
+
+        .file-upload-btn i {
+            color: var(--primary);
+            margin-right: 0.75rem;
+        }
+
+        .file-upload-text {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .file-name {
+            color: var(--gray-500);
+            margin-left: auto;
+            font-size: 0.875rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 50%;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            right: 50%;
+            height: 2px;
+            background: var(--gray-200);
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--gray-200);
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .step.active .step-number {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.2);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Button Styling */
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 320px;
+            margin: 2rem auto 0;
+            height: 52px;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.25);
+        }
+
+        .submit-btn:hover::before {
+            opacity: 1;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .form-container {
+                margin: 1.5rem auto;
+                padding: 0 1rem;
+            }
+            
+            .form-header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .form-body {
+                padding: 1.75rem;
+            }
+            
+            .form-section {
+                margin-bottom: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+            }
+            
+            .field-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+            
+            .submit-btn {
+                max-width: 100%;
+            }
+            
+            .progress-steps {
+                gap: 1rem;
+            }
+            
+            .progress-steps::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    
+    <div class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h2>Become a Service Provider</h2>
+                <p>Join our network of professionals and start offering your services</p>
+            </div>
+            
+            <div class="form-body">
+                <!-- Progress Steps -->
+                <!-- <div class="progress-steps">
+                    <div class="step active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Personal Info</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Bank Details</div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Complete</div>
+                    </div>
+                </div> -->
+                
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Personal Details Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-user-tie"></i> Personal Information
+                        </h3>
                         
-                        <h4 class="mb-3">Personal Details</h4>
-                        {{ form|crispy }}
-                        
-                        <h4 class="mb-3 mt-4">Bank Details</h4>
-                        {{ bank_form|crispy }}
-                        
-                        <div class="form-group mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                Complete Registration
-                            </button>
+                        <div class="field-grid">
+                            {% for field in form %}
+                            <div class="form-field">
+                                <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required{% endif %}">
+                                    {{ field.label }}
+                                </label>
+                                
+                                {% if field.field.widget.input_type == 'file' %}
+                                <div class="file-upload-wrapper">
+                                    <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" class="file-upload-input" {% if field.field.required %}required{% endif %}>
+                                    <label for="{{ field.id_for_label }}" class="file-upload-btn">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span class="file-upload-text">Choose file</span>
+                                        <span class="file-name" id="file-name-display">No file chosen</span>
+                                    </label>
+                                </div>
+                                {% elif field.field.widget.input_type == 'select' %}
+                                <select name="{{ field.name }}"
+                                        id="{{ field.id_for_label }}"
+                                        class="form-input"
+                                        {% if field.field.required %}required{% endif %}>
+                                    {% if field.field.empty_label %}
+                                    <option value="" selected disabled>{{ field.field.empty_label }}</option>
+                                    {% endif %}
+                                    {% for choice in field.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if field.value == choice.0 %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                {% elif field.field.widget.input_type == 'textarea' %}
+                                <textarea name="{{ field.name }}"
+                                          id="{{ field.id_for_label }}"
+                                          class="form-input"
+                                          {% if field.field.required %}required{% endif %}
+                                          rows="4">{{ field.value|default_if_none:'' }}</textarea>
+                                {% else %}
+                                <input type="{{ field.field.widget.input_type }}" 
+                                       name="{{ field.name }}"
+                                       id="{{ field.id_for_label }}"
+                                       class="form-input"
+                                       value="{{ field.value|default_if_none:'' }}"
+                                       {% if field.field.required %}required{% endif %}
+                                       {% if field.field.widget.attrs.placeholder %}placeholder="{{ field.field.widget.attrs.placeholder }}"{% endif %}>
+                                {% endif %}
+                                
+                                {% if field.help_text %}
+                                <small class="text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                                
+                                {% for error in field.errors %}
+                                <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
                         </div>
-                    </form>
-                </div>
+                    </div>
+                    
+                    <!-- Bank Details Section -->
+                    <div class="form-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-university"></i> Bank Details
+                        </h3>
+                        
+                        <div class="field-grid">
+                            {% for field in bank_form %}
+                            <div class="form-field">
+                                <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required{% endif %}">
+                                    {{ field.label }}
+                                </label>
+                                
+                                {% if field.field.widget.input_type == 'select' %}
+                                <select name="{{ field.name }}"
+                                        id="{{ field.id_for_label }}"
+                                        class="form-input"
+                                        {% if field.field.required %}required{% endif %}>
+                                    {% if field.field.empty_label %}
+                                    <option value="" selected disabled>{{ field.field.empty_label }}</option>
+                                    {% endif %}
+                                    {% for choice in field.field.choices %}
+                                    <option value="{{ choice.0 }}" {% if field.value == choice.0 %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                {% else %}
+                                <input type="{{ field.field.widget.input_type }}" 
+                                       name="{{ field.name }}"
+                                       id="{{ field.id_for_label }}"
+                                       class="form-input"
+                                       value="{{ field.value|default_if_none:'' }}"
+                                       {% if field.field.required %}required{% endif %}
+                                       {% if field.field.widget.attrs.placeholder %}placeholder="{{ field.field.widget.attrs.placeholder }}"{% endif %}>
+                                {% endif %}
+                                
+                                {% if field.help_text %}
+                                <small class="text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                                
+                                {% for error in field.errors %}
+                                <span class="error-message">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Terms and Conditions -->
+                    <div class="form-section">
+                        <div class="form-field">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div style="text-align: center;">
+                        <button type="submit" class="submit-btn">
+                            Complete Registration <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Google Maps Address Autocomplete -->
-<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
-<script>
-    function initAutocomplete() {
-        const addressField = document.getElementById("id_address");
-        if (addressField) {
-            const autocomplete = new google.maps.places.Autocomplete(addressField, {
-                types: ["geocode"],
-                componentRestrictions: {country: "in"}
-            });
-            
-            autocomplete.addListener("place_changed", () => {
-                const place = autocomplete.getPlace();
-                const components = {};
+    
+    {% include 'footer.html' %}
+    
+    <!-- Google Maps Address Autocomplete -->
+    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
+    <script>
+        function initAutocomplete() {
+            const addressField = document.getElementById("id_address");
+            if (addressField) {
+                const autocomplete = new google.maps.places.Autocomplete(addressField, {
+                    types: ["geocode"],
+                    componentRestrictions: {country: "in"}
+                });
                 
-                for (const component of place.address_components) {
-                    const componentType = component.types[0];
-                    components[componentType] = component.long_name;
-                }
-                
-                // Update form fields
-                document.getElementById("id_city").value = components.locality || '';
-                document.getElementById("id_state").value = components.administrative_area_level_1 || '';
-                document.getElementById("id_pincode").value = components.postal_code || '';
-            });
+                autocomplete.addListener("place_changed", () => {
+                    const place = autocomplete.getPlace();
+                    const components = {};
+                    
+                    for (const component of place.address_components) {
+                        const componentType = component.types[0];
+                        components[componentType] = component.long_name;
+                    }
+                    
+                    // Update form fields
+                    document.getElementById("id_city").value = components.locality || '';
+                    document.getElementById("id_state").value = components.administrative_area_level_1 || '';
+                    document.getElementById("id_pincode").value = components.postal_code || '';
+                });
+            }
         }
-    }
-</script>
-{% endblock %}
+
+        // File upload display
+        document.querySelectorAll('.file-upload-input').forEach(input => {
+            input.addEventListener('change', function(e) {
+                const fileName = e.target.files[0]?.name || 'No file chosen';
+                const displayElement = this.closest('.file-upload-wrapper').querySelector('.file-name');
+                if (displayElement) {
+                    displayElement.textContent = fileName;
+                }
+            });
+        });
+
+        // Add consistent height to all selects
+        document.querySelectorAll('select').forEach(select => {
+            select.style.height = '48px';
+        });
+
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const termsCheck = document.getElementById('termsCheck');
+            if (!termsCheck.checked) {
+                e.preventDefault();
+                termsCheck.focus();
+                alert('Please agree to the terms and conditions');
+            }
+        });
+    </script> -->
+</body>
+</html>
