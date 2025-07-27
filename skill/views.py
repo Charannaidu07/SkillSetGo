@@ -8,18 +8,8 @@ from .models import ServiceProviderDetails, ServiceProviderBankDetails ,ServiceI
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.models import auth
-from django.http import HttpResponse
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import mm
-from reportlab.lib.units import inch
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import Paragraph
-from io import BytesIO
-import os
-from django.conf import settings
-from reportlab.lib.utils import ImageReader
-
+from django.views.decorators.http import require_GET
+from django.http import JsonResponse
 
 # Create your views here.
 def index(request):
@@ -126,6 +116,7 @@ def service_provider_dashboard(request):
     
     provider = request.user.service_provider
     appoint=Book_Appointment.objects.order_by('-created_at')
+    appoint=appoint[:3]
     context = {
         'provider': provider,
         'bank_details': getattr(provider, 'bank_details', None),
@@ -136,3 +127,140 @@ def service_provider_dashboard(request):
         'appointments':appoint,
     }
     return render(request, 'serviceproviderdashboard.html', context)
+
+def appointments(request):
+    provider = request.user.service_provider
+    appoint=Book_Appointment.objects.order_by('-created_at')
+    context = {
+        'provider': provider,
+        'appointments':appoint,
+    }
+    return render(request,'appointments.html',context)
+
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.views import View
+from .models import Bargaining
+import json
+@method_decorator(csrf_exempt, name='dispatch')
+class BargainView(View):
+    def post(self, request):
+        try:
+            data = json.loads(request.body)
+            appointment = Book_Appointment.objects.get(id=data['appointment_id'])
+            
+            # Create or update bargaining entry
+            bargain, created = Bargaining.objects.update_or_create(
+                appointment=appointment,
+                service_provider=request.user.service_provider,
+                defaults={
+                    'servicer_offer_price': data.get('servicer_offer'),
+                    'user_offer_price': data.get('user_offer'),
+                    'message': data.get('message', ''),
+                    'status': 'pending'
+                }
+            )
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Offer submitted successfully',
+                'bargain_id': bargain.id
+            })
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AcceptBargainView(View):
+    def post(self, request, bargain_id):
+        try:
+            bargain = Bargaining.objects.get(id=bargain_id)
+            if request.user == bargain.appointment.user:
+                # User accepting servicer's offer
+                bargain.status = 'accepted'
+                bargain.final_price = bargain.servicer_offer_price
+                bargain.save()
+                
+                # Update appointment with final price
+                bargain.appointment.expected_amount = bargain.final_price
+                bargain.appointment.save()
+                
+                return JsonResponse({'success': True, 'message': 'Offer accepted successfully'})
+            else:
+                return JsonResponse({'success': False, 'error': 'Unauthorized'}, status=403)
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AcceptAppointmentView(View):
+    def post(self, request, appointment_id):
+        try:
+            appointment = Book_Appointment.objects.get(id=appointment_id)
+            accepted_bargain = appointment.bargains.filter(status='accepted').first()
+            
+            if not accepted_bargain:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'No accepted negotiation found'
+                }, status=400)
+                
+            appointment.status = 'accepted'
+            appointment.expected_amount = accepted_bargain.final_price
+            appointment.save()
+            
+            return JsonResponse({
+                'success': True,
+                'message': 'Appointment accepted successfully'
+            })
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=400)
+        
+@require_GET
+def appointment_details(request, appointment_id):
+    try:
+        appointment = Book_Appointment.objects.get(id=appointment_id)
+        
+        # Get bargaining history
+        bargaining_history = []
+        for bargain in Bargaining.objects.filter(appointment=appointment).order_by('-created_at'):
+            bargaining_history.append({
+                'id': bargain.id,
+                'offer_price': str(bargain.servicer_offer_price),
+                'initial_price': str(bargain.initial_price),
+                'message': bargain.message,
+                'status': bargain.status,
+                'status_display': bargain.get_status_display(),
+                'offered_by': 'servicer' if bargain.service_provider.user == request.user else 'user',
+                'created_at': bargain.created_at.isoformat(),
+                'updated_at': bargain.updated_at.isoformat()
+            })
+        
+        # Prepare image URLs
+        def get_image_url(image_field):
+            return request.build_absolute_uri(image_field.url) if image_field else None
+        
+        data = {
+            'id': appointment.id,
+            'full_name': appointment.full_name,
+            'contact_number': appointment.contact_number,
+            'issue': appointment.issue,
+            'issue_display': appointment.get_issue_display(),
+            'custom_issue': appointment.custom_issue,
+            'description': appointment.description,
+            'booking_id':appointment.booking_id,
+            'expected_amount': str(appointment.expected_amount),
+            'address': appointment.address,
+            'city': appointment.city,
+            'state': appointment.state,
+            'country': appointment.country,
+            'pincode': appointment.pincode,
+            'expected_time': appointment.expected_time.isoformat() if appointment.expected_time else None,
+            'image1': get_image_url(appointment.image1),
+            'image2': get_image_url(appointment.image2),
+            'image3': get_image_url(appointment.image3),
+            'image4': get_image_url(appointment.image4),
+            'bargaining_history': bargaining_history,
+            'status': appointment.status
+        }
+        return JsonResponse(data)
+    except Book_Appointment.DoesNotExist:
+        return JsonResponse({'error': 'Appointment not found'}, status=404)

@@ -2,6 +2,8 @@ from allauth.account.forms import SignupForm
 from django import forms
 from .models import Book_Appointment, ServiceProviderBankDetails, ServiceProviderDetails, ServiceInitialRegistrationPayment
 from django.core.validators import MinLengthValidator, MaxLengthValidator
+from .models import Book_Appointment
+from django.utils import timezone
 
 class CustomSignupForm(SignupForm):
     user_type = forms.ChoiceField(
@@ -19,29 +21,92 @@ class CustomSignupForm(SignupForm):
 class BookAppointmentForm(forms.ModelForm):
     class Meta:
         model = Book_Appointment
-        fields = ['contact_number', 'issue', 'custom_issue', 'description', 
-                 'expected_amount', 'image1', 'image2', 'image3', 'image4']
+        fields = [
+            'contact_number', 'full_name','issue', 'custom_issue', 'description', 
+            'expected_amount', 'address', 'city', 'state', 'country', 
+            'pincode', 'expected_time', 'image1', 'image2', 'image3', 'image4'
+        ]
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'class': 'form-control shadow-sm',
+                'placeholder': 'Describe your service requirement in detail'
+            }),
+            'address': forms.Textarea(attrs={
+                'rows': 3,
+                'class': 'form-control shadow-sm',
+                'placeholder': 'Full street address'
+            }),
+            'expected_time': forms.DateTimeInput(attrs={
+                'class': 'form-control flatpickr-datetime',
+                'data-enable-time': 'true',
+                'data-date-format': 'm/d/Y h:i K',
+                'data-time_24hr': 'false',
+                'data-min-date': 'today'
+            }),
+            
+            'contact_number': forms.TextInput(attrs={
+                'class': 'form-control shadow-sm',
+                'placeholder': 'e.g. +91 9876543210'
+            }),
+            'expected_amount': forms.NumberInput(attrs={
+                'class': 'form-control shadow-sm',
+                'placeholder': 'Estimated amount in ₹',
+                'min': '0',
+            }),
+            'country': forms.TextInput(attrs={
+                'class': 'form-control shadow-sm',
+                'value': 'India'
+            }),
         }
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['image1'].required = False
-        self.fields['image2'].required = False
-        self.fields['image3'].required = False
-        self.fields['image4'].required = False
+        self.fields['expected_time'].input_formats = ['%m/%d/%Y %I:%M %p', '%Y-%m-%d %H:%M:%S']
+        # Common attributes for all fields
+        for field in self.fields:
+            if field not in self.Meta.widgets:
+                self.fields[field].widget.attrs.update({
+                    'class': 'form-control shadow-sm'
+                })
+            
+            if field.startswith('image'):
+                self.fields[field].required = False
+                self.fields[field].widget.attrs.update({
+                    'class': 'form-control d-none image-upload-input'
+                })
+        
+        # Set default country to India
+        self.fields['country'].initial = 'India'
         
     def clean(self):
         cleaned_data = super().clean()
         issue = cleaned_data.get('issue')
         custom_issue = cleaned_data.get('custom_issue')
+        expected_time = cleaned_data.get('expected_time')
         
         if issue == 'others' and not custom_issue:
             raise forms.ValidationError("Please specify the issue when selecting 'Others'.")
+            
+        # Validate location fields
+        address = cleaned_data.get('address')
+        city = cleaned_data.get('city')
+        state = cleaned_data.get('state')
+        pincode = cleaned_data.get('pincode')
         
+        if not all([address, city, state, pincode]):
+            raise forms.ValidationError("Please provide complete address details.")
+            
+        # Validate expected_time is in the future
+        if expected_time and expected_time < timezone.now():
+            raise forms.ValidationError("Expected time must be in the future.")
+            
         return cleaned_data
-
+    def clean_expected_time(self):
+        expected_time = self.cleaned_data.get('expected_time')
+        if expected_time and expected_time < timezone.now():
+            raise forms.ValidationError("Service date/time must be in the future.")
+        return expected_time
 class ServiceProviderForm(forms.ModelForm):
     mobile_number = forms.CharField(
         validators=[MinLengthValidator(10)],

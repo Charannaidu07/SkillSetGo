@@ -910,37 +910,7 @@
             }
         });
 </script>
-    <!-- <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize the display of other preference fields based on current values
-    document.querySelectorAll('.preference-select').forEach(select => {
-        const otherFieldId = select.getAttribute('data-other-field');
-        const otherField = document.getElementById(otherFieldId);
-        
-        // Initial state
-        if (select.value === 'others') {
-            otherField.style.display = 'block';
-            otherField.setAttribute('required', 'required');
-        } else {
-            otherField.style.display = 'none';
-            otherField.removeAttribute('required');
-        }
-        
-        // Change handler
-        select.addEventListener('change', function() {
-            if (this.value === 'others') {
-                otherField.style.display = 'block';
-                otherField.setAttribute('required', 'required');
-            } else {
-                otherField.style.display = 'none';
-                otherField.removeAttribute('required');
-                otherField.value = '';
-            }
-        });
-    });
-});
-</script> -->
-
+    
 <script>
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(function() {

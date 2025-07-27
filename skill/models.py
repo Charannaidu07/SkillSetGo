@@ -6,6 +6,7 @@ from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.conf import settings
 from django.db import transaction
 from datetime import datetime
+from django.utils import timezone
 class CustomUser(AbstractUser):
     USER_TYPE_CHOICES = (
         ('user', 'Regular User'),
@@ -13,8 +14,13 @@ class CustomUser(AbstractUser):
     )
     user_type = models.CharField(max_length=10, choices=USER_TYPE_CHOICES, default='user')
 
-
 class Book_Appointment(models.Model):
+    STATUS_CHOICES=[
+        ('accepted','Accepted'),
+        ('pending','Pending'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+    ]
     ISSUE_CHOICES = [
         ('plumbing', 'Plumbing'),
         ('cleaning', 'Cleaning'),
@@ -27,27 +33,24 @@ class Book_Appointment(models.Model):
     ]
     
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
     contact_number = models.CharField(max_length=15)
     issue = models.CharField(max_length=20, choices=ISSUE_CHOICES)
     custom_issue = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField()
     expected_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    
-    # Location Fields
+    booking_id = models.CharField(max_length=15, unique=True, editable=False)
     address = models.TextField(null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, default="India", null=True, blank=True)
     pincode = models.CharField(max_length=10, null=True, blank=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    
-    # Image Fields
+    expected_time = models.DateTimeField(null=True, blank=True)
     image1 = models.ImageField(upload_to='appointment_images/', blank=True, null=True)
     image2 = models.ImageField(upload_to='appointment_images/', blank=True, null=True)
     image3 = models.ImageField(upload_to='appointment_images/', blank=True, null=True)
     image4 = models.ImageField(upload_to='appointment_images/', blank=True, null=True)
-    
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -58,6 +61,24 @@ class Book_Appointment(models.Model):
     
     def get_full_location(self):
         return f"{self.address}, {self.city}, {self.state}, {self.pincode}, {self.country}"
+    
+    def save(self, *args, **kwargs):
+        if not self.booking_id:
+            year_suffix = timezone.now().strftime('%y')
+            with transaction.atomic():
+                last_appointment = Book_Appointment.objects.select_for_update() \
+                    .filter(booking_id__startswith=f'AB{year_suffix}') \
+                    .order_by('-booking_id').first()
+                
+                if last_appointment:
+                    last_seq = int(last_appointment.booking_id[4:])
+                    new_seq = last_seq + 1
+                else:
+                    new_seq = 11111111111
+                    
+                self.booking_id = f"AB{year_suffix}{new_seq:011d}"
+        
+        super().save(*args, **kwargs)
 
 
 class ServiceProviderDetails(models.Model):
@@ -225,3 +246,145 @@ class ServiceInitialRegistrationPayment(models.Model):
         if not self.service_provider_id and self.user_id:
             self.service_provider = ServiceProviderDetails.objects.get(user=self.user)
         super().save(*args, **kwargs)
+
+# class Bargaining(models.Model):
+#     STATUS_CHOICES = [
+#         ('pending', 'Pending'),
+#         ('accepted_by_user', 'Accepted by User'),
+#         ('accepted_by_servicer', 'Accepted by Servicer'),
+#         ('rejected', 'Rejected'),
+#         ('counter_offer', 'Counter Offer'),
+#         ('expired', 'Expired'),
+#     ]
+    
+#     user = models.ForeignKey(
+#         settings.AUTH_USER_MODEL,
+#         on_delete=models.CASCADE,
+#         related_name='bargaining_requests'
+#     )
+#     service_provider = models.ForeignKey(
+#         ServiceProviderDetails,
+#         on_delete=models.CASCADE,
+#         related_name='bargaining_requests'
+#     )
+#     appointment = models.ForeignKey(
+#         Book_Appointment,
+#         on_delete=models.CASCADE,
+#         related_name='bargaining_requests'
+#     )
+#     initial_price = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2,
+#         help_text="Original price quoted in the appointment"
+#     )
+#     user_offer_price = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2,
+#         null=True,
+#         blank=True,
+#         help_text="Price offered by the user"
+#     )
+#     servicer_offer_price = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2,
+#         null=True,
+#         blank=True,
+#         help_text="Price offered by the service provider"
+#     )
+#     current_price = models.DecimalField(
+#         max_digits=10,
+#         decimal_places=2,
+#         help_text="Current negotiated price"
+#     )
+#     status = models.CharField(
+#         max_length=20,
+#         choices=STATUS_CHOICES,
+#         default='pending'
+#     )
+#     last_updated_by = models.CharField(
+#         max_length=10,
+#         choices=[('user', 'User'), ('servicer', 'Servicer')],
+#         null=True,
+#         blank=True
+#     )
+#     expiry_time = models.DateTimeField(
+#         help_text="Time until which this offer is valid"
+#     )
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
+
+#     class Meta:
+#         ordering = ['-updated_at']
+#         verbose_name = 'Price Negotiation'
+#         verbose_name_plural = 'Price Negotiations'
+
+#     def __str__(self):
+#         return f"Negotiation for {self.appointment.booking_id} - {self.get_status_display()}"
+
+#     def save(self, *args, **kwargs):
+#         # Set initial price from appointment if not set
+#         if not self.initial_price and self.appointment_id:
+#             self.initial_price = self.appointment.expected_amount
+        
+#         # Set current price logic
+#         if not self.current_price:
+#             if self.user_offer_price and self.servicer_offer_price:
+#                 # Use the average if both have made offers
+#                 self.current_price = (self.user_offer_price + self.servicer_offer_price) / 2
+#             elif self.user_offer_price:
+#                 self.current_price = self.user_offer_price
+#             elif self.servicer_offer_price:
+#                 self.current_price = self.servicer_offer_price
+#             else:
+#                 self.current_price = self.initial_price
+        
+#         # Set default expiry (24 hours from creation)
+#         if not self.expiry_time and not self.pk:
+#             self.expiry_time = timezone.now() + timezone.timedelta(hours=24)
+        
+#         super().save(*args, **kwargs)
+
+#     def is_expired(self):
+#         return timezone.now() > self.expiry_time if self.expiry_time else False
+
+#     def get_negotiation_history(self):
+#         # This would return a queryset of related negotiation history if you create a separate model for it
+#         pass
+
+class Bargaining(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
+        ('counter', 'Counter Offer'),
+    ]
+
+    appointment = models.ForeignKey(Book_Appointment, on_delete=models.CASCADE, related_name='bargains')
+    service_provider = models.ForeignKey(ServiceProviderDetails, on_delete=models.CASCADE)
+    initial_price = models.DecimalField(max_digits=10, decimal_places=2)
+    servicer_offer_price = models.DecimalField(max_digits=10, decimal_places=2)
+    user_offer_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    final_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    message = models.TextField(blank=True, null=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.status == 'accepted' and not self.final_price:
+            self.final_price = self.servicer_offer_price if self.user_offer_price is None else self.user_offer_price
+        super().save(*args, **kwargs)
+
+class BargainingHistory(models.Model):
+    bargaining = models.ForeignKey(
+        Bargaining,
+        on_delete=models.CASCADE,
+        related_name='history'
+    )
+    offered_by = models.CharField(max_length=10, choices=[('user', 'User'), ('servicer', 'Servicer')])
+    offered_price = models.DecimalField(max_digits=10, decimal_places=2)
+    message = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
