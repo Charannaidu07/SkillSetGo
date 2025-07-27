@@ -1,52 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicer Dashboard | SkillSetGo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Your existing styles */
+        /* BODY & BASE STYLES */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
 
-{% block content %}
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <h3>Service Provider Dashboard</h3>
+        /* Dashboard specific styles */
+        .dashboard-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 4px solid #6a11cb;
+            box-shadow: 0 4px 20px rgba(106, 17, 203, 0.2);
+        }
+
+        .preferences-card, .appointments-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .preferences-card:hover, .appointments-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-preference {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .appointment-item {
+            border-left: 4px solid #6a11cb;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #f9f9f9;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .appointment-item:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .verification-badge {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .id-card-btn {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .id-card-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            color: #6a11cb;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        }
+
+        /* Keep all your existing navbar styles */
+        /* ... */
+    </style>
+</head>
+<body>
+    {% include 'header.html' %}
+    
+    <div class="dashboard-container">
+        <div class="row g-4">
+            <!-- Left Column - Profile -->
+            <div class="col-lg-3">
+                <div class="profile-card">
+                    <div class="text-center mb-4">
+                        {% if provider.profile_photo %}
+                            <img src="{{ provider.profile_photo.url }}" class="profile-img rounded-circle">
+                        {% else %}
+                            <div class="profile-img rounded-circle bg-light d-flex align-items-center justify-content-center">
+                                <i class="fas fa-user fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h4 class="text-center mb-3">{{ provider.full_name }}</h4>
+                    <p class="text-center text-muted mb-4">ID: {{ provider.service_provider_id }}</p>
+
+                   <div class="verification-status mb-4">
+    <h6 class="fw-bold mb-3">Verification Status</h6>
+    
+    <!-- Profile Verification -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <span>Profile:</span>
+        <span class="badge {% if provider.is_verified %}bg-success{% else %}bg-warning text-dark{% endif %} verification-badge">
+            {% if provider.is_verified %}
+                <i class="fas fa-check-circle me-1"></i> Verified
+            {% else %}
+                <i class="fas fa-clock me-1"></i> Pending
+            {% endif %}
+        </span>
+    </div>
+    
+    <!-- Bank Details Verification -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <span>Bank Details:</span>
+        <span class="badge 
+            {% if bank_details and bank_details.is_verified %}
+                bg-success
+            {% else %}
+                bg-warning text-dark
+            {% endif %} verification-badge">
+            {% if bank_details and bank_details.is_verified %}
+                <i class="fas fa-check-circle me-1"></i> Verified
+            {% else %}
+                <i class="fas fa-clock me-1"></i> 
+                {% if bank_details %}Pending{% else %}Not Added{% endif %}
+            {% endif %}
+        </span>
+    </div>
+    
+    <!-- Payment Verification -->
+    <div class="d-flex justify-content-between align-items-center">
+        <span>Payment Verification:</span>
+        <span class="badge 
+            {% if payment_verified %}
+                bg-success
+            {% else %}
+                bg-warning text-dark
+            {% endif %} verification-badge">
+            {% if payment_verified %}
+                <i class="fas fa-check-circle me-1"></i> Verified
+            {% else %}
+                <i class="fas fa-clock me-1"></i> 
+                Pending
+            {% endif %}
+        </span>
+    </div>
+</div>
+                    <div class="contact-info mb-4">
+                        <h6 class="fw-bold mb-3">Contact Information</h6>
+                        <p><i class="fas fa-phone me-2"></i> {{ provider.mobile_number }}</p>
+                        {% if provider.whatsapp_number %}
+                            <p><i class="fab fa-whatsapp me-2"></i> {{ provider.whatsapp_number }}</p>
+                        {% endif %}
+                        <p><i class="fas fa-map-marker-alt me-2"></i> {{ provider.get_full_address }}</p>
+                    </div>
+                    
+                    <div class="text-center">
+    {% if provider.is_verified and bank_details and bank_details.is_verified and payment_verified %}
+        <a href="{% url 'generate_id_card' %}" class="btn id-card-btn text-white">
+            <i class="fas fa-id-card me-2"></i> Download ID Card
+        </a>
+    {% else %}
+        <div class="alert alert-warning small">
+            Complete all verifications to download your ID card
+        </div>
+    {% endif %}
+</div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            {% if provider.profile_photo %}
-                                <img src="{{ provider.profile_photo.url }}" class="img-fluid rounded-circle">
-                            {% endif %}
-                        </div>
-                        <div class="col-md-8">
-                            <h4>{{ provider.full_name }}</h4>
-                            <p class="text-muted">Service Provider ID: {{ provider.service_provider_id }}</p>
-                            
-                            <div class="mt-4">
-                                <h5>Contact Information</h5>
-                                <p>Mobile: {{ provider.mobile_number }}</p>
-                                {% if provider.whatsapp_number %}
-                                    <p>WhatsApp: {{ provider.whatsapp_number }}</p>
+            </div>
+            
+            <!-- Middle Column - Appointments (Only if verified) -->
+            <div class="col-lg-6">
+                {% if provider.is_verified %}
+                <div class="appointments-card">
+                    <h4 class="section-title"><i class="fas fa-calendar-check me-2"></i> Your Appointments</h4>
+                    
+                    {% if appointments %}
+                        {% for appointment in appointments %}
+                        <div class="appointment-item">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                {% if appointment.issue == 'others' %}
+                                <h5 class="mb-0">{{ appointment.custom_issue }}</h5>
+                                {% else %}
+                                <h5 class="mb-0">{{ appointment.issue }}</h5>
                                 {% endif %}
-                                <p>Address: {{ provider.get_full_address }}</p>
+                                <span class="badge {% if appointment.status == 'completed' %}bg-success{% elif appointment.status == 'pending' %}bg-warning text-dark{% else %}bg-info{% endif %}">
+                                    {{ appointment.get_status_display }}
+                                </span>
                             </div>
-                            
-                            <div class="mt-4">
-                                <h5>Verification Status</h5>
-                                <p>
-                                    Profile: 
-                                    <span class="badge {% if provider.is_verified %}bg-success{% else %}bg-warning{% endif %}">
-                                        {% if provider.is_verified %}Verified{% else %}Pending Verification{% endif %}
-                                    </span>
-                                </p>
-                                <p>
-                                    Bank Details: 
-                                    <span class="badge {% if provider.bank_details.is_verified %}bg-success{% else %}bg-warning{% endif %}">
-                                        {% if provider.bank_details.is_verified %}Verified{% else %}Pending Verification{% endif %}
-                                    </span>
-                                </p>
+                            <p class="mb-1"><i class="fas fa-user me-2"></i> {{ appointment.customer_name }}</p>
+                            <p class="mb-1"><i class="fas fa-clock me-2"></i> {{ appointment.appointment_date }} at {{ appointment.appointment_time }}</p>
+                            <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> {{ appointment.address }}</p>
+                            <div class="d-flex justify-content-end">
+                                <a href="#" class="btn btn-sm btn-outline-primary me-2">Details</a>
+                                {% if appointment.status == 'pending' %}
+                                    <a href="#" class="btn btn-sm btn-success">Accept</a>
+                                {% endif %}
                             </div>
+                        </div>
+                        {% endfor %}
+                        <div class="text-center">
+        <a href="{% url 'appointments' %}" class="btn id-card-btn text-white">
+            <i class="fas fa-id-card me-2"></i> View All Appointmnets
+        </a>
+</div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <h5>No Appointments Yet</h5>
+                            <p class="text-muted">Your upcoming appointments will appear here</p>
+                        </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="appointments-card">
+                    <h4 class="section-title"><i class="fas fa-lock me-2"></i> Appointments</h4>
+                    <div class="text-center py-4">
+                        <i class="fas fa-user-shield fa-3x text-muted mb-3"></i>
+                        <h5>Account Verification Required</h5>
+                        <p class="text-muted">Please complete your profile verification to view and accept appointments</p>
+                        <a href="#" class="btn btn-primary mt-2">Complete Verification</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Right Column - Preferences -->
+            <div class="col-lg-3">
+                <div class="preferences-card">
+                    <h4 class="section-title"><i class="fas fa-tags me-2"></i> Your Services</h4>
+                    
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Primary Service</h6>
+                        <span class="badge-preference">
+                            {{ provider.Preference1 }}
+                            {% if provider.Preference1 == 'others' and provider.other_preference1 %}
+                                ({{ provider.other_preference1 }})
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    {% if provider.Preference2 %}
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Secondary Service</h6>
+                        <span class="badge-preference">
+                            {{ provider.Preference2 }}
+                            {% if provider.Preference2 == 'others' and provider.other_preference2 %}
+                                ({{ provider.other_preference2 }})
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="availability mt-4">
+                        <h6 class="fw-bold mb-3">Availability</h6>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" id="availableSwitch" checked>
+                            <label class="form-check-label" for="availableSwitch">Currently Available</label>
+                        </div>
+                        <small class="text-muted">Toggle to pause new appointment requests</small>
+                    </div>
+                    
+                    <div class="stats mt-4">
+                        <h6 class="fw-bold mb-3">Your Stats</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Completed Jobs:</span>
+                            <span class="fw-bold">24</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Rating:</span>
+                            <span class="fw-bold">4.8 <i class="fas fa-star text-warning"></i></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Earnings:</span>
+                            <span class="fw-bold">₹12,500</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+    
+    {% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add any interactive functionality here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example: Toggle availability status
+            const availabilitySwitch = document.getElementById('availableSwitch');
+            if (availabilitySwitch) {
+                availabilitySwitch.addEventListener('change', function() {
+                    // Here you would typically make an AJAX call to update the status
+                    const status = this.checked ? 'available' : 'unavailable';
+                    console.log('Availability status changed to:', status);
+                    // You would add AJAX call here to update server
+                });
+            }
+        });
+    </script>
+</body>
+</html>

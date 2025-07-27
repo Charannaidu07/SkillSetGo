@@ -414,6 +414,72 @@
             }
         }
     </style>
+    <style>
+    .qr-code-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .qr-code-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        align-items: center;
+    }
+    
+    .qr-code-image {
+        width: 200px;
+        height: 200px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: white;
+    }
+    
+    .payment-instructions {
+        flex: 1;
+        min-width: 250px;
+    }
+    
+    .payment-instructions ol {
+        padding-left: 20px;
+    }
+    
+    .payment-amount {
+        margin: 15px 0;
+        padding: 10px;
+        background: #e9f7ef;
+        border-radius: 5px;
+        font-size: 1.1em;
+    }
+    
+    .upi-id {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: #e3f2fd;
+        border-radius: 5px;
+    }
+    
+    .copy-btn {
+        background: #1976d2;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .copy-btn:hover {
+        background: #1565c0;
+    }
+</style>
 </head>
 <body>
     {% include 'header.html' %}
@@ -427,87 +493,151 @@
             
             <div class="form-body">
                 <!-- Progress Steps -->
-                <!-- <div class="progress-steps">
-                    <div class="step active">
-                        <div class="step-number">1</div>
-                        <div class="step-label">Personal Info</div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-label">Bank Details</div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-label">Complete</div>
-                    </div>
-                </div> -->
-                
+                {% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
                 <form method="post" enctype="multipart/form-data" novalidate>
                     {% csrf_token %}
                     
                     <!-- Personal Details Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-user-tie"></i> Personal Information
-                        </h3>
-                        
-                        <div class="field-grid">
-                            {% for field in form %}
-                            <div class="form-field">
-                                <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required{% endif %}">
-                                    {{ field.label }}
-                                </label>
-                                
-                                {% if field.field.widget.input_type == 'file' %}
-                                <div class="file-upload-wrapper">
-                                    <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" class="file-upload-input" {% if field.field.required %}required{% endif %}>
-                                    <label for="{{ field.id_for_label }}" class="file-upload-btn">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                        <span class="file-upload-text">Choose file</span>
-                                        <span class="file-name" id="file-name-display">No file chosen</span>
-                                    </label>
-                                </div>
-                                {% elif field.field.widget.input_type == 'select' %}
-                                <select name="{{ field.name }}"
-                                        id="{{ field.id_for_label }}"
-                                        class="form-input"
-                                        {% if field.field.required %}required{% endif %}>
-                                    {% if field.field.empty_label %}
-                                    <option value="" selected disabled>{{ field.field.empty_label }}</option>
-                                    {% endif %}
-                                    {% for choice in field.field.choices %}
-                                    <option value="{{ choice.0 }}" {% if field.value == choice.0 %}selected{% endif %}>
-                                        {{ choice.1 }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                                {% elif field.field.widget.input_type == 'textarea' %}
-                                <textarea name="{{ field.name }}"
-                                          id="{{ field.id_for_label }}"
-                                          class="form-input"
-                                          {% if field.field.required %}required{% endif %}
-                                          rows="4">{{ field.value|default_if_none:'' }}</textarea>
-                                {% else %}
-                                <input type="{{ field.field.widget.input_type }}" 
-                                       name="{{ field.name }}"
-                                       id="{{ field.id_for_label }}"
-                                       class="form-input"
-                                       value="{{ field.value|default_if_none:'' }}"
-                                       {% if field.field.required %}required{% endif %}
-                                       {% if field.field.widget.attrs.placeholder %}placeholder="{{ field.field.widget.attrs.placeholder }}"{% endif %}>
-                                {% endif %}
-                                
-                                {% if field.help_text %}
-                                <small class="text-muted">{{ field.help_text }}</small>
-                                {% endif %}
-                                
-                                {% for error in field.errors %}
-                                <span class="error-message">{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+       <div class="form-section">
+    <h3 class="section-title">
+        <i class="fas fa-user-tie"></i> Personal Information
+    </h3>
+    
+    <div class="field-grid">
+        <!-- Render all regular fields first -->
+         <div class="field-grid">
+    <!-- Render all regular fields first -->
+    {% for field in form %}
+        {% if field.name != 'Preference1' and field.name != 'Preference2' and field.name != 'other_preference1' and field.name != 'other_preference2' %}
+        <div class="form-field">
+            <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required{% endif %}">
+                {{ field.label }}
+            </label>
+            
+            {% if field.field.widget.input_type == 'file' %}
+            <div class="file-upload-wrapper">
+                <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" class="file-upload-input" {% if field.field.required %}required{% endif %}>
+                <label for="{{ field.id_for_label }}" class="file-upload-btn">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span class="file-upload-text">Choose file</span>
+                    <span class="file-name" id="file-name-display">No file chosen</span>
+                </label>
+            </div>
+            {% elif field.field.widget.input_type == 'textarea' %}
+            <textarea name="{{ field.name }}"
+                      id="{{ field.id_for_label }}"
+                      class="form-input"
+                      {% if field.field.required %}required{% endif %}
+                      rows="4">{{ field.value|default_if_none:'' }}</textarea>
+            {% else %}
+            <input type="{{ field.field.widget.input_type }}" 
+                   name="{{ field.name }}"
+                   id="{{ field.id_for_label }}"
+                   class="form-input"
+                   value="{{ field.value|default_if_none:'' }}"
+                   {% if field.field.required %}required{% endif %}
+                   {% if field.field.widget.attrs.placeholder %}placeholder="{{ field.field.widget.attrs.placeholder }}"{% endif %}>
+            {% endif %}
+            
+            {% if field.help_text %}
+            <small class="text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            
+            {% for error in field.errors %}
+            <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endfor %}
+
+        <!-- Preference 1 Field -->
+        <div class="form-field">
+            <label for="id_Preference1" class="form-label required">
+                Primary Service Preference
+            </label>
+            <select name="Preference1"
+                    id="id_Preference1"
+                    class="form-input preference-select"
+                    required
+                    data-other-field="other_Preference1">
+                {% for choice in form.Preference1.field.choices %}
+                <option value="{{ choice.0 }}" 
+                        {% if form.Preference1.value == choice.0 %}selected{% endif %}>
+                    {{ choice.1 }}
+                </option>
+                {% endfor %}
+            </select>
+            
+            <input type="text" 
+                   name="other_preference1"
+                   id="other_Preference1"
+                   class="form-input other-preference-input"
+                   style="display: {% if form.Preference1.value == 'others' %}block{% else %}none{% endif %}; margin-top: 5px;"
+                   value="{{ form.other_preference1.value|default_if_none:'' }}"
+                   placeholder="Please specify your service">
+            
+            {% if form.Preference1.errors %}
+                {% for error in form.Preference1.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+            {% if form.other_preference1.errors %}
+                {% for error in form.other_preference1.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Preference 2 Field -->
+        <div class="form-field">
+            <label for="id_Preference2" class="form-label">
+                Secondary Service Preference (Optional)
+            </label>
+            <select name="Preference2"
+                    id="id_Preference2"
+                    class="form-input preference-select"
+                    data-other-field="other_Preference2">
+                <option value="" selected disabled>Select a secondary service</option>
+                {% for choice in form.Preference2.field.choices %}
+                    {% if choice.0 %}  {# Skip empty choice since we added our own #}
+                    <option value="{{ choice.0 }}" 
+                            {% if form.Preference2.value == choice.0 %}selected{% endif %}>
+                        {{ choice.1 }}
+                    </option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            
+            <input type="text" 
+                   name="other_preference2"
+                   id="other_Preference2"
+                   class="form-input other-preference-input"
+                   style="display: {% if form.Preference2.value == 'others' %}block{% else %}none{% endif %}; margin-top: 5px;"
+                   value="{{ form.other_preference2.value|default_if_none:'' }}"
+                   placeholder="Please specify your service">
+            
+            {% if form.Preference2.errors %}
+                {% for error in form.Preference2.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+            {% if form.other_preference2.errors %}
+                {% for error in form.other_preference2.errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
                     
                     <!-- Bank Details Section -->
                     <div class="form-section">
@@ -557,19 +687,152 @@
                             {% endfor %}
                         </div>
                     </div>
-                    
-                    <!-- Terms and Conditions -->
+                    <!-- Bank Details Section -->
                     <div class="form-section">
-                        <div class="form-field">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
-                                <label class="form-check-label" for="termsCheck">
-                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
+    <h3 class="section-title">
+        <i class="fas fa-university"></i> Payment Details
+    </h3>
+    
+    <div class="payment-section">
+    <!-- QR Code Section -->
+    <div class="qr-code-section">
+        <h3 class="section-title">
+            <i class="fas fa-qrcode"></i> Scan to Pay
+        </h3>
+        <div class="qr-code-container">
+            <!-- QR Code Image -->
+            <img src="{% static 'Scanner.jpg' %}" alt="Payment QR Code" class="qr-code-image">
+            
+            <!-- Payment Instructions -->
+            <div class="payment-instructions">
+                <h4>Payment Instructions:</h4>
+                <ol>
+                    <li>Scan the QR code using your payment app</li>
+                    <li>Enter the exact payment amount shown below</li>
+                    <li>After payment, upload the screenshot/proof</li>
+                    <li>Complete the form and submit</li>
+                </ol>
+                
+                <!-- Display Payment Amount -->
+                <div class="payment-amount">
+                    <strong>Amount to Pay:</strong> ₹{{ payment_amount|default:"500.00" }}
+                </div>
+                
+                <!-- UPI ID Display -->
+                <div class="upi-id">
+                    <strong>UPI ID:</strong> yourbusiness@upi
+                    <button class="copy-btn" onclick="copyToClipboard('yourbusiness@upi')">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Form Fields (your existing code) -->
+    <div class="field-grid">
+        {% for field in payment_form %}
+        <div class="form-field">
+            <label for="{{ field.id_for_label }}" class="form-label {% if field.field.required %}required{% endif %}">
+                {{ field.label }}
+            </label>
+            
+            {% if field.field.widget.input_type == 'file' %}
+                {# Special handling for file upload (payment proof) #}
+                <div class="file-upload-wrapper">
+                    <input type="file" name="{{ field.name }}" id="{{ field.id_for_label }}" class="file-upload-input" {% if field.field.required %}required{% endif %}>
+                    <label for="{{ field.id_for_label }}" class="file-upload-btn">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span class="file-upload-text">Choose file</span>
+                        <span class="file-name" id="file-name-display">No file chosen</span>
+                    </label>
+                </div>
+            {% elif field.field.widget.input_type == 'select' %}
+                <select name="{{ field.name }}"
+                        id="{{ field.id_for_label }}"
+                        class="form-input"
+                        {% if field.field.required %}required{% endif %}>
+                    {% if field.field.empty_label %}
+                    <option value="" selected disabled>{{ field.field.empty_label }}</option>
+                    {% endif %}
+                    {% for choice in field.field.choices %}
+                    <option value="{{ choice.0 }}" {% if field.value == choice.0 %}selected{% endif %}>
+                        {{ choice.1 }}
+                    </option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                <input type="{{ field.field.widget.input_type }}" 
+                       name="{{ field.name }}"
+                       id="{{ field.id_for_label }}"
+                       class="form-input"
+                       value="{{ field.value|default_if_none:'' }}"
+                       {% if field.field.required %}required{% endif %}
+                       {% if field.field.widget.attrs.placeholder %}placeholder="{{ field.field.widget.attrs.placeholder }}"{% endif %}>
+            {% endif %}
+            
+            {% if field.help_text %}
+            <small class="text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            
+            {% for error in field.errors %}
+            <span class="error-message">{{ error }}</span>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+</div>
+                    <!-- Payment Terms Section -->
+<div class="form-section">
+    <h3 class="section-title">
+        <i class="fas fa-rupee-sign"></i> Payment Terms & Conditions
+    </h3>
+    
+    <div class="alert alert-info" style="border-left: 4px solid var(--primary); padding: 1rem;">
+        <h5 class="mb-3">Important Payment Information:</h5>
+        <ul class="mb-0" style="padding-left: 1.5rem;">
+            <li class="mb-2">A one-time registration fee of <strong>₹500</strong> is required to become a service provider.</li>
+            <li class="mb-2">Company will deduct <strong>10% service charge</strong> from each payment you receive.</li>
+            <li class="mb-2">For distant work locations: 
+                <ul style="padding-left: 1.5rem;">
+                    <li>Customers will pay <strong>₹5/km</strong> (based on 40km mileage assumption)</li>
+                    <li>Petrol expenditure for return trips is the <strong>service provider's responsibility</strong></li>
+                </ul>
+            </li>
+            <li class="mb-2">Verification process takes <strong>3 working days</strong> after registration.</li>
+            <li>If disqualified during verification, <strong>₹400 will be refunded</strong> (₹100 deducted as processing fee).</li>
+        </ul>
+    </div>
+    <div class="form-field mt-3">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="accept_payment_terms" id="paymentTermsCheck" required>
+            <label class="form-check-label" for="paymentTermsCheck">
+                I understand and accept all the payment terms and conditions mentioned above
+            </label>
+            <div id="paymentTermsCheck-error" class="error-message" style="display: none; color: var(--error); margin-top: 0.5rem;">
+                You must accept the payment terms to proceed
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms and Conditions -->
+<div class="form-section">
+    <div class="form-field">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="accept_terms" id="termsCheck" required>
+            <label class="form-check-label" for="termsCheck">
+                I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+            </label>
+            <div id="termsCheck-error" class="error-message" style="display: none; color: var(--error); margin-top: 0.5rem;">
+                You must agree to the terms and conditions
+            </div>
+        </div>
+    </div>
+</div>
                     <!-- Submit Button -->
                     <div style="text-align: center;">
                         <button type="submit" class="submit-btn">
@@ -582,36 +845,9 @@
     </div>
     
     {% include 'footer.html' %}
-    
-    <!-- Google Maps Address Autocomplete -->
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initAutocomplete" async defer></script>
     <script>
-        function initAutocomplete() {
-            const addressField = document.getElementById("id_address");
-            if (addressField) {
-                const autocomplete = new google.maps.places.Autocomplete(addressField, {
-                    types: ["geocode"],
-                    componentRestrictions: {country: "in"}
-                });
-                
-                autocomplete.addListener("place_changed", () => {
-                    const place = autocomplete.getPlace();
-                    const components = {};
-                    
-                    for (const component of place.address_components) {
-                        const componentType = component.types[0];
-                        components[componentType] = component.long_name;
-                    }
-                    
-                    // Update form fields
-                    document.getElementById("id_city").value = components.locality || '';
-                    document.getElementById("id_state").value = components.administrative_area_level_1 || '';
-                    document.getElementById("id_pincode").value = components.postal_code || '';
-                });
-            }
-        }
-
-        // File upload display
+    // File upload display
+    document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.file-upload-input').forEach(input => {
             input.addEventListener('change', function(e) {
                 const fileName = e.target.files[0]?.name || 'No file chosen';
@@ -621,21 +857,68 @@
                 }
             });
         });
-
-        // Add consistent height to all selects
-        document.querySelectorAll('select').forEach(select => {
-            select.style.height = '48px';
-        });
-
-        // Form validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const termsCheck = document.getElementById('termsCheck');
-            if (!termsCheck.checked) {
-                e.preventDefault();
-                termsCheck.focus();
-                alert('Please agree to the terms and conditions');
+    });
+    document.querySelector('form').addEventListener('submit', function(e) {
+    const termsCheck = document.getElementById('termsCheck');
+    const paymentTermsCheck = document.getElementById('paymentTermsCheck');
+    let isValid = true;
+    
+    // Reset error messages
+    document.querySelectorAll('.error-message').forEach(el => {
+        el.style.display = 'none';
+    });
+    
+    if (!termsCheck.checked) {
+        document.getElementById('termsCheck-error').style.display = 'block';
+        isValid = false;
+    }
+    
+    if (!paymentTermsCheck.checked) {
+        document.getElementById('paymentTermsCheck-error').style.display = 'block';
+        isValid = false;
+    }
+    
+    if (!isValid) {
+        e.preventDefault();
+        // Scroll to first error
+        const firstError = document.querySelector('.error-message[style="display: block;"]');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+});
+</script>
+<script>
+    document.getElementById('id_Preference1').addEventListener('change', function() {
+            const customIssueContainer = document.getElementById('other_Preference1');
+            if (this.value === 'others') {
+                customIssueContainer.style.display = 'block';
+                document.getElementById('other_Preference1').required = true;
+            } else {
+                customIssueContainer.style.display = 'none';
+                document.getElementById('other_Preference1').required = false;
             }
         });
-    </script> -->
+        document.getElementById('id_Preference2').addEventListener('change', function() {
+            const customIssueContainer = document.getElementById('other_Preference2');
+            if (this.value === 'others') {
+                customIssueContainer.style.display = 'block';
+                document.getElementById('other_Preference2').required = true;
+            } else {
+                customIssueContainer.style.display = 'none';
+                document.getElementById('other_Preference2').required = false;
+            }
+        });
+</script>
+    
+<script>
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            alert('UPI ID copied to clipboard: ' + text);
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    }
+</script>
 </body>
-</html>
+</html>      

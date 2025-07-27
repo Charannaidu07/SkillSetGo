@@ -81,6 +81,18 @@
             }
         }
     </style>
+    <style>
+        .w3-container {
+            font-size: 14px;
+        }
+
+        .center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
 </head>
 <body>
     {% include 'header.html' %}
@@ -132,6 +144,7 @@
             <img src="{% static 'main.webp' %}" alt="Person working on laptop">
         </div>
     </div>
+   
     {% include 'footer.html' %}
 </body>
 </html>

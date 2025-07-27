@@ -4,74 +4,597 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment</title>
-    <!-- Bootstrap CSS -->
+    <title>Book Appointment | SkillSetGo</title>
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Flatpickr for datetime input -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- Custom CSS -->
     <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --accent-color: #2e59d9;
+            --text-color: #5a5c69;
+            --light-gray: #f8f9fa;
+            --dark-gray: #d1d3e2;
+        }
+        
         body {
-            background-color: #f8f9fa;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
         }
+        
         .card {
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        .card-header {
-            font-weight: 600;
-        }
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 10px 15px;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #86b7fe;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
-        .btn-primary {
-            background-color: #0d6efd;
             border: none;
-            padding: 12px;
-            font-weight: 500;
-            border-radius: 8px;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            transition: all 0.3s ease;
         }
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-        }
-        .image-upload-label {
-            display: block;
-            padding: 10px;
-            border: 2px dashed #dee2e6;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .image-upload-label:hover {
-            border-color: #86b7fe;
-            background-color: #f8f9fa;
-        }
-        .appointment-card {
-            transition: all 0.3s;
-        }
-        .appointment-card:hover {
+        
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
         }
-        #appointmentForm {
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 0.5rem 0.5rem 0 0 !important;
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 0.35rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d3e2;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .shadow-sm {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.35rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+        
+        .image-upload-container {
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed var(--dark-gray);
+            border-radius: 0.35rem;
+            background-color: white;
+            transition: all 0.3s;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        
+        .image-upload-container:hover {
+            border-color: var(--primary-color);
+            background-color: var(--light-gray);
+        }
+        
+        .image-upload-container i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .image-upload-container .image-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: none;
         }
-        .status-badge {
-            font-size: 0.8rem;
-            padding: 5px 10px;
-            border-radius: 20px;
+        
+        .location-section {
+            background-color: rgba(78, 115, 223, 0.05);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
         }
+        
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 1rem;
+        }
+        
+        .appointment-card {
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .appointment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+        
+        #appointmentForm {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            position: relative;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .text-muted {
+            color: #858796 !important;
+        }
+        
+        .terms-container {
+            background-color: rgba(248, 249, 250, 0.8);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e3e6f0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .terms-container h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .terms-container ul {
+            padding-left: 1.5rem;
+        }
+        
+        .terms-container li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-check-label {
+            font-size: 0.9rem;
+        }
+        .flatpickr-datetime {
+    background-color: white;
+    cursor: pointer;
+}
+
+.flatpickr-calendar {
+    font-family: inherit;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.flatpickr-time input {
+    font-weight: 600;
+}
+
+.flatpickr-day.selected {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp:after {
+    border-bottom-color: var(--primary-color);
+}
+
+.flatpickr-time .numInputWrapper span.arrowDown:after {
+    border-top-color: var(--primary-color);
+}
+
     </style>
+    <style>
+    .bargaining-history {
+        border-top: 1px solid #eee;
+        padding-top: 1rem;
+    }
+    .bargain-item {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+    }
+    .bargain-price {
+        font-weight: 600;
+    }
+    .bargain-message {
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+    .bargain-meta {
+        font-size: 0.75rem;
+        color: #adb5bd;
+    }
+    .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 20px;
+}
+
+.image-thumbnail {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.image-thumbnail:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.bargaining-history {
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+    margin-top: 1.5rem;
+}
+
+.bargain-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid #4e73df;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.no-images {
+    color: #6c757d;
+    font-style: italic;
+}
+.bargain-actions {
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+    text-align: center;
+}
+
+.bargain-item.accepted {
+    background-color: #e8f5e9;
+    border-left-color: #4caf50;
+}
+
+.bargain-item.rejected {
+    background-color: #ffebee;
+    border-left-color: #f44336;
+}
+</style>
+
 </head>
 <body>
     {% include 'header.html' %}
+    
     <div class="container py-5">
+        <!-- Book New Appointment Button -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-lg-10 text-center">
+                <button id="showFormBtn" class="btn btn-primary btn-lg py-3 px-5 shadow">
+                    <i class="fas fa-plus-circle me-2"></i>Book a New Appointment
+                </button>
+            </div>
+        </div>
+
+        <!-- Appointment Form (Hidden by default) -->
+        <div class="row justify-content-center" id="appointmentForm">
+            <div class="col-lg-10">
+                <div class="card shadow-lg">
+                    <div class="card-header">
+                        <h3 class="mb-0 text-center"><i class="fas fa-calendar-check me-2"></i>Book Appointment</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            
+                            <!-- Contact Information -->
+                            <div class="mb-4">
+                                <label for="id_contact_number" class="form-label">
+                                    <i class="fas fa-phone me-2"></i>Contact Number
+                                </label>
+                                {{ form.contact_number }}
+                                {% if form.contact_number.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.contact_number.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-4">
+                                <label for="id_contact_number" class="form-label">
+                                    <i class="fas fa-phone me-2"></i>Name
+                                </label>
+                                {{ form.full_name }}
+                                {% if form.full_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.full_name.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Service Information Section -->
+                            <h5 class="section-title">Service Information</h5>
+                            
+                            <!-- Issue Type -->
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="id_issue" class="form-label">
+                                        <i class="fas fa-tools me-2"></i>Service Type
+                                    </label>
+                                    {{ form.issue }}
+                                    {% if form.issue.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.issue.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <!-- Custom Issue -->
+                                <div class="col-md-6 mb-4" id="custom_issue_container" style="display: none;">
+                                    <label for="id_custom_issue" class="form-label">
+                                        <i class="fas fa-pen me-2"></i>Custom Service Type
+                                    </label>
+                                    {{ form.custom_issue }}
+                                    {% if form.custom_issue.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.custom_issue.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label for="id_description" class="form-label">
+                                    <i class="fas fa-align-left me-2"></i>Service Description
+                                </label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.description.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Expected Amount -->
+                            <div class="mb-4">
+                                <label for="id_expected_amount" class="form-label">
+                                    <i class="fas fa-rupee-sign me-2"></i>Expected Budget (₹)
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₹</span>
+                                    {{ form.expected_amount }}
+                                </div>
+                                <small class="text-muted">Enter any positive amount</small>
+                                {% if form.expected_amount.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.expected_amount.errors }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Location Section -->
+                            <div class="location-section mb-4">
+                                <h5 class="mb-3 fw-semibold"><i class="fas fa-map-marker-alt me-2"></i>Service Location</h5>
+                                
+                                <!-- Address -->
+                                <div class="mb-3">
+                                    <label for="id_address" class="form-label">Full Address</label>
+                                    {{ form.address }}
+                                    {% if form.address.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.address.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <!-- City -->
+                                    <div class="col-md-4">
+                                        <label for="id_city" class="form-label">City</label>
+                                        {{ form.city }}
+                                        {% if form.city.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ form.city.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- State -->
+                                    <div class="col-md-4">
+                                        <label for="id_state" class="form-label">State</label>
+                                        {{ form.state }}
+                                        {% if form.state.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ form.state.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Pincode -->
+                                    <div class="col-md-4">
+                                        <label for="id_pincode" class="form-label">Pincode</label>
+                                        {{ form.pincode }}
+                                        {% if form.pincode.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ form.pincode.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-3 mt-2">
+                                    <!-- Country -->
+                                    <div class="col-md-6">
+                                        <label for="id_country" class="form-label">Country</label>
+                                        {{ form.country }}
+                                        {% if form.country.errors %}
+                                            <div class="invalid-feedback d-block">
+                                                {{ form.country.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Expected Time -->
+                                    <!-- Expected Date and Time -->
+<div class="col-md-6">
+    <label for="id_expected_time" class="form-label">Preferred Service Date & Time</label>
+    <input type="text" 
+           class="form-control flatpickr-datetime" 
+           id="id_expected_time" 
+           name="expected_time" 
+           placeholder="Select date and time"
+           data-enable-time="true"
+           data-date-format="m/d/Y h:i K"
+           data-time_24hr="false"
+           data-min-date="today"
+           {% if form.expected_time.value %}value="{{ form.expected_time.value|date:'m/d/Y h:i A' }}"{% endif %}
+           required>
+    {% if form.expected_time.errors %}
+        <div class="invalid-feedback d-block">
+            {{ form.expected_time.errors }}
+        </div>
+    {% endif %}
+</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Image Uploads -->
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    <i class="fas fa-images me-2"></i>Upload Images (Optional, Max 4)
+                                </label>
+                                <div class="row g-3">
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="image-upload-container" id="imageUpload1">
+                                            <i class="fas fa-camera"></i>
+                                            <span>Image 1</span>
+                                            <img class="image-preview" id="imagePreview1">
+                                            {{ form.image1 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="image-upload-container" id="imageUpload2">
+                                            <i class="fas fa-camera"></i>
+                                            <span>Image 2</span>
+                                            <img class="image-preview" id="imagePreview2">
+                                            {{ form.image2 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="image-upload-container" id="imageUpload3">
+                                            <i class="fas fa-camera"></i>
+                                            <span>Image 3</span>
+                                            <img class="image-preview" id="imagePreview3">
+                                            {{ form.image3 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3">
+                                        <div class="image-upload-container" id="imageUpload4">
+                                            <i class="fas fa-camera"></i>
+                                            <span>Image 4</span>
+                                            <img class="image-preview" id="imagePreview4">
+                                            {{ form.image4 }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <small class="text-muted">Upload clear images of the problem (Max 2MB each)</small>
+                            </div>
+                            
+                            <!-- Terms and Conditions -->
+                            <div class="terms-container mb-4">
+                                <h6 class="mb-3">Terms and Conditions</h6>
+                                <ul>
+                                    <li>The customer should pay ₹5 for servicer petrol charges (for only up side coming). Down side is servicer's responsibility.</li>
+                                    <li>Additional 5% of your fixed amount (negotiation can happen between user and servicer) will be added as platform fee. Example: If servicer and you agree on ₹300, then additional ₹15 (5%) will be charged by the company, so total amount will be ₹300 + ₹15 (platform fee) + upside direction petrol charges.</li>
+                                    <li>Servicer can negotiate the amount that you mentioned for higher prices. Both parties can agree on a final price by talking directly through our platform without company mediation.</li>
+                                    <li>If any new item is required and it is purchased by the user, the company will not charge any fee for that item.</li>
+                                    <li>Always check the servicer ID before allowing work to begin.</li>
+                                    <li>By booking this appointment, you agree to these terms and conditions.</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Terms Acceptance -->
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                                <label class="form-check-label" for="termsCheck">
+                                    I agree to the terms and conditions mentioned above
+                                </label>
+                                <div class="invalid-feedback">
+                                    You must agree to the terms and conditions before booking.
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg py-3 shadow">
+                                    <i class="fas fa-bookmark me-2"></i>Submit Appointment
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Previous Appointments Section -->
         <!-- Previous Appointments Section -->
         <div class="row justify-content-center mb-5">
             <div class="col-lg-10">
@@ -87,18 +610,27 @@
                                     <div class="card appointment-card h-100">
                                         <div class="card-body">
                                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                                <h5 class="card-title mb-0">{{ appointment.get_issue_display }}</h5>
+                                                <h5 class="card-title mb-0">{{ appointment.get_issue_domain }}</h5>
                                                 <span class="badge {% if appointment.status == 'completed' %}bg-success{% elif appointment.status == 'pending' %}bg-warning{% else %}bg-secondary{% endif %} status-badge">
-                                                    {{ appointment.get_status_display }}
+                                                    {{ appointment.get_status_display|default:"Pending" }}
                                                 </span>
                                             </div>
                                             <p class="card-text text-muted small mb-1">
                                                 <i class="far fa-calendar me-1"></i> {{ appointment.created_at|date:"M d, Y" }}
+                                                {% if appointment.expected_time %}
+                                                • <i class="far fa-clock me-1"></i> {{ appointment.expected_time|time }}
+                                                {% endif %}
                                             </p>
                                             <p class="card-text">{{ appointment.description|truncatechars:100 }}</p>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <span class="fw-bold">₹{{ appointment.expected_amount }}</span>
-                                                <a href="#" class="btn btn-sm btn-outline-primary">View Details</a>
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <div>
+                                                    <span class="fw-bold text-primary">₹{{ appointment.expected_amount }}</span>
+                                                    <span class="text-muted small ms-2">{{ appointment.city }}</span>
+                                                </div>
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        onclick="viewAppointmentDetails({{ appointment.id }})">
+                                                    View Details
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -116,146 +648,288 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Book New Appointment Button -->
-        <div class="row justify-content-center mb-4">
-            <div class="col-lg-10 text-center">
-                <button id="showFormBtn" class="btn btn-primary btn-lg py-3 px-5">
-                    <i class="fas fa-plus-circle me-2"></i>Book a New Appointment
-                </button>
-            </div>
-        </div>
-
-        <!-- Appointment Form (Hidden by default) -->
-        <div class="row justify-content-center" id="appointmentForm">
-            <div class="col-lg-8">
-                <div class="card shadow">
-                    <div class="card-header bg-primary text-white py-3">
-                        <h3 class="mb-0 text-center"><i class="fas fa-calendar-check me-2"></i>Book Appointment</h3>
+    <!-- Appointment Details Modal -->
+    <div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Appointment Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Service Type:</strong> <span id="detail-issue"></span></p>
+                            <p><strong>Status:</strong> <span id="detail-status" class="badge"></span></p>
+                            <p><strong>Booking ID:</strong> <span id="detail-booking-id"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Date:</strong> <span id="detail-date"></span></p>
+                            <p><strong>Expected Amount:</strong> <span id="detail-amount"></span></p>
+                            <p><strong>Location:</strong> <span id="detail-location"></span></p>
+                        </div>
                     </div>
-                    <div class="card-body p-4">
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            
-                            <!-- Contact Information -->
-                            <div class="mb-4">
-                                <label for="id_contact_number" class="form-label fw-semibold">
-                                    <i class="fas fa-phone me-2"></i>Contact Number
-                                </label>
-                                <input type="tel" class="form-control" id="id_contact_number" name="contact_number" required
-                                       placeholder="Enter your phone number">
-                                {% if form.contact_number.errors %}
-                                    <div class="text-danger mt-2">{{ form.contact_number.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <!-- Issue Type -->
-                            <div class="mb-4">
-                                <label for="id_issue" class="form-label fw-semibold">
-                                    <i class="fas fa-tools me-2"></i>Service Required
-                                </label>
-                                <select class="form-select" id="id_issue" name="issue" required>
-                                    <option value="" selected disabled>Select service type</option>
-                                    <option value="plumbing">Plumbing</option>
-                                    <option value="cleaning">Cleaning</option>
-                                    <option value="teaching">Teaching</option>
-                                    <option value="technical">Technical Support</option>
-                                    <option value="medical">Medical</option>
-                                    <option value="electrical">Electrical</option>
-                                    <option value="carpentry">Carpentry</option>
-                                    <option value="others">Others</option>
-                                </select>
-                                {% if form.issue.errors %}
-                                    <div class="text-danger mt-2">{{ form.issue.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <!-- Custom Issue -->
-                            <div class="mb-4" id="custom_issue_container" style="display: none;">
-                                <label for="id_custom_issue" class="form-label fw-semibold">
-                                    <i class="fas fa-pen me-2"></i>Please specify service type
-                                </label>
-                                <input type="text" class="form-control" id="id_custom_issue" name="custom_issue"
-                                       placeholder="Enter your specific service requirement">
-                                {% if form.custom_issue.errors %}
-                                    <div class="text-danger mt-2">{{ form.custom_issue.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <!-- Description -->
-                            <div class="mb-4">
-                                <label for="id_description" class="form-label fw-semibold">
-                                    <i class="fas fa-align-left me-2"></i>Description
-                                </label>
-                                <textarea class="form-control" id="id_description" name="description" rows="4" required
-                                          placeholder="Describe your service requirement in detail"></textarea>
-                                {% if form.description.errors %}
-                                    <div class="text-danger mt-2">{{ form.description.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <!-- Expected Amount -->
-                            <div class="mb-4">
-                                <label for="id_expected_amount" class="form-label fw-semibold">
-                                    <i class="fas fa-rupee-sign me-2"></i>Expected Amount to Pay (₹)
-                                </label>
-                                <input type="number" class="form-control" id="id_expected_amount" name="expected_amount" 
-                                       step="0.01" min="0" required placeholder="Enter expected amount">
-                                {% if form.expected_amount.errors %}
-                                    <div class="text-danger mt-2">{{ form.expected_amount.errors }}</div>
-                                {% endif %}
-                            </div>
-                            
-                            <!-- Image Uploads -->
-                            <div class="mb-4">
-                                <label class="form-label fw-semibold">
-                                    <i class="fas fa-images me-2"></i>Upload Images (Optional, Max 4)
-                                </label>
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="id_image1" class="image-upload-label">
-                                            <i class="fas fa-camera me-2"></i>Image 1
-                                        </label>
-                                        <input type="file" class="d-none" id="id_image1" name="image1" accept="image/*">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="id_image2" class="image-upload-label">
-                                            <i class="fas fa-camera me-2"></i>Image 2
-                                        </label>
-                                        <input type="file" class="d-none" id="id_image2" name="image2" accept="image/*">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="id_image3" class="image-upload-label">
-                                            <i class="fas fa-camera me-2"></i>Image 3
-                                        </label>
-                                        <input type="file" class="d-none" id="id_image3" name="image3" accept="image/*">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="id_image4" class="image-upload-label">
-                                            <i class="fas fa-camera me-2"></i>Image 4
-                                        </label>
-                                        <input type="file" class="d-none" id="id_image4" name="image4" accept="image/*">
-                                    </div>
-                                </div>
-                                <small class="text-muted">Upload clear images of the problem (optional)</small>
-                            </div>
-                            
-                            <div class="d-grid mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg py-3">
-                                    <i class="fas fa-bookmark me-2"></i>Submit Appointment
-                                </button>
-                            </div>
-                        </form>
+                    
+                    <div class="mb-3">
+                        <h6>Description</h6>
+                        <p id="detail-description" class="text-muted"></p>
                     </div>
+                    
+                    <h6 class="mt-4 mb-3">Images:</h6>
+                    <div class="image-gallery" id="detail-images">
+                        <!-- Images will be inserted here by JavaScript -->
+                    </div>
+                    
+                    <div class="bargaining-history mt-4">
+                        <h6 class="mb-3">Price Negotiation History</h6>
+                        <div id="bargainHistory">
+                            <!-- History will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {% if user.user_type == 'servicer' %}
+                    <button class="btn btn-success" id="confirmAppointmentBtn" style="display: none;">
+                        Confirm Appointment
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Bargain Modal -->
+    <div class="modal fade" id="bargainModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">{% if user.user_type == 'servicer' %}Make Offer{% else %}Make Counter Offer{% endif %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{% if user.user_type == 'servicer' %}Your Offer Price (₹){% else %}Your Counter Offer (₹){% endif %}</label>
+                        <input type="number" class="form-control" id="offerPrice">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message (Optional)</label>
+                        <textarea class="form-control" id="offerMessage" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitBargain()">
+                        {% if user.user_type == 'servicer' %}Submit Offer{% else %}Submit Counter Offer{% endif %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    
     {% include 'footer.html' %}
+    <!-- Add this modal at the bottom of your file, before the closing body tag -->
+<div class="modal fade" id="appointmentDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Appointment Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Service Type:</strong> <span id="detail-issue"></span></p>
+                        <p><strong>Status:</strong> <span id="detail-status" class="badge"></span></p>
+                        <p><strong>Booking ID:</strong> <span id="detail-booking-id"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Date:</strong> <span id="detail-date"></span></p>
+                        <p><strong>Expected Amount:</strong> <span id="detail-amount"></span></p>
+                        <p><strong>Location:</strong> <span id="detail-location"></span></p>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Description</h6>
+                    <p id="detail-description" class="text-muted"></p>
+                </div>
+                
+                <h6 class="mt-4 mb-3">Images:</h6>
+                <div class="image-gallery" id="detail-images">
+                    <!-- Images will be inserted here by JavaScript -->
+                </div>
+                
+                <div class="bargaining-history mt-4">
+                    <h6 class="mb-3">Price Negotiation History</h6>
+                    <div id="bargainHistory">
+                        <!-- History will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="bargainModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Make Counter Offer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Your Offer Price (₹)</label>
+                    <input type="number" class="form-control" id="counterOfferPrice">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Message (Optional)</label>
+                    <textarea class="form-control" id="counterOfferMessage" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="submitCounterOffer()">Submit Offer</button>
+            </div>
+        </div>
+    </div>
+</div>
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <!-- Custom JS -->
+     <script>
+    // Function to load appointment details
+    function viewAppointmentDetails(appointmentId) {
+        // Clear previous content
+        document.getElementById('detail-images').innerHTML = '';
+        document.getElementById('bargainHistory').innerHTML = '';
+        
+        // Fetch appointment details
+        fetch(`/api/appointments/${appointmentId}/`)
+            .then(response => response.json())
+            .then(data => {
+                // Populate modal with data
+                document.getElementById('detail-issue').textContent = 
+                    data.issue === 'others' ? data.custom_issue : data.issue_display;
+                document.getElementById('detail-status').textContent = data.status;
+                document.getElementById('detail-status').className = `badge bg-${getStatusColor(data.status)}`;
+                document.getElementById('detail-booking-id').textContent = data.booking_id;
+                document.getElementById('detail-date').textContent = 
+                    new Date(data.expected_time).toLocaleString();
+                document.getElementById('detail-amount').textContent = '₹' + data.expected_amount;
+                document.getElementById('detail-location').textContent = 
+                    `${data.address}, ${data.city}, ${data.state} - ${data.pincode}, ${data.country}`;
+                document.getElementById('detail-description').textContent = data.description;
+                
+                // Handle images
+                const imageGallery = document.getElementById('detail-images');
+                const images = [data.image1, data.image2, data.image3, data.image4]
+                    .filter(img => img !== null && img.trim() !== '');
+
+                if (images.length > 0) {
+                    images.forEach(imgUrl => {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'gallery-item';
+                        
+                        const img = document.createElement('img');
+                        img.src = imgUrl;
+                        img.className = 'image-thumbnail';
+                        img.alt = 'Appointment image';
+                        img.loading = 'lazy';
+                        
+                        imgContainer.appendChild(img);
+                        imageGallery.appendChild(imgContainer);
+                    });
+                } else {
+                    const noImages = document.createElement('p');
+                    noImages.className = 'text-muted';
+                    noImages.textContent = 'No images provided';
+                    imageGallery.appendChild(noImages);
+                }
+                
+                // Load bargain history
+                if (data.bargaining_history && data.bargaining_history.length > 0) {
+                    const historyContainer = document.getElementById('bargainHistory');
+                    data.bargaining_history.forEach(item => {
+                        const historyItem = document.createElement('div');
+                        historyItem.className = 'bargain-item';
+                        
+                        const statusClass = `badge bg-${getBargainStatusColor(item.status)}`;
+                        
+                        historyItem.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div>
+                                    <span class="fw-bold">₹${item.initial_price}</span>
+                                    <i class="fas fa-arrow-right mx-2"></i>
+                                    <span class="fw-bold">₹${item.offer_price}</span>
+                                </div>
+                                <span class="${statusClass}">${item.status_display}</span>
+                            </div>
+                            ${item.message ? `<div class="text-muted small mb-2">${item.message}</div>` : ''}
+                            <div class="text-muted small">
+                                Offered by ${item.offered_by === 'servicer' ? 'Servicer' : 'You'} on ${new Date(item.created_at).toLocaleString()}
+                            </div>
+                        `;
+                        historyContainer.appendChild(historyItem);
+                    });
+                } else {
+                    document.getElementById('bargainHistory').innerHTML = 
+                        '<p class="text-muted">No negotiation history yet</p>';
+                }
+                
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('appointmentDetailsModal'));
+                modal.show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to load appointment details');
+            });
+    }
+
+    function getStatusColor(status) {
+        switch(status) {
+            case 'pending': return 'warning';
+            case 'accepted': return 'success';
+            case 'completed': return 'info';
+            case 'cancelled': return 'danger';
+            default: return 'secondary';
+        }
+    }
+
+    function getBargainStatusColor(status) {
+        switch(status) {
+            case 'pending': return 'warning';
+            case 'accepted': return 'success';
+            case 'rejected': return 'danger';
+            case 'counter': return 'info';
+            default: return 'secondary';
+        }
+    }
+</script>
     <script>
-        // Toggle form visibility
+        // Initialize Flatpickr for datetime input
+        flatpickr(".flatpickr-datetime", {
+    enableTime: true,
+    dateFormat: "m/d/Y h:i K",  // Shows date + AM/PM time
+    time_24hr: false,           // Disables 24-hour format
+    minuteIncrement: 15,        // Optional: 15-minute increments
+    minDate: "today",           // Prevent selecting past dates
+    defaultDate: new Date()     // Default to current datetime
+});
+        
+        // Toggle form visibility with animation
         document.getElementById('showFormBtn').addEventListener('click', function() {
             const form = document.getElementById('appointmentForm');
             const btn = this;
@@ -266,7 +940,7 @@
                 btn.classList.remove('btn-primary');
                 btn.classList.add('btn-secondary');
                 // Scroll to form
-                form.scrollIntoView({ behavior: 'smooth' });
+                form.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
                 form.style.display = 'none';
                 btn.innerHTML = '<i class="fas fa-plus-circle me-2"></i>Book a New Appointment';
@@ -287,16 +961,70 @@
             }
         });
 
-        // Preview image when selected
-        document.querySelectorAll('input[type="file"]').forEach(input => {
-            input.addEventListener('change', function() {
-                const label = this.previousElementSibling;
-                if (this.files && this.files[0]) {
-                    label.innerHTML = `<i class="fas fa-check-circle text-success me-2"></i>${this.files[0].name}`;
-                } else {
-                    label.innerHTML = `<i class="fas fa-camera me-2"></i>Image ${this.id.replace('id_image', '')}`;
+        // Image upload preview functionality
+        document.getElementById('imageUpload1').addEventListener('click', function() {
+            document.getElementById('id_image1').click();
+        });
+        
+        document.getElementById('id_image1').addEventListener('change', function() {
+            const preview = document.getElementById('imagePreview1');
+            const container = document.getElementById('imageUpload1');
+            handleImageUpload(this, preview, container);
+        });
+
+        document.getElementById('imageUpload2').addEventListener('click', function() {
+            document.getElementById('id_image2').click();
+        });
+        
+        document.getElementById('id_image2').addEventListener('change', function() {
+            const preview = document.getElementById('imagePreview2');
+            const container = document.getElementById('imageUpload2');
+            handleImageUpload(this, preview, container);
+        });
+
+        document.getElementById('imageUpload3').addEventListener('click', function() {
+            document.getElementById('id_image3').click();
+        });
+        
+        document.getElementById('id_image3').addEventListener('change', function() {
+            const preview = document.getElementById('imagePreview3');
+            const container = document.getElementById('imageUpload3');
+            handleImageUpload(this, preview, container);
+        });
+
+        document.getElementById('imageUpload4').addEventListener('click', function() {
+            document.getElementById('id_image4').click();
+        });
+        
+        document.getElementById('id_image4').addEventListener('change', function() {
+            const preview = document.getElementById('imagePreview4');
+            const container = document.getElementById('imageUpload4');
+            handleImageUpload(this, preview, container);
+        });
+
+        function handleImageUpload(input, preview, container) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    container.querySelector('i').style.display = 'none';
+                    container.querySelector('span').style.display = 'none';
                 }
-            });
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Validate expected amount to be positive
+        document.getElementById('id_expected_amount').addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            if (value < 0) {
+                this.setCustomValidity('Please enter a positive amount');
+            } else {
+                this.setCustomValidity('');
+            }
         });
 
         // Initialize form with any existing values
@@ -305,7 +1033,292 @@
             if (issueSelect && issueSelect.value === 'others') {
                 document.getElementById('custom_issue_container').style.display = 'block';
             }
+            
+            // Set India as default country if empty
+            const countryField = document.getElementById('id_country');
+            if (countryField && !countryField.value) {
+                countryField.value = 'India';
+            }
+            
+            // Form validation
+            const forms = document.querySelectorAll('.needs-validation');
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
         });
     </script>
+    <script>
+        let currentBargainId = null;
+        let currentAppointmentId = null;
+        let currentAppointmentStatus = null;
+
+        function viewAppointmentDetails(appointmentId) {
+            currentAppointmentId = appointmentId;
+            
+            // Clear previous content
+            document.getElementById('detail-images').innerHTML = '';
+            document.getElementById('bargainHistory').innerHTML = '';
+            
+            fetch(`/api/appointments/${appointmentId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate basic details
+                    document.getElementById('detail-issue').textContent = 
+                        data.issue === 'others' ? data.custom_issue : data.issue_display;
+                    document.getElementById('detail-status').textContent = data.status;
+                    document.getElementById('detail-status').className = `badge bg-${getStatusColor(data.status)}`;
+                    document.getElementById('detail-booking-id').textContent = data.booking_id;
+                    document.getElementById('detail-date').textContent = 
+                        new Date(data.expected_time).toLocaleString();
+                    document.getElementById('detail-amount').textContent = '₹' + data.expected_amount;
+                    document.getElementById('detail-location').textContent = 
+                        `${data.address}, ${data.city}, ${data.state} - ${data.pincode}, ${data.country}`;
+                    document.getElementById('detail-description').textContent = data.description;
+                    
+                    // Handle images
+                    const imageGallery = document.getElementById('detail-images');
+                    const images = [data.image1, data.image2, data.image3, data.image4]
+                        .filter(img => img !== null && img.trim() !== '');
+
+                    if (images.length > 0) {
+                        images.forEach(imgUrl => {
+                            const imgContainer = document.createElement('div');
+                            imgContainer.className = 'gallery-item';
+                            
+                            const img = document.createElement('img');
+                            img.src = imgUrl;
+                            img.className = 'image-thumbnail';
+                            img.alt = 'Appointment image';
+                            img.loading = 'lazy';
+                            
+                            imgContainer.appendChild(img);
+                            imageGallery.appendChild(imgContainer);
+                        });
+                    } else {
+                        const noImages = document.createElement('p');
+                        noImages.className = 'text-muted';
+                        noImages.textContent = 'No images provided';
+                        imageGallery.appendChild(noImages);
+                    }
+                    
+                    // Load bargain history
+                    const historyContainer = document.getElementById('bargainHistory');
+                    if (data.bargaining_history && data.bargaining_history.length > 0) {
+                        data.bargaining_history.forEach(item => {
+                            const historyItem = document.createElement('div');
+                            historyItem.className = `bargain-item ${item.status === 'accepted' ? 'accepted' : ''}`;
+                            
+                            historyItem.innerHTML = `
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <span class="fw-bold">₹${item.initial_price}</span>
+                                        <i class="fas fa-arrow-right mx-2"></i>
+                                        <span class="fw-bold">₹${item.offer_price}</span>
+                                    </div>
+                                    <span class="badge bg-${getBargainStatusColor(item.status)}">
+                                        ${item.status_display}
+                                    </span>
+                                </div>
+                                ${item.message ? `<div class="text-muted small mb-2">${item.message}</div>` : ''}
+                                <div class="text-muted small">
+                                    Offered by ${item.offered_by} on ${new Date(item.created_at).toLocaleString()}
+                                </div>
+                            `;
+                            historyContainer.appendChild(historyItem);
+                        });
+
+                        // Check if there's an accepted offer
+                        const hasAcceptedOffer = data.bargaining_history.some(item => item.status === 'accepted');
+                        const confirmBtn = document.getElementById('confirmAppointmentBtn');
+                        if (confirmBtn) {
+                            confirmBtn.style.display = hasAcceptedOffer && data.status === 'pending' ? 'inline-block' : 'none';
+                            confirmBtn.onclick = function() {
+                                confirmAppointment(appointmentId);
+                            };
+                        }
+                    } else {
+                        historyContainer.innerHTML = '<p class="text-muted">No negotiation history yet</p>';
+                    }
+
+                    // Add bargain action buttons if user is owner
+                    if (data.user_id === {{ request.user.id }} && data.status === 'pending') {
+                        const bargainActions = document.createElement('div');
+                        bargainActions.className = 'bargain-actions mt-3';
+                        
+                        const latestBargain = data.bargaining_history[0];
+                        const hasPendingOffer = latestBargain && latestBargain.status === 'pending';
+                        
+                        bargainActions.innerHTML = `
+                            <button class="btn btn-primary me-2" onclick="showBargainModal(${appointmentId})">
+                                ${hasPendingOffer ? 'Make Counter Offer' : 'Make Offer'}
+                            </button>
+                            ${hasPendingOffer ? `
+                            <button class="btn btn-success" onclick="acceptBargain(${latestBargain.id})">
+                                Accept This Offer
+                            </button>
+                            ` : ''}
+                        `;
+                        historyContainer.appendChild(bargainActions);
+                    }
+
+                    // Show the modal
+                    const modal = new bootstrap.Modal(document.getElementById('appointmentDetailsModal'));
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to load appointment details');
+                });
+        }
+
+        function showBargainModal(appointmentId) {
+            currentAppointmentId = appointmentId;
+            fetch(`/api/appointments/${appointmentId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const latestBargain = data.bargaining_history[0];
+                    const offerInput = document.getElementById('offerPrice');
+                    const modalTitle = document.querySelector('#bargainModal .modal-title');
+                    const submitBtn = document.querySelector('#bargainModal .btn-primary');
+                    
+                    if (latestBargain) {
+                        if ({{ request.user.id }} === data.user_id) {
+                            // User making counter offer
+                            offerInput.value = latestBargain.servicer_offer_price;
+                            modalTitle.textContent = 'Make Counter Offer';
+                            submitBtn.textContent = 'Submit Counter Offer';
+                        } else {
+                            // Servicer making new offer
+                            offerInput.value = '';
+                            modalTitle.textContent = 'Make Offer';
+                            submitBtn.textContent = 'Submit Offer';
+                        }
+                    }
+                    
+                    $('#bargainModal').modal('show');
+                });
+        }
+
+        function submitBargain() {
+            const offerPrice = document.getElementById('offerPrice').value;
+            const message = document.getElementById('offerMessage').value;
+            
+            if (!offerPrice || isNaN(offerPrice)) {
+                alert('Please enter a valid price');
+                return;
+            }
+
+            const payload = {
+                appointment_id: currentAppointmentId,
+                message: message
+            };
+
+            if ({% if request.user.user_type == 'servicer' %}true{% else %}false{% endif %}) {
+                payload.servicer_offer = offerPrice;
+            } else {
+                payload.user_offer = offerPrice;
+            }
+
+            fetch('/api/bargain/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Offer submitted successfully!');
+                    $('#bargainModal').modal('hide');
+                    viewAppointmentDetails(currentAppointmentId);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit offer');
+            });
+        }
+
+        function acceptBargain(bargainId) {
+            if (confirm('Are you sure you want to accept this offer?')) {
+                fetch(`/api/bargain/${bargainId}/accept/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Offer accepted! The servicer can now confirm the appointment.');
+                        viewAppointmentDetails(currentAppointmentId);
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to accept offer');
+                });
+            }
+        }
+
+        function confirmAppointment(appointmentId) {
+            if (confirm('Are you sure you want to confirm this appointment at the agreed price?')) {
+                fetch(`/api/appointments/${appointmentId}/accept/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Appointment confirmed successfully!');
+                        viewAppointmentDetails(appointmentId);
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to confirm appointment');
+                });
+            }
+        }
+
+        function getStatusColor(status) {
+            switch(status) {
+                case 'pending': return 'warning';
+                case 'accepted': return 'success';
+                case 'completed': return 'info';
+                case 'cancelled': return 'danger';
+                default: return 'secondary';
+            }
+        }
+
+        function getBargainStatusColor(status) {
+            switch(status) {
+                case 'pending': return 'warning';
+                case 'accepted': return 'success';
+                case 'rejected': return 'danger';
+                case 'counter': return 'info';
+                default: return 'secondary';
+            }
+        }
+    </script>
+
 </body>
 </html>

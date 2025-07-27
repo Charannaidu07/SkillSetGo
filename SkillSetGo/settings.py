@@ -137,6 +137,8 @@ STATICFILES_DIRS = [
 ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760   # 10MB
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -165,3 +167,7 @@ ACCOUNT_FORMS = {
     'signup': 'skill.forms.CustomSignupForm',  # Path to your form
 }
 
+SITE_NAME = "SkillSetGo"
+SITE_URL = "https://SkillSetGo.com"
+SITE_SUPPORT_EMAIL = "SkillSetGo@gmail.com"
+SITE_LOGO_PATH = os.path.join(BASE_DIR, 'static/logo.jpeg')
