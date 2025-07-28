@@ -31,7 +31,6 @@
             flex-direction: column;
         }
 
-        /* Navbar Styles - Same as before */
         .navbar {
             background: var(--primary-gradient);
             box-shadow: var(--shadow-lg);
@@ -41,14 +40,12 @@
             z-index: 1000;
         }
 
-        /* Main Content Styles */
         .main-container {
             flex: 1;
             padding: 2rem 0;
             background-color: #f8f9fa;
         }
 
-        /* Appointments Grid */
         .appointments-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -62,7 +59,6 @@
             }
         }
 
-        /* Appointment Card */
         .appointment-card {
             background: white;
             border-radius: 12px;
@@ -132,7 +128,6 @@
             color: var(--accent-color);
         }
 
-        /* Status Badges */
         .status-pending {
             background-color: #ffc107;
             color: #000;
@@ -143,12 +138,16 @@
             color: #fff;
         }
 
+        .status-accepted {
+            background-color: #007bff;
+            color: #fff;
+        }
+
         .status-cancelled {
             background-color: #dc3545;
             color: #fff;
         }
 
-        /* Empty State */
         .empty-state {
             grid-column: 1 / -1;
             text-align: center;
@@ -157,208 +156,246 @@
             border-radius: 12px;
             box-shadow: var(--shadow-sm);
         }
-        /* Modal Styles */
+
         .appointment-modal .modal-content {
             border-radius: 12px;
             border: none;
             box-shadow: var(--shadow-lg);
         }
-        
+
         .appointment-modal .modal-header {
             background: var(--primary-gradient);
             color: white;
             border-radius: 12px 12px 0 0;
             border-bottom: none;
         }
-        
+
         .appointment-modal .modal-body {
             padding: 2rem;
         }
-        
+
         .detail-row {
             display: flex;
             margin-bottom: 1rem;
         }
-        
+
         .detail-label {
             font-weight: 600;
             color: var(--text-dark);
             min-width: 150px;
         }
-        
+
         .detail-value {
             flex: 1;
         }
-        
+
         .image-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
         }
-        
+
+        .image-gallery .gallery-item {
+            flex: 1 1 calc(50% - 16px);
+            min-width: 0;
+        }
+
         .image-thumbnail {
-            height: 150px;
-            object-fit: cover;
+            width: 100%;
+            height: auto;
             border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition-base);
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
         }
-        
-        .image-thumbnail:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-md);
-        }
-        
+
         .no-images {
             color: #6c757d;
             font-style: italic;
         }
-        .image-gallery {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 20px;
-}
 
-.image-thumbnail {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    object-fit: cover;
-    aspect-ratio: 1 / 1; /* This makes images square */
-}
-.image-gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.image-gallery .gallery-item {
-    flex: 1 1 calc(50% - 16px); /* 2 items per row with gap */
-    min-width: 0;
-}
-
-.image-thumbnail {
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    object-fit: cover;
-    aspect-ratio: 1 / 1;
-}
-
-        /* Rest of your existing styles... */
-    </style>
-    <style>
         .bargaining-history {
             border-top: 1px solid #eee;
             padding-top: 1rem;
             margin-top: 1.5rem;
         }
+
         .bargain-item {
-            background: #f8f9fa;
+            background: white;
             border-radius: 8px;
-            padding: 0.75rem 1rem;
-            margin-bottom: 0.75rem;
-            border-left: 3px solid var(--accent-color);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+            box-shadow: var(--shadow-sm);
         }
+
+        .bargain-item.accepted {
+            background-color: #e8f5e9;
+            border-left: 3px solid #28a745;
+        }
+
+        .bargain-item.rejected {
+            background-color: #ffebee;
+            border-left: 3px solid #dc3545;
+        }
+
+        .bargain-item.pending {
+            background-color: #fffde7;
+            border-left: 3px solid #ffc107;
+        }
+
+        .bargain-item.user_accepted {
+            background-color: #e3f2fd;
+            border-left: 3px solid #2196f3;
+        }
+        .bargain-item.servicer_accepted {
+            background-color: #e0f7fa;
+            border-left: 3px solid #00bcd4;
+        }
+
         .bargain-price {
             font-weight: 600;
         }
+
         .bargain-message {
             color: #6c757d;
             font-size: 0.875rem;
             margin-top: 0.5rem;
         }
+
         .bargain-meta {
             font-size: 0.75rem;
             color: #adb5bd;
             margin-top: 0.5rem;
         }
-        .bargain-status {
-            font-size: 0.75rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            margin-left: 0.5rem;
+
+        .bargain-actions {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
         }
-        .status-pending {
-            background-color: #ffc107;
-            color: #000;
-        }
-        .status-accepted {
-            background-color: #28a745;
-            color: #fff;
-        }
-        .status-rejected {
-            background-color: #dc3545;
-            color: #fff;
-        }
-        .status-counter {
-            background-color: #17a2b8;
-            color: #fff;
-        }
+
         .price-comparison {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
+
+        .otp-section {
+            background-color: #f0f8ff;
+            border: 1px solid #cceeff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .otp-section h6 {
+            color: var(--primary-gradient);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .otp-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #28a745;
+            letter-spacing: 0.1em;
+            text-align: center;
+            padding: 0.5rem;
+            border: 2px dashed #28a745;
+            border-radius: 5px;
+            display: inline-block;
+            background-color: #e9ffe9;
+        }
+
+        .otp-input-group {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            text-align: center;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+
+        .total-price-section {
+            background-color: #e6ffe6;
+            border: 1px solid #a3e9a4;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .total-price-section h6 {
+            color: #28a745;
+            font-weight: 600;
+        }
+        .total-price-section p {
+            margin-bottom: 0.5rem;
+        }
+        .total-price-section strong {
+            color: #007bff;
+        }
+        .total-price-section .servicer-earnings {
+            color: #dc3545;
+        }
+
+        .rating-section {
+            background-color: #f7f7f7;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .rating-section .stars {
+            font-size: 2.5rem;
+            color: #ffc107;
+            cursor: pointer;
+        }
+
+        .rating-section .star {
+            transition: color 0.2s;
+        }
+
+        .rating-section .star.selected,
+        .rating-section .star:hover {
+            color: #ffc107;
+        }
+
+        .rating-section .star:not(.selected):hover ~ .star {
+            color: #e0e0e0;
+        }
+
     </style>
 </head>
 <body>
-    <!-- Navbar (same as before) -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="{% url 'index' %}">SkillSetGo</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarMain">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'service' %}">Services</a>
-                    </li>
-                    {% if user.user_type == 'servicer' %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'service_provider_dashboard' %}">Dashboard</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'book_appointment' %}">Book Appointment</a>
-                    </li>
-                    {% endif %}
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i> {{ user.first_name }}
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="fas fa-user me-2"></i> Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="fas fa-shopping-cart me-2"></i> Cart</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_login' %}"><i class="fas fa-sign-in-alt me-1"></i> Login</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {% include 'header.html' %}
 
-    <!-- Main Content -->
     <main class="main-container">
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    {% if provider.is_verified %}
+                    {% if user.user_type == 'servicer' and not provider.is_verified %}
+                    <div class="alert alert-warning">
+                        <h5 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> Account Not Verified</h5>
+                        <p>Your service provider account is not yet verified. Please complete your profile and verification process to access appointments.</p>
+                        <hr>
+                        <a href="{% url 'service_provider_dashboard' %}" class="btn btn-sm btn-warning">Complete Verification</a>
+                    </div>
+                    {% endif %}
+
                     <h4 class="section-title"><i class="fas fa-calendar-check me-2"></i> Your Appointments</h4>
-                    
+
                     <div class="appointments-grid">
                         {% if appointments %}
                             {% for appointment in appointments %}
@@ -371,46 +408,45 @@
                                             {{ appointment.get_issue_display }}
                                         {% endif %}
                                     </h5>
-                                    <span class="appointment-status 
+                                    <span class="appointment-status
                                         {% if appointment.status == 'completed' %}status-completed
                                         {% elif appointment.status == 'pending' %}status-pending
+                                        {% elif appointment.status == 'accepted' %}status-accepted
                                         {% else %}status-cancelled{% endif %}">
                                         {{ appointment.get_status_display }}
                                     </span>
                                 </div>
-                                
+
                                 <div class="appointment-details">
                                     <div class="appointment-detail">
                                         <i class="fas fa-user"></i>
-                                        <span>{{ appointment.customer_name }}</span>
+                                        <span>{{ appointment.full_name }}</span>
                                     </div>
                                     <div class="appointment-detail">
                                         <i class="fas fa-clock"></i>
-                                        <span>{{ appointment.appointment_date|date:"F j, Y" }} at {{ appointment.appointment_time|time:"g:i A" }}</span>
+                                        <span>{{ appointment.expected_time|date:"F j, Y" }} at {{ appointment.expected_time|time:"g:i A" }}</span>
                                     </div>
                                     <div class="appointment-detail">
                                         <i class="fas fa-map-marker-alt"></i>
                                         <span>{{ appointment.address|truncatechars:40 }}</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="appointment-footer">
                                     <div class="appointment-price">
                                         <i class="fas fa-rupee-sign"></i> {{ appointment.expected_amount }}
                                     </div>
-                                    <div class="appointment-footer">
-            <div>
-                <button class="btn btn-sm btn-outline-primary me-2" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#appointmentModal"
-                        onclick="loadAppointmentDetails({{ appointment.id }})">
-                    Details
-                </button>
-                {% if appointment.status == 'pending' %}
-                    <a href="#" class="btn btn-sm btn-success">Accept</a>
-                {% endif %}
-            </div>
-        </div>
+                                    <div>
+                                        <button class="btn btn-sm btn-outline-primary me-2"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#appointmentModal"
+                                                onclick="loadAppointmentDetails({{ appointment.id }})">
+                                            Details
+                                        </button>
+                                        {% if appointment.status == 'pending' and user.user_type == 'servicer' %}
+                                            <button class="btn btn-sm btn-success" onclick="acceptAppointmentConfirmation({{ appointment.id }})">Accept Initial Price</button>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                             {% endfor %}
@@ -427,19 +463,11 @@
                             </div>
                         {% endif %}
                     </div>
-                    {% else %}
-                    <div class="alert alert-warning">
-                        <h5 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> Account Not Verified</h5>
-                        <p>Your service provider account is not yet verified. Please complete your profile and verification process to access appointments.</p>
-                        <hr>
-                        <a href="{% url 'service_provider_dashboard' %}" class="btn btn-sm btn-warning">Complete Verification</a>
-                    </div>
-                    {% endif %}
                 </div>
             </div>
         </div>
     </main>
-    <!-- Add this modal at the bottom of your body, before scripts -->
+
     <div class="modal fade appointment-modal" id="appointmentModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -452,12 +480,12 @@
                         <div class="detail-label">Service Type:</div>
                         <div class="detail-value" id="detail-issue"></div>
                     </div>
-                    
+
                     <div class="detail-row">
                         <div class="detail-label">Customer Name:</div>
                         <div class="detail-value" id="detail-customer"></div>
                     </div>
-                    
+
                     <div class="detail-row">
                         <div class="detail-label">Contact Number:</div>
                         <div class="detail-value" id="detail-contact"></div>
@@ -466,53 +494,99 @@
                         <div class="detail-label">Booking Id:</div>
                         <div class="detail-value" id="detail-booking"></div>
                     </div>
-                    
+
                     <div class="detail-row">
                         <div class="detail-label">Scheduled Time:</div>
                         <div class="detail-value" id="detail-time"></div>
                     </div>
-                    
+
                     <div class="detail-row">
                         <div class="detail-label">Expected Budget:</div>
                         <div class="detail-value" id="detail-amount"></div>
                     </div>
-                    
+
                     <div class="detail-row">
                         <div class="detail-label">Description:</div>
                         <div class="detail-value" id="detail-description"></div>
                     </div>
-                    
+
                     <div class="detail-row">
                         <div class="detail-label">Location:</div>
                         <div class="detail-value" id="detail-location"></div>
                     </div>
-                    
+
+                    <div id="servicerDetailsSection" style="display: none;">
+                        <h6 class="mt-4 mb-3">Assigned Servicer Details:</h6>
+                        <p><strong>Servicer ID:</strong> <span id="servicer-id"></span></p>
+                        <p><strong>Name:</strong> <span id="servicer-name"></span></p>
+                        <p><strong>Mobile:</strong> <span id="servicer-mobile"></span></p>
+                        <p><strong>WhatsApp:</strong> <span id="servicer-whatsapp"></span></p>
+                        <p><strong>Address:</strong> <span id="servicer-address"></span></p>
+                        <p><strong>Rating:</strong> <span id="servicer-rating"></span></p>
+                    </div>
+
+                    <div id="totalPriceSection" style="display: none;" class="total-price-section">
+                        <h6 class="mt-4 mb-3">Total Cost & Earnings:</h6>
+                        <p><strong>Final Agreed Price:</strong> <span id="final-agreed-price"></span></p>
+                        <p><strong>Distance Cost (₹5/km):</strong> <span id="distance-cost"></span></p>
+                        <p><strong>Platform Fee (User):</strong> <span id="platform-fee-user"></span></p>
+                        <p><strong>Your Total Price:</strong> <strong id="user-total-price"></strong></p>
+                        <p><strong>Platform Fee (Servicer):</strong> <span id="platform-fee-servicer"></span></p>
+                        <p><strong class="servicer-earnings">Servicer Earnings:</strong> <strong id="servicer-earnings"></strong></p>
+                    </div>
+
+                    <div id="otpSection" style="display: none;" class="otp-section">
+                        <h6 class="mt-4 mb-3">Appointment Verification:</h6>
+                        <div id="otpDisplay" style="display: none;">
+                            <p>Please provide this OTP to the Servicer after work completion:</p>
+                            <span class="otp-display" id="generated-otp"></span>
+                        </div>
+                        <div id="otpVerification" style="display: none;">
+                            <p>Enter OTP provided by the User to mark as completed:</p>
+                            <input type="text" class="form-control otp-input" id="servicer-otp-input" maxlength="6" placeholder="Enter OTP">
+                            <button class="btn btn-primary mt-2" onclick="verifyOtp()">Verify OTP</button>
+                        </div>
+                        <p class="text-danger mt-2" id="otp-error" style="display: none;"></p>
+                    </div>
+
+                    <div id="ratingSection" style="display: none;" class="rating-section">
+                        <h6>Rate the Servicer (1-5 Stars)</h6>
+                        <div class="stars" id="servicer-stars">
+                            <i class="far fa-star star" data-rating="1"></i>
+                            <i class="far fa-star star" data-rating="2"></i>
+                            <i class="far fa-star star" data-rating="3"></i>
+                            <i class="far fa-star star" data-rating="4"></i>
+                            <i class="far fa-star star" data-rating="5"></i>
+                        </div>
+                        <button class="btn btn-primary mt-3" id="submitRatingBtn" onclick="submitRating()">Submit Rating</button>
+                        <p class="text-info mt-2" id="rating-message" style="display: none;"></p>
+                    </div>
+
                     <h6 class="mt-4 mb-3">Images:</h6>
                     <div class="image-gallery" id="detail-images">
-                        <!-- Images will be inserted here by JavaScript -->
-                    </div>
-                    
+                        </div>
+
                     <div class="bargaining-history">
                         <h6 class="mb-3">Price Negotiation History</h6>
                         <div id="bargainHistory">
-                            <!-- History will be loaded here -->
-                        </div>
+                            </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bargainModal" 
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bargainModal"
                             id="bargainButton" style="display: none;">
                         Bargain Price
                     </button>
-                    <button class="btn btn-success" id="acceptButton" style="display: none;">
-                        Accept Appointment
+                    <button class="btn btn-success" id="acceptAppointmentBtn" style="display: none;">
+                        Confirm Final Price
                     </button>
                 </div>
             </div>
         </div>
     </div>
-   <div class="modal fade" id="bargainModal" tabindex="-1" aria-hidden="true">
+
+    <div class="modal fade" id="bargainModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -543,185 +617,527 @@
 
     {% include 'footer.html' %}
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Animation for cards when they come into view
-        document.addEventListener('DOMContentLoaded', function() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.appointment-card').forEach(card => {
-                observer.observe(card);
+<script>
+    // Animation for cards when they come into view
+    document.addEventListener('DOMContentLoaded', function() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                    observer.unobserve(entry.target);
+                }
             });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.appointment-card').forEach(card => {
+            observer.observe(card);
         });
-    </script>
-    <script>
-        // Function to load appointment details via AJAX
-        function loadAppointmentDetails(appointmentId) {
-            // Clear previous content
-            document.getElementById('detail-images').innerHTML = '';
-            
-            // Fetch appointment details
-            fetch(`/api/appointments/${appointmentId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    // Populate modal with data
-                    document.getElementById('detail-issue').textContent = 
-                        data.issue === 'others' ? data.custom_issue : data.issue_display;
-                    document.getElementById('detail-customer').textContent = data.full_name;
-                    document.getElementById('detail-booking').textContent = data.booking_id;
-                    document.getElementById('detail-contact').textContent = data.contact_number;
-                    document.getElementById('detail-time').textContent = 
-                        new Date(data.expected_time).toLocaleString();
-                    document.getElementById('detail-amount').textContent = 
-                        '₹' + data.expected_amount;
-                    document.getElementById('detail-description').textContent = data.description;
-                    document.getElementById('detail-location').textContent = 
-                        `${data.address}, ${data.city}, ${data.state} - ${data.pincode}, ${data.country}`;
-                    
-                    // Handle images
-                    const imageGallery = document.getElementById('detail-images');
-const images = [data.image1, data.image2, data.image3, data.image4]
-    .filter(img => img !== null && img.trim() !== '');
-
-if (images.length > 0) {
-    images.forEach(imgUrl => {
-        const imgContainer = document.createElement('div');
-        imgContainer.className = 'gallery-item';
-        
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        img.className = 'image-thumbnail';
-        img.alt = 'Appointment image';
-        img.loading = 'lazy'; // for lazy loading
-        
-        imgContainer.appendChild(img);
-        imageGallery.appendChild(imgContainer);
     });
-} else {
-                        const noImages = document.createElement('p');
-                        noImages.className = 'no-images';
-                        noImages.textContent = 'No images provided';
-                        imageGallery.appendChild(noImages);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching appointment details:', error);
-                    alert('Failed to load appointment details');
-                });
-        }
-    </script>
-    <script>
-        // Add these new functions to your existing script
-        let currentAppointmentId = null;
-        let initialPrice = 0;
 
-        function prepareBargain(appointmentId, price) {
-            currentAppointmentId = appointmentId;
-            initialPrice = price;
-            document.getElementById('initialPrice').value = '₹' + price;
-            document.getElementById('offerPrice').value = '';
-            document.getElementById('offerMessage').value = '';
+    let currentAppointmentId = null;
+    let initialPrice = 0;
+    const isServicer = {% if user.user_type == 'servicer' %}true{% else %}false{% endif %};
+    const currentUserId = {{ user.id }}; // Get current user's ID
+    let selectedRating = 0; // To store the rating selected by the user
+
+    function prepareBargain(appointmentId, price) {
+        currentAppointmentId = appointmentId;
+        initialPrice = price;
+        const initialPriceElem = document.getElementById('initialPrice');
+        if (initialPriceElem) initialPriceElem.value = '₹' + price;
+        const offerPriceElem = document.getElementById('offerPrice');
+        if (offerPriceElem) offerPriceElem.value = '';
+        const offerMessageElem = document.getElementById('offerMessage');
+        if (offerMessageElem) offerMessageElem.value = '';
+    }
+
+    function submitBargain() {
+        const offerPriceElem = document.getElementById('offerPrice');
+        const offerMessageElem = document.getElementById('offerMessage');
+
+        const offerPrice = offerPriceElem ? offerPriceElem.value : '';
+        const offerMessage = offerMessageElem ? offerMessageElem.value : '';
+
+        if (!offerPrice || isNaN(offerPrice) || parseFloat(offerPrice) <= 0) {
+            alert('Please enter a valid positive price.');
+            return;
         }
 
-        function submitBargain() {
-            const offerPrice = document.getElementById('offerPrice').value;
-            const offerMessage = document.getElementById('offerMessage').value;
-            
-            if (!offerPrice || isNaN(offerPrice)) {
-                alert('Please enter a valid price');
-                return;
+        const payload = {
+            appointment_id: currentAppointmentId,
+            message: offerMessage
+        };
+
+        if (isServicer) {
+            payload.servicer_offer = offerPrice;
+        } else {
+            payload.user_offer = offerPrice;
+        }
+
+        fetch('/api/bargain/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
             }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert('Your offer has been submitted!');
+                const bargainModalElement = document.getElementById('bargainModal');
+                const bargainModal = bootstrap.Modal.getInstance(bargainModalElement) || new bootstrap.Modal(bargainModalElement);
+                bargainModal.hide();
 
-            fetch('/api/bargain/', {
+                loadAppointmentDetails(currentAppointmentId);
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting offer:', error);
+            alert('Failed to submit offer: ' + error.message);
+        });
+    }
+
+    function acceptOffer(bargainId) {
+        fetch(`/api/bargain/${bargainId}/accept/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert('Offer accepted!');
+                loadAppointmentDetails(currentAppointmentId);
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error accepting offer:', error);
+            alert('Failed to accept offer: ' + error.message);
+        });
+    }
+
+    function rejectOffer(bargainId) {
+        if (!confirm('Are you sure you want to reject this offer?')) return;
+
+        fetch(`/api/bargain/${bargainId}/reject/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert('Offer rejected');
+                loadAppointmentDetails(currentAppointmentId);
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error rejecting offer:', error);
+            alert('Failed to reject offer: ' + error.message);
+        });
+    }
+
+    function acceptAppointmentConfirmation(appointmentId) {
+        if (confirm('Are you sure you want to accept this appointment at the requested price?')) {
+            fetch(`/api/appointments/${appointmentId}/accept/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify({
-                    appointment_id: currentAppointmentId,
-                    servicer_offer: offerPrice,
-                    message: offerMessage
-                })
+                }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
-                    alert('Your offer has been submitted!');
-                    $('#bargainModal').modal('hide');
-                    loadAppointmentDetails(currentAppointmentId);
+                    alert('Appointment accepted successfully!');
+                    const appointmentModalElement = document.getElementById('appointmentModal');
+                    const appointmentModal = bootstrap.Modal.getInstance(appointmentModalElement) || new bootstrap.Modal(appointmentModalElement);
+                    appointmentModal.hide();
+                    location.reload();
                 } else {
                     alert('Error: ' + data.error);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to submit offer');
+                console.error('Error accepting appointment:', error);
+                alert('Failed to accept appointment: ' + error.message);
             });
         }
+    }
 
-        function acceptAppointment() {
-            if (confirm('Are you sure you want to accept this appointment at the requested price?')) {
-                fetch(`/api/appointments/${currentAppointmentId}/accept/`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Appointment accepted successfully!');
-                        $('#appointmentModal').modal('hide');
-                        location.reload();
-                    } else {
-                        alert('Error: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to accept appointment');
-                });
+    function confirmFinalPrice(appointmentId) {
+        if (confirm('Are you sure you want to confirm the final agreed price and accept this appointment?')) {
+            fetch(`/api/appointments/${appointmentId}/confirm/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Appointment confirmed successfully at the final price!');
+                    const appointmentModalElement = document.getElementById('appointmentModal');
+                    const appointmentModal = bootstrap.Modal.getInstance(appointmentModalElement) || new bootstrap.Modal(appointmentModalElement);
+                    appointmentModal.hide();
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error confirming final price:', error);
+                alert('Failed to confirm appointment at final price: ' + error.message);
+            });
+        }
+    }
+
+    // OTP Verification
+    function verifyOtp() {
+        const otpInputElem = document.getElementById('servicer-otp-input');
+        const otpErrorElem = document.getElementById('otp-error');
+        const otpInput = otpInputElem ? otpInputElem.value : '';
+
+        if (otpErrorElem) otpErrorElem.style.display = 'none';
+
+        if (!otpInput) {
+            if (otpErrorElem) {
+                otpErrorElem.textContent = 'Please enter the OTP.';
+                otpErrorElem.style.display = 'block';
             }
+            return;
         }
 
-        // Update your loadAppointmentDetails function
-        function loadAppointmentDetails(appointmentId) {
-            currentAppointmentId = appointmentId;
-            
-            // Clear previous content
-            document.getElementById('detail-images').innerHTML = '';
-            document.getElementById('bargainHistory').innerHTML = '';
-            
-            // Fetch appointment details
-            fetch(`/api/appointments/${appointmentId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    // Populate modal with data
-                    document.getElementById('detail-issue').textContent = 
-                        data.issue === 'others' ? data.custom_issue : data.issue_display;
-                    document.getElementById('detail-customer').textContent = data.full_name;
-                    document.getElementById('detail-contact').textContent = data.contact_number;
-                    document.getElementById('detail-booking').textContent = data.booking_id;
-                    document.getElementById('detail-time').textContent = 
-                        new Date(data.expected_time).toLocaleString();
-                    document.getElementById('detail-amount').textContent = 
-                        '₹' + data.expected_amount;
-                    document.getElementById('detail-description').textContent = data.description;
-                    document.getElementById('detail-location').textContent = 
-                        `${data.address}, ${data.city}, ${data.state} - ${data.pincode}, ${data.country}`;
-                    
-                    // Handle images
-                    const imageGallery = document.getElementById('detail-images');
+        fetch(`/api/appointments/${currentAppointmentId}/verify-otp/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ otp: otpInput })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                const appointmentModalElement = document.getElementById('appointmentModal');
+                const appointmentModal = bootstrap.Modal.getInstance(appointmentModalElement) || new bootstrap.Modal(appointmentModalElement);
+                appointmentModal.hide();
+                location.reload();
+            } else {
+                if (otpErrorElem) {
+                    otpErrorElem.textContent = data.error;
+                    otpErrorElem.style.display = 'block';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error verifying OTP:', error);
+            if (otpErrorElem) {
+                otpErrorElem.textContent = 'Failed to verify OTP: ' + error.message;
+                otpErrorElem.style.display = 'block';
+            }
+        });
+    }
+
+    // Rating functionality
+    function setupRatingStars(initialRating = 0) {
+        const starsContainer = document.getElementById('servicer-stars');
+        if (!starsContainer) return;
+
+        starsContainer.innerHTML = '';
+        selectedRating = initialRating;
+
+        for (let i = 1; i <= 5; i++) {
+            const star = document.createElement('i');
+            star.classList.add('far', 'fa-star', 'star');
+            if (i <= selectedRating) {
+                star.classList.remove('far');
+                star.classList.add('fas', 'selected');
+            }
+            star.setAttribute('data-rating', i);
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.getAttribute('data-rating'));
+                updateStarDisplay();
+            });
+            star.addEventListener('mouseover', function() {
+                highlightStars(parseInt(this.getAttribute('data-rating')));
+            });
+            star.addEventListener('mouseout', function() {
+                updateStarDisplay();
+            });
+            starsContainer.appendChild(star);
+        }
+        updateStarDisplay();
+    }
+
+    function updateStarDisplay() {
+        const stars = document.querySelectorAll('#servicer-stars .star');
+        stars.forEach(star => {
+            const rating = parseInt(star.getAttribute('data-rating'));
+            if (rating <= selectedRating) {
+                star.classList.remove('far');
+                star.classList.add('fas', 'selected');
+            } else {
+                star.classList.remove('fas', 'selected');
+                star.classList.add('far');
+            }
+        });
+    }
+
+    function highlightStars(hoverRating) {
+        const stars = document.querySelectorAll('#servicer-stars .star');
+        stars.forEach(star => {
+            const rating = parseInt(star.getAttribute('data-rating'));
+            if (rating <= hoverRating) {
+                star.classList.remove('far');
+                star.classList.add('fas');
+            } else {
+                star.classList.remove('fas');
+                star.classList.add('far');
+            }
+        });
+    }
+
+    function submitRating() {
+        const ratingMessageElem = document.getElementById('rating-message');
+        if (ratingMessageElem) ratingMessageElem.style.display = 'none';
+
+        if (selectedRating === 0) {
+            if (ratingMessageElem) {
+                ratingMessageElem.textContent = 'Please select a rating before submitting.';
+                ratingMessageElem.classList.remove('text-success');
+                ratingMessageElem.classList.add('text-danger');
+                ratingMessageElem.style.display = 'block';
+            }
+            return;
+        }
+
+        fetch(`/api/appointments/${currentAppointmentId}/rate-servicer/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ rating: selectedRating })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                if (ratingMessageElem) {
+                    ratingMessageElem.textContent = data.message;
+                    ratingMessageElem.classList.remove('text-danger');
+                    ratingMessageElem.classList.add('text-success');
+                    ratingMessageElem.style.display = 'block';
+                }
+                document.getElementById('submitRatingBtn').disabled = true;
+                loadAppointmentDetails(currentAppointmentId);
+            } else {
+                if (ratingMessageElem) {
+                    ratingMessageElem.textContent = data.error;
+                    ratingMessageElem.classList.remove('text-success');
+                    ratingMessageElem.classList.add('text-danger');
+                    ratingMessageElem.style.display = 'block';
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting rating:', error);
+            if (ratingMessageElem) {
+                ratingMessageElem.textContent = 'Failed to submit rating: ' + error.message;
+                ratingMessageElem.style.display = 'block';
+            }
+        });
+    }
+
+    function loadAppointmentDetails(appointmentId) {
+        currentAppointmentId = appointmentId;
+
+        // Clear previous content
+        const detailImages = document.getElementById('detail-images');
+        if (detailImages) detailImages.innerHTML = '';
+        const bargainHistory = document.getElementById('bargainHistory');
+        if (bargainHistory) bargainHistory.innerHTML = '';
+
+        // Fetch appointment details
+        fetch(`/api/appointments/${appointmentId}/`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch appointment details');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Populate modal with data
+                document.getElementById('detail-issue').textContent =
+                    data.issue === 'others' ? data.custom_issue : data.issue_display;
+                document.getElementById('detail-customer').textContent = data.full_name;
+                document.getElementById('detail-contact').textContent = data.contact_number;
+                document.getElementById('detail-booking').textContent = data.booking_id;
+
+                const detailTimeElem = document.getElementById('detail-time');
+                if (detailTimeElem && data.expected_time) {
+                    detailTimeElem.textContent = new Date(data.expected_time).toLocaleString();
+                } else if (detailTimeElem) {
+                    detailTimeElem.textContent = 'N/A';
+                }
+
+                document.getElementById('detail-amount').textContent =
+                    '₹' + parseFloat(data.expected_amount).toFixed(2);
+                document.getElementById('detail-description').textContent = data.description;
+                document.getElementById('detail-location').textContent =
+                    `${data.address}, ${data.city}, ${data.state} - ${data.pincode}, ${data.country}`;
+
+                // Handle Servicer Details
+                const servicerDetailsSection = document.getElementById('servicerDetailsSection');
+                if (servicerDetailsSection) {
+                    if (data.servicer_details) { // Changed condition to just check if servicer_details exists
+                        document.getElementById('servicer-id').textContent = data.servicer_details.id;
+                        document.getElementById('servicer-name').textContent = data.servicer_details.full_name;
+                        document.getElementById('servicer-mobile').textContent = data.servicer_details.mobile_number;
+                        document.getElementById('servicer-whatsapp').textContent = data.servicer_details.whatsapp_number;
+                        document.getElementById('servicer-address').textContent = data.servicer_details.address;
+                        document.getElementById('servicer-rating').textContent = data.servicer_details.rating + ' ★';
+                        servicerDetailsSection.style.display = 'block';
+                    } else {
+                        servicerDetailsSection.style.display = 'none';
+                    }
+                }
+
+                // Handle Total Price Section
+                const totalPriceSection = document.getElementById('totalPriceSection');
+                if (totalPriceSection) {
+                    if ((data.status === 'accepted' || data.status === 'completed') && data.user_total_price && data.servicer_earnings) {
+                        document.getElementById('final-agreed-price').textContent = '₹' + parseFloat(data.expected_amount).toFixed(2);
+                        document.getElementById('distance-cost').textContent = data.distance_cost || 'N/A';
+                        document.getElementById('platform-fee-user').textContent = data.platform_fee_user || 'N/A';
+                        document.getElementById('user-total-price').textContent = data.user_total_price;
+                        document.getElementById('platform-fee-servicer').textContent = data.platform_fee_servicer || 'N/A';
+                        document.getElementById('servicer-earnings').textContent = data.servicer_earnings;
+                        totalPriceSection.style.display = 'block';
+                    } else {
+                        totalPriceSection.style.display = 'none';
+                    }
+                }
+
+
+                // Handle OTP Section
+                const otpSection = document.getElementById('otpSection');
+                const otpDisplay = document.getElementById('otpDisplay');
+                const otpVerification = document.getElementById('otpVerification');
+                const servicerOtpInput = document.getElementById('servicer-otp-input');
+                const otpError = document.getElementById('otp-error');
+
+                if (otpSection) otpSection.style.display = 'none';
+                if (otpDisplay) otpDisplay.style.display = 'none';
+                if (otpVerification) otpVerification.style.display = 'none';
+                if (otpError) otpError.style.display = 'none';
+                if (servicerOtpInput) servicerOtpInput.value = '';
+
+                // Show OTP section if status is 'accepted' AND not yet OTP verified
+                if (data.status === 'accepted' && !data.otp_verified) {
+                    if (otpSection) otpSection.style.display = 'block';
+                    if (!isServicer) { // Regular User: Show generated OTP
+                        if (otpDisplay) {
+                            otpDisplay.style.display = 'block';
+                            document.getElementById('generated-otp').textContent = data.otp || 'N/A';
+                        }
+                    } else { // Servicer: Show OTP input for verification
+                        const assignedServicerId = data.servicer_details ? data.servicer_details.id : null;
+                        const currentServicerId = {% if user.user_type == 'servicer' and user.service_provider %} '{{ user.service_provider.service_provider_id }}' {% else %} null {% endif %};
+                        if (assignedServicerId === currentServicerId) {
+                            if (otpVerification) otpVerification.style.display = 'block';
+                        }
+                    }
+                }
+
+                // Handle Rating Section (moved logic here for clarity)
+                const ratingSection = document.getElementById('ratingSection');
+                const submitRatingBtn = document.getElementById('submitRatingBtn');
+                const ratingMessageElem = document.getElementById('rating-message');
+
+                if (ratingSection) ratingSection.style.display = 'none'; // Always hide first
+                if (ratingMessageElem) ratingMessageElem.style.display = 'none'; // Hide messages
+
+                // Condition for showing the rating section:
+                // 1. Appointment status is 'completed'
+                // 2. Current user is a 'user' (not servicer)
+                // 3. A servicer was actually assigned (data.servicer_details exists)
+                if (data.status === 'completed' && !isServicer && data.servicer_details) {
+                    if (ratingSection) ratingSection.style.display = 'block';
+                    if (submitRatingBtn) {
+                        submitRatingBtn.disabled = false; // Enable by default
+                    }
+                    if (data.appointment_rating) {
+                        // If already rated, display the rating and disable submission
+                        setupRatingStars(data.appointment_rating);
+                        if (submitRatingBtn) submitRatingBtn.disabled = true;
+                        if (ratingMessageElem) {
+                            ratingMessageElem.textContent = `You rated this servicer ${data.appointment_rating} star(s).`;
+                            ratingMessageElem.classList.remove('text-danger');
+                            ratingMessageElem.classList.add('text-info');
+                            ratingMessageElem.style.display = 'block';
+                        }
+                    } else {
+                        // If not rated, enable rating submission
+                        setupRatingStars(0); // Initialize with 0 for unrated
+                    }
+                } else {
+                    if (ratingSection) ratingSection.style.display = 'none'; // Ensure it's hidden if conditions not met
+                }
+
+                // Handle images
+                const imageGallery = document.getElementById('detail-images');
+                if (imageGallery) {
                     const images = [data.image1, data.image2, data.image3, data.image4]
                         .filter(img => img !== null && img.trim() !== '');
 
@@ -729,13 +1145,13 @@ if (images.length > 0) {
                         images.forEach(imgUrl => {
                             const imgContainer = document.createElement('div');
                             imgContainer.className = 'gallery-item';
-                            
+
                             const img = document.createElement('img');
                             img.src = imgUrl;
                             img.className = 'image-thumbnail';
                             img.alt = 'Appointment image';
                             img.loading = 'lazy';
-                            
+
                             imgContainer.appendChild(img);
                             imageGallery.appendChild(imgContainer);
                         });
@@ -745,63 +1161,165 @@ if (images.length > 0) {
                         noImages.textContent = 'No images provided';
                         imageGallery.appendChild(noImages);
                     }
-                    
-                    // Handle bargaining history
-                    if (data.bargaining_history && data.bargaining_history.length > 0) {
-                        const historyContainer = document.getElementById('bargainHistory');
-                        data.bargaining_history.forEach(item => {
-                            const historyItem = document.createElement('div');
-                            historyItem.className = 'bargain-item';
-                            
-                            const statusClass = `status-${item.status}`;
-                            
-                            historyItem.innerHTML = `
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="price-comparison">
-                                        <span class="bargain-price">₹${item.initial_price}</span>
-                                        <i class="fas fa-arrow-right"></i>
-                                        <span class="bargain-price">₹${item.offer_price}</span>
-                                    </div>
-                                    <span class="bargain-status ${statusClass}">
-                                        ${item.status_display}
-                                    </span>
-                                </div>
-                                ${item.message ? `<div class="bargain-message">${item.message}</div>` : ''}
-                                <div class="bargain-meta">
-                                    Offered by ${item.offered_by === 'servicer' ? 'You' : 'Customer'} on ${new Date(item.created_at).toLocaleString()}
-                                </div>
-                            `;
-                            historyContainer.appendChild(historyItem);
-                        });
-                    } else {
-                        document.getElementById('bargainHistory').innerHTML = 
-                            '<p class="text-muted">No negotiation history yet</p>';
-                    }
-                    
-                    // Show/hide buttons based on status
-                    const bargainBtn = document.getElementById('bargainButton');
-                    const acceptBtn = document.getElementById('acceptButton');
-                    
+                }
+
+                // Handle bargaining history and buttons
+                const bargainBtn = document.getElementById('bargainButton');
+                const acceptAppointmentBtn = document.getElementById('acceptAppointmentBtn');
+
+                if (bargainBtn) {
                     if (data.status === 'pending') {
-                        bargainBtn.style.display = 'inline-block';
-                        acceptBtn.style.display = 'inline-block';
-                        
-                        // Set up button click handlers
+                        const lastBargain = data.bargaining_history.length > 0 ? data.bargaining_history[0] : null;
+                        if (!isServicer || (isServicer && (!lastBargain || lastBargain.offered_by === 'servicer' || lastBargain.status !== 'pending'))) {
+                             bargainBtn.style.display = 'inline-block';
+                        } else {
+                            bargainBtn.style.display = 'none';
+                        }
+
                         bargainBtn.onclick = function() {
-                            prepareBargain(appointmentId, data.expected_amount);
+                            prepareBargain(data.id, parseFloat(data.expected_amount));
                         };
-                        
-                        acceptBtn.onclick = acceptAppointment;
+
+                        if (acceptAppointmentBtn) {
+                            if (isServicer && data.bargaining_history.length === 0 && data.status === 'pending') {
+                                acceptAppointmentBtn.style.display = 'inline-block';
+                                acceptAppointmentBtn.onclick = function() {
+                                    acceptAppointmentConfirmation(data.id);
+                                };
+                            } else {
+                                acceptAppointmentBtn.style.display = 'none';
+                            }
+                        }
+
                     } else {
                         bargainBtn.style.display = 'none';
-                        acceptBtn.style.display = 'none';
+                        if (acceptAppointmentBtn) acceptAppointmentBtn.style.display = 'none';
                     }
-                })
-                .catch(error => {
-                    console.error('Error fetching appointment details:', error);
-                    alert('Failed to load appointment details');
-                });
+                }
+
+                const bargainHistoryContainer = document.getElementById('bargainHistory');
+                if (bargainHistoryContainer) {
+                    if (data.bargaining_history && data.bargaining_history.length > 0) {
+                        renderBargainHistory(data.bargaining_history, data.status);
+                    } else {
+                        bargainHistoryContainer.innerHTML = '<p class="text-muted">No negotiation history yet</p>';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching appointment details:', error);
+                alert('Failed to load appointment details: ' + error.message);
+            });
+    }
+
+    function getStatusColor(status) {
+        switch(status) {
+            case 'pending': return 'warning';
+            case 'accepted': return 'primary';
+            case 'completed': return 'success';
+            case 'cancelled': return 'danger';
+            default: return 'secondary';
         }
-    </script>
+    }
+
+    function getBargainStatusColor(status) {
+        switch(status) {
+            case 'pending': return 'warning';
+            case 'accepted': return 'success';
+            case 'rejected': return 'danger';
+            case 'user_accepted': return 'info';
+            case 'servicer_accepted': return 'primary';
+            default: return 'secondary';
+        }
+    }
+
+    function renderBargainHistory(history, appointmentStatus) {
+        const container = document.getElementById('bargainHistory');
+        if (!container) return;
+        container.innerHTML = '';
+
+        let latestRelevantPendingOffer = null;
+        if (appointmentStatus === 'pending') {
+            if (isServicer) {
+                for (let i = 0; i < history.length; i++) {
+                    if (history[i].offered_by === 'user' && history[i].status === 'pending') {
+                        latestRelevantPendingOffer = history[i];
+                        break;
+                    }
+                }
+            } else {
+                for (let i = 0; i < history.length; i++) {
+                    if (history[i].offered_by === 'servicer' && history[i].status === 'pending') {
+                        latestRelevantPendingOffer = history[i];
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        history.forEach(item => {
+            const historyItem = document.createElement('div');
+            historyItem.className = `bargain-item ${item.status.replace('_', '-')}`;
+
+            let offerPrice;
+            if (item.offered_by === 'servicer') {
+                offerPrice = item.servicer_offer_price;
+            } else {
+                offerPrice = item.user_offer_price;
+            }
+
+            const initialPriceFormatted = parseFloat(item.initial_price).toFixed(2);
+            const offerPriceFormatted = (offerPrice !== null && offerPrice !== 'None' && offerPrice !== undefined) ? parseFloat(offerPrice).toFixed(2) : 'N/A';
+
+            let servicerDetailsHtml = '';
+            if (item.offered_by === 'servicer' && item.servicer_info) {
+                servicerDetailsHtml = `
+                    <small class="text-muted">
+                        Servicer: ${item.servicer_info.full_name} (ID: ${item.servicer_info.id})
+                        ${item.servicer_info.rating ? `★ ${item.servicer_info.rating}` : ''}
+                    </small><br>
+                `;
+            }
+
+            let priceHtml = `
+                <div class="price-comparison">
+                    <span class="bargain-price">₹${initialPriceFormatted}</span>
+                    <i class="fas fa-arrow-right"></i>
+                    <span class="bargain-price">₹${offerPriceFormatted}</span>
+                </div>
+            `;
+
+            let actionButtons = '';
+            if (appointmentStatus === 'pending' && latestRelevantPendingOffer && latestRelevantPendingOffer.id === item.id) {
+                actionButtons = `
+                    <div class="bargain-actions">
+                        <button class="btn btn-sm btn-success"
+                                onclick="acceptOffer(${item.id})">
+                            <i class="fas fa-check"></i> Accept
+                        </button>
+                        <button class="btn btn-sm btn-danger"
+                                onclick="rejectOffer(${item.id})">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </div>
+                `;
+            }
+
+            historyItem.innerHTML = `
+                ${priceHtml}
+                <div class="bargain-meta">
+                    ${servicerDetailsHtml}
+                    Offered by ${item.offered_by === 'servicer' ? 'Servicer' : 'You'}
+                    on ${new Date(item.created_at).toLocaleString()}
+                    <span class="badge bg-${getBargainStatusColor(item.status)} ms-2">${item.status_display}</span>
+                </div>
+                ${item.message ? `<div class="bargain-message">${item.message}</div>` : ''}
+                ${actionButtons}
+            `;
+            container.appendChild(historyItem);
+        });
+    }
+</script>
 </body>
 </html>

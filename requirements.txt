@@ -6,3 +6,4 @@ mysqlclient
 weasyprint
 reportlab
 qrcode[pil]
+opencage

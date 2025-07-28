@@ -492,7 +492,6 @@
             </div>
             
             <div class="form-body">
-                <!-- Progress Steps -->
                 {% if messages %}
 <div class="container mt-3">
     {% for message in messages %}
@@ -506,16 +505,13 @@
                 <form method="post" enctype="multipart/form-data" novalidate>
                     {% csrf_token %}
                     
-                    <!-- Personal Details Section -->
-       <div class="form-section">
+                    <div class="form-section">
     <h3 class="section-title">
         <i class="fas fa-user-tie"></i> Personal Information
     </h3>
     
     <div class="field-grid">
-        <!-- Render all regular fields first -->
-         <div class="field-grid">
-    <!-- Render all regular fields first -->
+        <div class="field-grid">
     {% for field in form %}
         {% if field.name != 'Preference1' and field.name != 'Preference2' and field.name != 'other_preference1' and field.name != 'other_preference2' %}
         <div class="form-field">
@@ -529,7 +525,7 @@
                 <label for="{{ field.id_for_label }}" class="file-upload-btn">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <span class="file-upload-text">Choose file</span>
-                    <span class="file-name" id="file-name-display">No file chosen</span>
+                    <span class="file-name" id="file-name-display-{{ field.name }}">No file chosen</span>
                 </label>
             </div>
             {% elif field.field.widget.input_type == 'textarea' %}
@@ -559,7 +555,6 @@
         {% endif %}
     {% endfor %}
 
-        <!-- Preference 1 Field -->
         <div class="form-field">
             <label for="id_Preference1" class="form-label required">
                 Primary Service Preference
@@ -597,7 +592,6 @@
             {% endif %}
         </div>
 
-        <!-- Preference 2 Field -->
         <div class="form-field">
             <label for="id_Preference2" class="form-label">
                 Secondary Service Preference (Optional)
@@ -606,12 +600,12 @@
                     id="id_Preference2"
                     class="form-input preference-select"
                     data-other-field="other_Preference2">
-                <option value="" selected disabled>Select a secondary service</option>
-                {% for choice in form.Preference2.field.choices %}
-                    {% if choice.0 %}  {# Skip empty choice since we added our own #}
-                    <option value="{{ choice.0 }}" 
-                            {% if form.Preference2.value == choice.0 %}selected{% endif %}>
-                        {{ choice.1 }}
+                <option value="" {% if not form.Preference2.value %}selected{% endif %}>Select a secondary service</option> {# Added empty option #}
+                {% for choice_value, choice_label in form.Preference2.field.choices %}
+                    {% if choice_value %} {# Skip empty choice if already handled #}
+                    <option value="{{ choice_value }}" 
+                            {% if form.Preference2.value == choice_value %}selected{% endif %}>
+                        {{ choice_label }}
                     </option>
                     {% endif %}
                 {% endfor %}
@@ -639,7 +633,6 @@
     </div>
 </div>
                     
-                    <!-- Bank Details Section -->
                     <div class="form-section">
                         <h3 class="section-title">
                             <i class="fas fa-university"></i> Bank Details
@@ -687,23 +680,19 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <!-- Bank Details Section -->
                     <div class="form-section">
     <h3 class="section-title">
         <i class="fas fa-university"></i> Payment Details
     </h3>
     
     <div class="payment-section">
-    <!-- QR Code Section -->
     <div class="qr-code-section">
         <h3 class="section-title">
             <i class="fas fa-qrcode"></i> Scan to Pay
         </h3>
         <div class="qr-code-container">
-            <!-- QR Code Image -->
             <img src="{% static 'Scanner.jpg' %}" alt="Payment QR Code" class="qr-code-image">
             
-            <!-- Payment Instructions -->
             <div class="payment-instructions">
                 <h4>Payment Instructions:</h4>
                 <ol>
@@ -713,15 +702,13 @@
                     <li>Complete the form and submit</li>
                 </ol>
                 
-                <!-- Display Payment Amount -->
                 <div class="payment-amount">
                     <strong>Amount to Pay:</strong> ₹{{ payment_amount|default:"500.00" }}
                 </div>
                 
-                <!-- UPI ID Display -->
                 <div class="upi-id">
                     <strong>UPI ID:</strong> yourbusiness@upi
-                    <button class="copy-btn" onclick="copyToClipboard('yourbusiness@upi')">
+                    <button type="button" class="copy-btn" onclick="copyToClipboard('yourbusiness@upi')">
                         <i class="fas fa-copy"></i> Copy
                     </button>
                 </div>
@@ -729,7 +716,6 @@
         </div>
     </div>
 
-    <!-- Payment Form Fields (your existing code) -->
     <div class="field-grid">
         {% for field in payment_form %}
         <div class="form-field">
@@ -744,7 +730,7 @@
                     <label for="{{ field.id_for_label }}" class="file-upload-btn">
                         <i class="fas fa-cloud-upload-alt"></i>
                         <span class="file-upload-text">Choose file</span>
-                        <span class="file-name" id="file-name-display">No file chosen</span>
+                        <span class="file-name" id="file-name-display-{{ field.name }}">No file chosen</span>
                     </label>
                 </div>
             {% elif field.field.widget.input_type == 'select' %}
@@ -785,8 +771,7 @@
 
 
 </div>
-                    <!-- Payment Terms Section -->
-<div class="form-section">
+                    <div class="form-section">
     <h3 class="section-title">
         <i class="fas fa-rupee-sign"></i> Payment Terms & Conditions
     </h3>
@@ -819,7 +804,6 @@
     </div>
 </div>
 
-<!-- Terms and Conditions -->
 <div class="form-section">
     <div class="form-field">
         <div class="form-check">
@@ -833,7 +817,6 @@
         </div>
     </div>
 </div>
-                    <!-- Submit Button -->
                     <div style="text-align: center;">
                         <button type="submit" class="submit-btn">
                             Complete Registration <i class="fas fa-arrow-right"></i>
@@ -845,48 +828,97 @@
     </div>
     
     {% include 'footer.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     // File upload display
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.file-upload-input').forEach(input => {
             input.addEventListener('change', function(e) {
                 const fileName = e.target.files[0]?.name || 'No file chosen';
+                // Use a more specific ID or data attribute for the file name display
                 const displayElement = this.closest('.file-upload-wrapper').querySelector('.file-name');
                 if (displayElement) {
                     displayElement.textContent = fileName;
                 }
             });
         });
-    });
-    document.querySelector('form').addEventListener('submit', function(e) {
-    const termsCheck = document.getElementById('termsCheck');
-    const paymentTermsCheck = document.getElementById('paymentTermsCheck');
-    let isValid = true;
-    
-    // Reset error messages
-    document.querySelectorAll('.error-message').forEach(el => {
-        el.style.display = 'none';
-    });
-    
-    if (!termsCheck.checked) {
-        document.getElementById('termsCheck-error').style.display = 'block';
-        isValid = false;
-    }
-    
-    if (!paymentTermsCheck.checked) {
-        document.getElementById('paymentTermsCheck-error').style.display = 'block';
-        isValid = false;
-    }
-    
-    if (!isValid) {
-        e.preventDefault();
-        // Scroll to first error
-        const firstError = document.querySelector('.error-message[style="display: block;"]');
-        if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Initial check for 'others' selection on page load for Preference1
+        const preference1Select = document.getElementById('id_Preference1');
+        const otherPreference1Input = document.getElementById('other_Preference1');
+        if (preference1Select && otherPreference1Input) {
+            if (preference1Select.value === 'others') {
+                otherPreference1Input.style.display = 'block';
+                otherPreference1Input.required = true;
+            } else {
+                otherPreference1Input.style.display = 'none';
+                otherPreference1Input.required = false;
+            }
         }
-    }
-});
+
+        // Initial check for 'others' selection on page load for Preference2
+        const preference2Select = document.getElementById('id_Preference2');
+        const otherPreference2Input = document.getElementById('other_Preference2');
+        if (preference2Select && otherPreference2Input) {
+            if (preference2Select.value === 'others') {
+                otherPreference2Input.style.display = 'block';
+                otherPreference2Input.required = true;
+            } else {
+                otherPreference2Input.style.display = 'none';
+                otherPreference2Input.required = false;
+            }
+        }
+    });
+
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const termsCheck = document.getElementById('termsCheck');
+        const paymentTermsCheck = document.getElementById('paymentTermsCheck');
+        let isValid = true;
+        
+        // Reset error messages
+        document.querySelectorAll('.error-message').forEach(el => {
+            el.style.display = 'none';
+        });
+        
+        if (!termsCheck.checked) {
+            document.getElementById('termsCheck-error').style.display = 'block';
+            isValid = false;
+        }
+        
+        if (!paymentTermsCheck.checked) {
+            document.getElementById('paymentTermsCheck-error').style.display = 'block';
+            isValid = false;
+        }
+        
+        // Custom validation for 'others' fields in ServiceProviderForm
+        const preference1Select = document.getElementById('id_Preference1');
+        const otherPreference1Input = document.getElementById('other_Preference1');
+        if (preference1Select && otherPreference1Input && preference1Select.value === 'others' && !otherPreference1Input.value.trim()) {
+            // This error will be handled by Django's form validation if 'required' is set correctly
+            // in forms.py and the field is not empty.
+            // For immediate client-side feedback:
+            // document.getElementById('other_Preference1_error').style.display = 'block'; // You'd need a specific ID for this error span
+            isValid = false; 
+        }
+
+        const preference2Select = document.getElementById('id_Preference2');
+        const otherPreference2Input = document.getElementById('other_Preference2');
+        if (preference2Select && otherPreference2Input && preference2Select.value === 'others' && !otherPreference2Input.value.trim()) {
+             // Similar client-side feedback needed if desired.
+            isValid = false;
+        }
+
+        if (!isValid) {
+            e.preventDefault();
+            // Scroll to first error
+            const firstError = document.querySelector('.error-message[style="display: block;"]');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            // For Bootstrap's validation display
+            e.target.classList.add('was-validated'); 
+        }
+    });
 </script>
 <script>
     document.getElementById('id_Preference1').addEventListener('change', function() {
@@ -921,4 +953,4 @@
     }
 </script>
 </body>
-</html>      
+</html>

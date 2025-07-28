@@ -13,20 +13,20 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 
 class BookAppointmentAdmin(admin.ModelAdmin):
-    list_display = ('booking_id', 'user', 'full_name', 'get_issue_display', 'status', 'expected_time', 'created_at')
-    list_filter = ('status', 'issue', 'created_at')
+    list_display = ('booking_id', 'user', 'full_name', 'get_issue_display', 'status', 'expected_time', 'rating', 'created_at') # Added 'rating'
+    list_filter = ('status', 'issue', 'created_at','otp_verified')
     search_fields = ('booking_id', 'full_name', 'contact_number', 'user__username')
     readonly_fields = ('booking_id', 'created_at')
     ordering = ('-created_at',)
     fieldsets = (
         ('Booking Information', {
-            'fields': ('booking_id', 'user', 'status', 'created_at')
+            'fields': ('booking_id', 'user', 'status', 'created_at', 'rating') # Added 'rating'
         }),
         ('Customer Details', {
             'fields': ('full_name', 'contact_number')
         }),
         ('Service Information', {
-            'fields': ('issue', 'custom_issue', 'description', 'expected_amount', 'expected_time')
+            'fields': ('issue', 'custom_issue', 'description', 'expected_amount', 'expected_time','otp_verified')
         }),
         ('Location', {
             'fields': ('address', 'city', 'state', 'country', 'pincode')
@@ -36,7 +36,7 @@ class BookAppointmentAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
-    
+
     def get_issue_display(self, obj):
         return obj.get_issue_domain()
     get_issue_display.short_description = 'Service Type'

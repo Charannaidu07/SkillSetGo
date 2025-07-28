@@ -1,0 +1,335 @@
+
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+            --accent-color: #2e59d9;
+            --text-color: #5a5c69;
+            --light-gray: #f8f9fa;
+            --dark-gray: #d1d3e2;
+        }
+        
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            border-radius: 0.5rem 0.5rem 0 0 !important;
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 0.35rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d3e2;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .shadow-sm {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.35rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+        
+        .image-upload-container {
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed var(--dark-gray);
+            border-radius: 0.35rem;
+            background-color: white;
+            transition: all 0.3s;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        
+        .image-upload-container:hover {
+            border-color: var(--primary-color);
+            background-color: var(--light-gray);
+        }
+        
+        .image-upload-container i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .image-upload-container .image-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .location-section {
+            background-color: rgba(78, 115, 223, 0.05);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 1rem;
+        }
+        
+        .appointment-card {
+            transition: all 0.3s;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .appointment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+        
+        #appointmentForm {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            position: relative;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .text-muted {
+            color: #858796 !important;
+        }
+        
+        .terms-container {
+            background-color: rgba(248, 249, 250, 0.8);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e3e6f0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .terms-container h6 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .terms-container ul {
+            padding-left: 1.5rem;
+        }
+        
+        .terms-container li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-check-label {
+            font-size: 0.9rem;
+        }
+        .flatpickr-datetime {
+    background-color: white;
+    cursor: pointer;
+}
+
+.flatpickr-calendar {
+    font-family: inherit;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+}
+
+.flatpickr-time input {
+    font-weight: 600;
+}
+
+.flatpickr-day.selected {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.flatpickr-time .numInputWrapper span.arrowUp:after {
+    border-bottom-color: var(--primary-color);
+}
+
+.flatpickr-time .numInputWrapper span.arrowDown:after {
+    border-top-color: var(--primary-color);
+}
+    .bargaining-history {
+        border-top: 1px solid #eee;
+        padding-top: 1rem;
+    }
+    .bargain-item {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.75rem;
+    }
+    .bargain-price {
+        font-weight: 600;
+    }
+    .bargain-message {
+        color: #6c757d;
+        font-size: 0.875rem;
+    }
+    .bargain-meta {
+        font-size: 0.75rem;
+        color: #adb5bd;
+    }
+    .image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 20px;
+}
+
+.image-thumbnail {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.image-thumbnail:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.bargaining-history {
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+    margin-top: 1.5rem;
+}
+
+.bargain-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid #4e73df;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.no-images {
+    color: #6c757d;
+    font-style: italic;
+}
+.bargain-actions {
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+    text-align: center;
+}
+
+.bargain-item.accepted {
+    background-color: #e8f5e9;
+    border-left-color: #4caf50;
+}
+
+.bargain-item.rejected {
+    background-color: #ffebee;
+    border-left-color: #f44336;
+}
+.bargain-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid #4e73df;
+}
+
+.bargain-item.accepted {
+    background-color: #e8f5e9;
+    border-left-color: #28a745;
+}
+
+.bargain-item.rejected {
+    background-color: #ffebee;
+    border-left-color: #dc3545;
+}
+
+.bargain-item.pending {
+    background-color: #fff3cd;
+    border-left-color: #ffc107;
+}
+
+.bargain-actions {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}

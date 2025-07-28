@@ -2,7 +2,6 @@ from allauth.account.forms import SignupForm
 from django import forms
 from .models import Book_Appointment, ServiceProviderBankDetails, ServiceProviderDetails, ServiceInitialRegistrationPayment
 from django.core.validators import MinLengthValidator, MaxLengthValidator
-from .models import Book_Appointment
 from django.utils import timezone
 
 class CustomSignupForm(SignupForm):
@@ -86,7 +85,7 @@ class BookAppointmentForm(forms.ModelForm):
         expected_time = cleaned_data.get('expected_time')
         
         if issue == 'others' and not custom_issue:
-            raise forms.ValidationError("Please specify the issue when selecting 'Others'.")
+            self.add_error('custom_issue', "Please specify the issue when selecting 'Others'.")
             
         # Validate location fields
         address = cleaned_data.get('address')
@@ -95,18 +94,17 @@ class BookAppointmentForm(forms.ModelForm):
         pincode = cleaned_data.get('pincode')
         
         if not all([address, city, state, pincode]):
+            # This general error might be less specific, consider adding errors to individual fields
             raise forms.ValidationError("Please provide complete address details.")
             
-        # Validate expected_time is in the future
-        if expected_time and expected_time < timezone.now():
-            raise forms.ValidationError("Expected time must be in the future.")
-            
         return cleaned_data
+
     def clean_expected_time(self):
         expected_time = self.cleaned_data.get('expected_time')
         if expected_time and expected_time < timezone.now():
             raise forms.ValidationError("Service date/time must be in the future.")
         return expected_time
+
 class ServiceProviderForm(forms.ModelForm):
     mobile_number = forms.CharField(
         validators=[MinLengthValidator(10)],
@@ -180,21 +178,6 @@ class ServiceProviderForm(forms.ModelForm):
         if Preference2 == 'others' and not other_preference2:
             raise forms.ValidationError("Please specify the issue when selecting 'Others'.")
         return cleaned_data
-
-    # def save(self, commit=True):
-    #     instance = super().save(commit=False)
-        
-    #     # Handle Preference1
-    #     if self.cleaned_data.get('Preference1') == 'others':
-    #         instance.Preference1 = self.cleaned_data.get('other_preference1', '').strip()
-        
-    #     # Handle Preference2
-    #     if self.cleaned_data.get('Preference2') == 'others':
-    #         instance.Preference2 = self.cleaned_data.get('other_preference2', '').strip()
-        
-    #     if commit:
-    #         instance.save()
-    #     return instance
 
 class ServiceProviderBankForm(forms.ModelForm):
     class Meta:

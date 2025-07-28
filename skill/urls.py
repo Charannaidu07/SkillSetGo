@@ -14,6 +14,10 @@ urlpatterns=[
     path('appointments/', views.appointments, name='appointments'),
     path('api/appointments/<int:appointment_id>/', views.appointment_details, name='appointment-details'),
     path('api/bargain/', views.BargainView.as_view(), name='bargain'),
-    path('api/bargain/<int:bargain_id>/accept/', views.AcceptBargainView.as_view(), name='accept_bargain'),
-    path('api/appointments/<int:appointment_id>/accept/', views.AcceptAppointmentView.as_view(), name='accept_appointment'),
+    path('api/bargain/<int:bargain_id>/accept/', views.AcceptOfferView.as_view(), name='accept_offer'), # Handles both user/servicer accepting an offer
+    path('api/bargain/<int:bargain_id>/reject/', views.RejectOfferView.as_view(), name='reject_offer'), # Handles both user/servicer rejecting an offer
+    path('api/appointments/<int:appointment_id>/accept/', views.AcceptAppointmentView.as_view(), name='accept_appointment'), # For servicer to accept initial price
+    path('api/appointments/<int:appointment_id>/confirm/', views.ConfirmAppointmentView.as_view(), name='confirm_appointment'), # For user to confirm final price
+    path('api/appointments/<int:appointment_id>/verify-otp/', views.VerifyOtpView.as_view(), name='verify_otp'), # NEW URL
+    path('api/appointments/<int:appointment_id>/rate-servicer/', views.RateServicerView.as_view(), name='rate_servicer'), # NEW URL for rating
 ]
