@@ -79,6 +79,11 @@ class ServiceProviderDetails(models.Model):
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.0) # Existing rating field
     total_ratings = models.IntegerField(default=0) # New field to sum all ratings
     num_ratings = models.IntegerField(default=0) # New field to count number of ratings
+    bookmarked_appointments = models.ManyToManyField( # New field for bookmarked appointments
+        'Book_Appointment',
+        related_name='bookmarked_by_servicers',
+        blank=True
+    )
 
     def __str__(self):
         return f"{self.full_name} (ID: {self.service_provider_id})"

@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.models import auth
 from .models import CustomUser,Book_Appointment
 from django.contrib.auth.decorators import login_required
@@ -19,7 +19,7 @@ import random
 import string
 import requests
 from opencage.geocoder import OpenCageGeocode
-
+from django.db.models import Exists, OuterRef
 # Initialize OpenCage Geocoder with your API key
 # IMPORTANT: Replace 'YOUR_OPENCAGE_API_KEY' with your actual key if different
 OPENCAGE_API_KEY = 'bc2f8214062b46749200f833a8686371' # Replace with your actual key
@@ -201,7 +201,12 @@ def service_provider_dashboard(request):
 def appointments(request):
     if hasattr(request.user, 'service_provider'):
         provider = request.user.service_provider
-        appointments_list = Book_Appointment.objects.all().order_by('-created_at')
+        # Annotate each appointment with 'is_bookmarked' status
+        appointments_list = Book_Appointment.objects.annotate(
+            is_bookmarked=Exists(
+                provider.bookmarked_appointments.filter(pk=OuterRef('pk'))
+            )
+        ).order_by('-created_at')
     else:
         provider = None
         appointments_list = Book_Appointment.objects.filter(user=request.user).order_by('-created_at')
@@ -212,6 +217,43 @@ def appointments(request):
         'user': request.user
     }
     return render(request,'appointments.html',context)
+
+
+@login_required
+def bookmarked_appointments(request):
+    if not hasattr(request.user, 'service_provider'):
+        messages.error(request, "Only servicers can bookmark appointments.")
+        return redirect('index')
+
+    provider = request.user.service_provider
+    bookmarked = provider.bookmarked_appointments.annotate(
+        is_bookmarked=Exists(
+            provider.bookmarked_appointments.filter(pk=OuterRef('pk'))
+        )
+    ).order_by('-created_at') #
+
+    context = {
+        'bookmarked_appointments': bookmarked,
+        'user': request.user
+    }
+    return render(request, 'bookmark.html', context)
+@login_required
+def my_work(request):
+    if not hasattr(request.user, 'service_provider'):
+        messages.error(request, "Only servicers have a 'My Work' section.")
+        return redirect('index')
+
+    provider = request.user.service_provider
+    accepted_appointments = Book_Appointment.objects.filter( # Get appointments where the current servicer is assigned and status is 'accepted' or 'completed'
+        servicer_assigned=provider,
+        status__in=['accepted', 'completed']
+    ).order_by('-created_at')
+
+    context = {
+        'accepted_appointments': accepted_appointments,
+        'user': request.user
+    }
+    return render(request, 'my_work.html', context)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -231,6 +273,7 @@ class BargainView(LoginRequiredMixin, View):
 
             is_servicer = request.user.user_type == 'servicer'
 
+            # Allow multiple pending offers, but only one from the current servicer/user
             if is_servicer and Bargaining.objects.filter(
                 appointment=appointment,
                 service_provider=request.user.service_provider,
@@ -281,6 +324,7 @@ class AcceptOfferView(LoginRequiredMixin, View):
             if bargain.status != 'pending':
                 return JsonResponse({'success': False, 'error': 'This offer is no longer pending.'}, status=400)
 
+            # A user can only accept a servicer's offer. A servicer can only accept a user's offer.
             if (user.user_type == 'user' and bargain.offered_by == 'servicer') or \
                (user.user_type == 'servicer' and bargain.offered_by == 'user'):
 
@@ -288,23 +332,21 @@ class AcceptOfferView(LoginRequiredMixin, View):
                     if bargain.servicer_offer_price is None:
                         return JsonResponse({'success': False, 'error': 'Servicer offer price is missing'}, status=400)
                     bargain.final_price = bargain.servicer_offer_price
-                    bargain.status = 'user_accepted'
-                else:
+                    bargain.status = 'user_accepted' # User accepted servicer's offer
+                    appointment_servicer = bargain.service_provider # The servicer who made the accepted offer
+                else: # offered_by == 'user'
                     if bargain.user_offer_price is None:
                         return JsonResponse({'success': False, 'error': 'User offer price is missing'}, status=400)
                     bargain.final_price = bargain.user_offer_price
-                    bargain.status = 'servicer_accepted'
+                    bargain.status = 'servicer_accepted' # Servicer accepted user's offer
+                    appointment_servicer = user.service_provider # The servicer who is accepting the user's offer
 
                 bargain.save()
 
                 appointment = bargain.appointment
                 appointment.status = 'accepted'
                 appointment.expected_amount = bargain.final_price
-
-                if bargain.offered_by == 'servicer' and user.user_type == 'user':
-                    appointment.servicer_assigned = bargain.service_provider
-                elif bargain.offered_by == 'user' and user.user_type == 'servicer':
-                    appointment.servicer_assigned = user.service_provider
+                appointment.servicer_assigned = appointment_servicer # Assign the servicer whose offer was accepted or who accepted the user's offer
 
                 if appointment.servicer_assigned:
                     _calculate_and_save_distance(appointment, appointment.servicer_assigned)
@@ -312,7 +354,7 @@ class AcceptOfferView(LoginRequiredMixin, View):
                 appointment.generate_otp()
                 appointment.save()
 
-                # Mark other pending bargains for this appointment as rejected
+                # Mark ALL other pending bargains for this appointment as rejected
                 Bargaining.objects.filter(
                     appointment=appointment,
                     status='pending'
@@ -355,6 +397,7 @@ class RejectOfferView(LoginRequiredMixin, View):
             if bargain.status != 'pending':
                 return JsonResponse({'success': False, 'error': 'This offer is no longer pending.'}, status=400)
 
+            # A user can only reject a servicer's offer. A servicer can only reject a user's offer.
             if (request.user.user_type == 'user' and bargain.offered_by == 'servicer') or \
                (request.user.user_type == 'servicer' and bargain.offered_by == 'user'):
                 bargain.status = 'rejected'
@@ -430,10 +473,14 @@ class AcceptAppointmentView(LoginRequiredMixin, View):
                 }, status=403)
 
             if appointment.status == 'pending':
-                if Bargaining.objects.filter(appointment=appointment, offered_by='user', status='pending').exists():
+                # If there are any pending offers (from either user or other servicers),
+                # the servicer should ideally go through the bargaining process
+                # or explicitly reject existing offers if they want to accept the initial price directly.
+                # For simplicity, we'll prevent direct acceptance if there are *any* pending offers.
+                if Bargaining.objects.filter(appointment=appointment, status='pending').exists():
                     return JsonResponse({
                         'success': False,
-                        'error': 'There are pending user offers. Please accept or reject them first.'
+                        'error': 'There are pending offers for this appointment. Please use the bargaining feature.'
                     }, status=400)
 
                 appointment.status = 'accepted'
@@ -473,7 +520,8 @@ def appointment_details(request, appointment_id):
                 'mobile_number': servicer.mobile_number,
                 'whatsapp_number': servicer.whatsapp_number,
                 'address': servicer.get_full_address(),
-                'rating': str(servicer.rating), # This is the aggregate rating
+                'rating': str(servicer.rating),
+                'appointment_distance_km': str(appointment.distance_km), # Add this line
             }
 
         bargaining_history = []
@@ -491,24 +539,24 @@ def appointment_details(request, appointment_id):
                 'servicer_offer_price': str(bargain.servicer_offer_price) if bargain.servicer_offer_price is not None else None,
                 'user_offer_price': str(bargain.user_offer_price) if bargain.user_offer_price is not None else None,
                 'initial_price': str(bargain.initial_price),
-                'final_price': str(bargain.final_price) if bargain.final_price is not None else None, # Include final_price for each bargain
+                'final_price': str(bargain.final_price) if bargain.final_price is not None else None,
                 'message': bargain.message,
                 'status': bargain.status,
                 'status_display': bargain.get_status_display(),
                 'offered_by': bargain.offered_by,
                 'created_at': bargain.created_at.isoformat(),
                 'updated_at': bargain.updated_at.isoformat(),
-                'servicer_info': bargain_servicer_info,
+                'servicer_info': bargain_servicer_info, # servicer_info for this specific bargain
             })
 
         user_total_price = None
         servicer_earnings = None
         platform_fee_user_amount = 0
         platform_fee_servicer_amount = 0
-        distance_cost = 0
-        final_agreed_price = float(appointment.expected_amount) # Start with expected_amount as the base for calculations
+        distance_cost = 0 # This is the cost, not the distance itself
 
-        # If a bargain was accepted, use its final price as the base
+        final_agreed_price = float(appointment.expected_amount)
+
         accepted_bargain = Bargaining.objects.filter(
             appointment=appointment,
             status__in=['user_accepted', 'servicer_accepted']
@@ -517,7 +565,7 @@ def appointment_details(request, appointment_id):
         if accepted_bargain and accepted_bargain.final_price is not None:
             final_agreed_price = float(accepted_bargain.final_price)
 
-        if appointment.status == 'accepted' or appointment.status == 'completed': # Calculate total prices only if accepted or completed
+        if appointment.status == 'accepted' or appointment.status == 'completed':
             distance_cost = float(appointment.distance_km) * 5
             platform_fee_user_amount = final_agreed_price * 0.05
             platform_fee_servicer_amount = final_agreed_price * 0.10
@@ -540,7 +588,7 @@ def appointment_details(request, appointment_id):
             'custom_issue': appointment.custom_issue,
             'description': appointment.description,
             'booking_id':appointment.booking_id,
-            'expected_amount': str(final_agreed_price), # This will be the current final agreed price
+            'expected_amount': str(final_agreed_price),
             'address': appointment.address,
             'city': appointment.city,
             'state': appointment.state,
@@ -553,15 +601,16 @@ def appointment_details(request, appointment_id):
             'image4': get_image_url(appointment.image4),
             'bargaining_history': bargaining_history,
             'status': appointment.status,
-            'servicer_details': servicer_info,
+            'servicer_details': servicer_info, # General servicer info for the assigned servicer
             'otp': appointment.otp if appointment.otp else None,
             'otp_verified': appointment.otp_verified,
             'user_total_price': user_total_price,
             'servicer_earnings': servicer_earnings,
             'platform_fee_user': f"₹{platform_fee_user_amount:.2f}",
             'platform_fee_servicer': f"₹{platform_fee_servicer_amount:.2f}",
-            'distance_cost': f"₹{distance_cost:.2f}",
-            'appointment_rating': appointment.rating, # Pass existing rating if any
+            'distance_cost': f"₹{distance_cost:.2f}", # This is the distance cost
+            'distance_km': str(appointment.distance_km), # Explicitly pass distance in KM
+            'appointment_rating': appointment.rating,
         }
         return JsonResponse(data)
     except Book_Appointment.DoesNotExist:
@@ -569,7 +618,6 @@ def appointment_details(request, appointment_id):
     except Exception as e:
         print(f"Error in appointment_details: {e}")
         return JsonResponse({'error': f'An unexpected error occurred: {str(e)}'}, status=500)
-
 @method_decorator(csrf_exempt, name='dispatch')
 class VerifyOtpView(LoginRequiredMixin, View):
     @method_decorator(require_POST, name='dispatch')
@@ -644,4 +692,23 @@ class RateServicerView(LoginRequiredMixin, View):
             return JsonResponse({'success': False, 'error': 'Appointment not found.'}, status=404)
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)}, status=400)
-        
+
+@method_decorator(csrf_exempt, name='dispatch')
+class BookmarkAppointmentView(LoginRequiredMixin, View):
+    @method_decorator(require_POST, name='dispatch')
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    def post(self, request, appointment_id):
+        if request.user.user_type != 'servicer':
+            return JsonResponse({'success': False, 'error': 'Only servicers can bookmark appointments.'}, status=403)
+
+        appointment = get_object_or_404(Book_Appointment, id=appointment_id)
+        servicer_profile = request.user.service_provider
+
+        if appointment.bookmarked_by_servicers.filter(id=servicer_profile.id).exists():
+            servicer_profile.bookmarked_appointments.remove(appointment)
+            return JsonResponse({'success': True, 'bookmarked': False, 'message': 'Appointment unbookmarked.'})
+        else:
+            servicer_profile.bookmarked_appointments.add(appointment)
+            return JsonResponse({'success': True, 'bookmarked': True, 'message': 'Appointment bookmarked.'})

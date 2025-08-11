@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointments | SkillSetGo</title>
+    <title>My Accepted Work | SkillSetGo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -157,6 +157,7 @@
             box-shadow: var(--shadow-sm);
         }
 
+        /* Modal Specific Styles - Added for My Work to use the same modal structure */
         .appointment-modal .modal-content {
             border-radius: 12px;
             border: none;
@@ -375,119 +376,76 @@
         .rating-section .star:not(.selected):hover ~ .star {
             color: #e0e0e0;
         }
-
-        .bookmark-btn {
-            background: none;
-            border: none;
-            color: #ccc;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .bookmark-btn.bookmarked {
-            color: var(--accent-color);
-        }
-
     </style>
 </head>
 <body>
-    {% csrf_token %} {# ADDED THIS LINE #}
+    {% csrf_token %} {# Required for AJAX calls #}
     {% include 'header.html' %}
 
     <main class="main-container">
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    {% if user.user_type == 'servicer' and not provider.is_verified %}
-                    <div class="alert alert-warning">
-                        <h5 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i> Account Not Verified</h5>
-                        <p>Your service provider account is not yet verified. Please complete your profile and verification process to access appointments.</p>
-                        <hr>
-                        <a href="{% url 'service_provider_dashboard' %}" class="btn btn-sm btn-warning">Complete Verification</a>
-                    </div>
-                    {% endif %}
+            <h4 class="section-title mb-4"><i class="fas fa-briefcase me-2"></i> My Accepted Work</h4>
 
-                    <h4 class="section-title"><i class="fas fa-calendar-check me-2"></i> Your Appointments</h4>
-
-                    <div class="appointments-grid">
-                        {% if appointments %}
-                            {% for appointment in appointments %}
-                            <div class="appointment-card animate__animated animate__fadeInUp">
-                                <div class="appointment-header">
-                                    <h5 class="appointment-title">
-                                        {% if appointment.issue == 'others' %}
-                                            {{ appointment.custom_issue }}
-                                        {% else %}
-                                            {{ appointment.get_issue_display }}
-                                        {% endif %}
-                                    </h5>
-                                    <span class="appointment-status
-                                        {% if appointment.status == 'completed' %}status-completed
-                                        {% elif appointment.status == 'pending' %}status-pending
-                                        {% elif appointment.status == 'accepted' %}status-accepted
-                                        {% else %}status-cancelled{% endif %}">
-                                        {{ appointment.get_status_display }}
-                                    </span>
-                                </div>
-
-                                <div class="appointment-details">
-                                    <div class="appointment-detail">
-                                        <i class="fas fa-user"></i>
-                                        <span>{{ appointment.full_name }}</span>
-                                    </div>
-                                    <div class="appointment-detail">
-                                        <i class="fas fa-clock"></i>
-                                        <span>{{ appointment.expected_time|date:"F j, Y" }} at {{ appointment.expected_time|time:"g:i A" }}</span>
-                                    </div>
-                                    <div class="appointment-detail">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span>{{ appointment.address|truncatechars:40 }}</span>
-                                    </div>
-                                </div>
-
-                                <div class="appointment-footer">
-                                    <div class="appointment-price">
-                                        <i class="fas fa-rupee-sign"></i> {{ appointment.expected_amount }}
-                                    </div>
-                                    <div>
-                                        <button class="btn btn-sm btn-outline-primary me-2"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#appointmentModal"
-                                                onclick="loadAppointmentDetails({{ appointment.id }})">
-                                            Details
-                                        </button>
-                                        {% if user.user_type == 'servicer' %}
-                                        <button class="bookmark-btn {% if appointment.is_bookmarked %}bookmarked{% endif %}"
-                                                onclick="toggleBookmark(this, {{ appointment.id }})">
-                                            <i class="fas fa-bookmark"></i>
-                                        </button>
-                                        {% endif %}
-                                        {% if appointment.status == 'pending' and user.user_type == 'servicer' %}
-                                            <button class="btn btn-sm btn-success" onclick="acceptAppointmentConfirmation({{ appointment.id }})">Accept Initial Price</button>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        {% else %}
-                            <div class="empty-state">
-                                <i class="far fa-calendar-times fa-3x mb-3 text-muted"></i>
-                                <h5>No Appointments Found</h5>
-                                <p class="text-muted mb-4">You don't have any appointments scheduled yet.</p>
-                                {% if user.user_type == 'servicer' %}
-                                <a href="{% url 'service_provider_dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+            <div class="appointments-grid">
+                {% if accepted_appointments %}
+                    {% for appointment in accepted_appointments %}
+                    <div class="appointment-card animate__animated animate__fadeInUp">
+                        <div class="appointment-header">
+                            <h5 class="appointment-title">
+                                {% if appointment.issue == 'others' %}
+                                    {{ appointment.custom_issue }}
                                 {% else %}
-                                <a href="{% url 'book_appointment' %}" class="btn btn-primary">Book New Appointment</a>
+                                    {{ appointment.get_issue_display }}
                                 {% endif %}
+                            </h5>
+                            <span class="appointment-status status-{{ appointment.status }}">
+                                {{ appointment.get_status_display }}
+                            </span>
+                        </div>
+
+                        <div class="appointment-details">
+                            <div class="appointment-detail">
+                                <i class="fas fa-user"></i>
+                                <span>{{ appointment.full_name }}</span>
                             </div>
-                        {% endif %}
+                            <div class="appointment-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>{{ appointment.expected_time|date:"F j, Y" }} at {{ appointment.expected_time|time:"g:i A" }}</span>
+                            </div>
+                            <div class="appointment-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ appointment.address|truncatechars:40 }}</span>
+                            </div>
+                        </div>
+
+                        <div class="appointment-footer">
+                            <div class="appointment-price">
+                                <i class="fas fa-rupee-sign"></i> {{ appointment.expected_amount }}
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#appointmentModal"
+                                        onclick="loadAppointmentDetails({{ appointment.id }})">
+                                    Details
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="far fa-clipboard fa-3x mb-3 text-muted"></i>
+                        <h5>No Accepted Work Found</h5>
+                        <p class="text-muted mb-4">You haven't accepted any appointments yet.</p>
+                        <a href="{% url 'appointments' %}" class="btn btn-primary">Browse Available Appointments</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </main>
 
+    {# Start of Modal HTML - COPIED FROM appointments.html to ensure details button works #}
     <div class="modal fade appointment-modal" id="appointmentModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -592,6 +550,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {# Bargain and Accept buttons from appointments.html are usually not shown here, as this is 'accepted work' #}
+                    {# However, if a servicer can re-bargain or confirm after a previous interaction, you might conditionally show them #}
                     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bargainModal"
                             id="bargainButton" style="display: none;">
                         Bargain Price
@@ -604,6 +564,7 @@
         </div>
     </div>
 
+    {# Bargain Modal - COPIED FROM appointments.html #}
     <div class="modal fade" id="bargainModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -632,431 +593,13 @@
             </div>
         </div>
     </div>
+    {# End of Bargain Modal #}
 
     {% include 'footer.html' %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    // Animation for cards when they come into view
-    document.addEventListener('DOMContentLoaded', function() {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate__animated', 'animate__fadeInUp');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.appointment-card').forEach(card => {
-            observer.observe(card);
-        });
-    });
-
-    let currentAppointmentId = null;
-    let initialPrice = 0;
-    const isServicer = {% if user.user_type == 'servicer' %}true{% else %}false{% endif %};
-    const currentUserId = {{ user.id }}; // Get current user's ID
-    let selectedRating = 0; // To store the rating selected by the user
-
-    function getCsrfToken() {
-        // Ensure the input exists before trying to access its value
-        const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
-        if (csrfInput) {
-            return csrfInput.value;
-        }
-        console.error("CSRF token input not found in the DOM.");
-        return ''; // Return an empty string or throw an error as appropriate
-    }
-
-    function toggleBookmark(button, appointmentId) {
-        fetch(`/api/appointments/${appointmentId}/bookmark/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()
-            },
-            body: JSON.stringify({})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                if (data.bookmarked) {
-                    button.classList.add('bookmarked');
-                    alert('Appointment bookmarked!');
-                } else {
-                    button.classList.remove('bookmarked');
-                    alert('Appointment unbookmarked!');
-                }
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error toggling bookmark:', error);
-            alert('Failed to toggle bookmark.');
-        });
-    }
-
-    function prepareBargain(appointmentId, price) {
-        currentAppointmentId = appointmentId;
-        initialPrice = price;
-        const initialPriceElem = document.getElementById('initialPrice');
-        if (initialPriceElem) initialPriceElem.value = '₹' + price;
-        const offerPriceElem = document.getElementById('offerPrice');
-        if (offerPriceElem) offerPriceElem.value = '';
-        const offerMessageElem = document.getElementById('offerMessage');
-        if (offerMessageElem) offerMessageElem.value = '';
-    }
-
-    function submitBargain() {
-        const offerPriceElem = document.getElementById('offerPrice');
-        const offerMessageElem = document.getElementById('offerMessage');
-
-        const offerPrice = offerPriceElem ? offerPriceElem.value : '';
-        const offerMessage = offerMessageElem ? offerMessageElem.value : '';
-
-        if (!offerPrice || isNaN(offerPrice) || parseFloat(offerPrice) <= 0) {
-            alert('Please enter a valid positive price.');
-            return;
-        }
-
-        const payload = {
-            appointment_id: currentAppointmentId,
-            message: offerMessage
-        };
-
-        if (isServicer) {
-            payload.servicer_offer = offerPrice;
-        } else {
-            payload.user_offer = offerPrice;
-        }
-
-        fetch('/api/bargain/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert('Your offer has been submitted!');
-                const bargainModalElement = document.getElementById('bargainModal');
-                const bargainModal = bootstrap.Modal.getInstance(bargainModalElement) || new bootstrap.Modal(bargainModalElement);
-                bargainModal.hide();
-
-                loadAppointmentDetails(currentAppointmentId);
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error submitting offer:', error);
-            alert('Failed to submit offer: ' + error.message);
-        });
-    }
-
-    function acceptOffer(bargainId) {
-        fetch(`/api/bargain/${bargainId}/accept/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert('Offer accepted!');
-                loadAppointmentDetails(currentAppointmentId);
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error accepting offer:', error);
-            alert('Failed to accept offer: ' + error.message);
-        });
-    }
-
-    function rejectOffer(bargainId) {
-        if (!confirm('Are you sure you want to reject this offer?')) return;
-
-        fetch(`/api/bargain/${bargainId}/reject/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert('Offer rejected');
-                loadAppointmentDetails(currentAppointmentId);
-            } else {
-                alert('Error: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error rejecting offer:', error);
-            alert('Failed to reject offer: ' + error.message);
-        });
-    }
-
-    function acceptAppointmentConfirmation(appointmentId) {
-        if (confirm('Are you sure you want to accept this appointment at the requested price?')) {
-            fetch(`/api/appointments/${appointmentId}/accept/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCsrfToken()
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('Appointment accepted successfully!');
-                    const appointmentModalElement = document.getElementById('appointmentModal');
-                    const appointmentModal = bootstrap.Modal.getInstance(appointmentModalElement) || new bootstrap.Modal(appointmentModalElement);
-                    appointmentModal.hide();
-                    location.reload();
-                } else {
-                    alert('Error: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error accepting appointment:', error);
-                alert('Failed to accept appointment: ' + error.message);
-            });
-        }
-    }
-
-    function confirmFinalPrice(appointmentId) {
-        if (confirm('Are you sure you want to confirm the final agreed price and accept this appointment?')) {
-            fetch(`/api/appointments/${appointmentId}/confirm/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCsrfToken()
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('Appointment confirmed successfully at the final price!');
-                    const appointmentModalElement = document.getElementById('appointmentModal');
-                    const appointmentModal = bootstrap.Modal.getInstance(appointmentModalElement) || new bootstrap.Modal(appointmentModalElement);
-                    appointmentModal.hide();
-                    location.reload();
-                } else {
-                    alert('Error: ' + data.error);
-                }
-            })
-            .catch(error => {
-                console.error('Error confirming final price:', error);
-                alert('Failed to confirm appointment at final price: ' + error.message);
-            });
-        }
-    }
-
-    // OTP Verification
-    function verifyOtp() {
-        const otpInputElem = document.getElementById('servicer-otp-input');
-        const otpErrorElem = document.getElementById('otp-error');
-        const otpInput = otpInputElem ? otpInputElem.value : '';
-
-        if (otpErrorElem) otpErrorElem.style.display = 'none';
-
-        if (!otpInput) {
-            if (otpErrorElem) {
-                otpErrorElem.textContent = 'Please enter the OTP.';
-                otpErrorElem.style.display = 'block';
-            }
-            return;
-        }
-
-        fetch(`/api/appointments/${currentAppointmentId}/verify-otp/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()
-            },
-            body: JSON.stringify({ otp: otpInput })
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert(data.message);
-                const appointmentModalElement = document.getElementById('appointmentModal');
-                const appointmentModal = bootstrap.Modal.getInstance(appointmentModalElement) || new bootstrap.Modal(appointmentModalElement);
-                appointmentModal.hide();
-                location.reload();
-            } else {
-                if (otpErrorElem) {
-                    otpErrorElem.textContent = data.error;
-                    otpErrorElem.style.display = 'block';
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error verifying OTP:', error);
-            if (otpErrorElem) {
-                otpErrorElem.textContent = 'Failed to verify OTP: ' + error.message;
-                otpErrorElem.style.display = 'block';
-            }
-        });
-    }
-
-    // Rating functionality
-    function setupRatingStars(initialRating = 0) {
-        const starsContainer = document.getElementById('servicer-stars');
-        if (!starsContainer) return;
-
-        starsContainer.innerHTML = '';
-        selectedRating = initialRating;
-
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('i');
-            star.classList.add('far', 'fa-star', 'star');
-            if (i <= selectedRating) {
-                star.classList.remove('far');
-                star.classList.add('fas', 'selected');
-            }
-            star.setAttribute('data-rating', i);
-            star.addEventListener('click', function() {
-                selectedRating = parseInt(this.getAttribute('data-rating'));
-                updateStarDisplay();
-            });
-            star.addEventListener('mouseover', function() {
-                highlightStars(parseInt(this.getAttribute('data-rating')));
-            });
-            star.addEventListener('mouseout', function() {
-                updateStarDisplay();
-            });
-            starsContainer.appendChild(star);
-        }
-        updateStarDisplay();
-    }
-
-    function updateStarDisplay() {
-        const stars = document.querySelectorAll('#servicer-stars .star');
-        stars.forEach(star => {
-            const rating = parseInt(star.getAttribute('data-rating'));
-            if (rating <= selectedRating) {
-                star.classList.remove('far');
-                star.classList.add('fas', 'selected');
-            } else {
-                star.classList.remove('fas', 'selected');
-                star.classList.add('far');
-            }
-        });
-    }
-
-    function highlightStars(hoverRating) {
-        const stars = document.querySelectorAll('#servicer-stars .star');
-        stars.forEach(star => {
-            const rating = parseInt(star.getAttribute('data-rating'));
-            if (rating <= hoverRating) {
-                star.classList.remove('far');
-                star.classList.add('fas');
-            } else {
-                star.classList.remove('fas');
-                star.classList.add('far');
-            }
-        });
-    }
-
-    function submitRating() {
-        const ratingMessageElem = document.getElementById('rating-message');
-        if (ratingMessageElem) ratingMessageElem.style.display = 'none';
-
-        if (selectedRating === 0) {
-            if (ratingMessageElem) {
-                ratingMessageElem.textContent = 'Please select a rating before submitting.';
-                ratingMessageElem.classList.remove('text-success');
-                ratingMessageElem.classList.add('text-danger');
-                ratingMessageElem.style.display = 'block';
-            }
-            return;
-        }
-
-        fetch(`/api/appointments/${currentAppointmentId}/rate-servicer/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCsrfToken()
-            },
-            body: JSON.stringify({ rating: selectedRating })
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                if (ratingMessageElem) {
-                    ratingMessageElem.textContent = data.message;
-                    ratingMessageElem.classList.remove('text-danger');
-                    ratingMessageElem.classList.add('text-success');
-                    ratingMessageElem.style.display = 'block';
-                }
-                document.getElementById('submitRatingBtn').disabled = true;
-                loadAppointmentDetails(currentAppointmentId);
-            } else {
-                if (ratingMessageElem) {
-                    ratingMessageElem.textContent = data.error;
-                    ratingMessageElem.classList.remove('text-success');
-                    ratingMessageElem.classList.add('text-danger');
-                    ratingMessageElem.style.display = 'block';
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error submitting rating:', error);
-            if (ratingMessageElem) {
-                ratingMessageElem.textContent = 'Failed to submit rating: ' + error.message;
-                ratingMessageElem.style.display = 'block';
-            }
-        });
-    }
-
-    function loadAppointmentDetails(appointmentId) {
+    <script>
+        function loadAppointmentDetails(appointmentId) {
         currentAppointmentId = appointmentId;
 
         // Clear previous content
@@ -1268,119 +811,420 @@
                 alert('Failed to load appointment details: ' + error.message);
             });
     }
-
-    function getStatusColor(status) {
-        switch(status) {
-            case 'pending': return 'warning';
-            case 'accepted': return 'primary';
-            case 'completed': return 'success';
-            case 'cancelled': return 'danger';
-            default: return 'secondary';
-        }
-    }
-
-    function getBargainStatusColor(status) {
-        switch(status) {
-            case 'pending': return 'warning';
-            case 'accepted': return 'success';
-            case 'rejected': return 'danger';
-            case 'user_accepted': return 'info';
-            case 'servicer_accepted': return 'primary';
-            default: return 'secondary';
-        }
-    }
-
-    // This function will be in your HTML template files (appointments.html, book_appointment.html, my_work.html)
-function renderBargainHistory(history, appointmentStatus, currentUserId) {
-    const container = document.getElementById('bargainHistory');
-    if (!container) return;
-    container.innerHTML = '';
-
-    history.forEach(item => {
-        const historyItem = document.createElement('div');
-        historyItem.className = `bargain-item ${item.status.replace('_', '-')}`;
-
-        let offerPrice;
-        if (item.offered_by === 'servicer') {
-            offerPrice = item.servicer_offer_price;
-        } else {
-            offerPrice = item.user_offer_price;
+        // Get CSRF Token for AJAX requests
+        function getCsrfToken() {
+            const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (csrfInput) {
+                return csrfInput.value;
+            }
+            console.error("CSRF token input not found in the DOM.");
+            return ''; // Fallback, though an error would be better handled upstream
         }
 
-        const initialPriceFormatted = parseFloat(item.initial_price).toFixed(2);
-        const offerPriceFormatted = (offerPrice !== null && offerPrice !== 'None' && offerPrice !== undefined) ? parseFloat(offerPrice).toFixed(2) : 'N/A';
+        let currentAppointmentId = null;
+        const isServicer = {% if user.user_type == 'servicer' %}true{% else %}false{% endif %};
+        const currentUserId = {{ user.id }}; // Access Django user ID
+        let selectedRating = 0; // For rating functionality
 
-        let servicerDetailsHtml = '';
-        if (item.offered_by === 'servicer' && item.servicer_info) {
-            // Check if appointment_distance_km exists before adding it
-            const distanceHtml = item.servicer_info.appointment_distance_km ?
-                                 `(${item.servicer_info.appointment_distance_km} km)` : '';
-            servicerDetailsHtml = `
-                <small class="text-muted">
-                    Servicer: ${item.servicer_info.full_name} (ID: ${item.servicer_info.id})
-                    ${item.servicer_info.rating ? `★ ${item.servicer_info.rating}` : ''}
-                    (distance: ${item.servicer_info.appointment_distance_km})
-                </small><br>
-            `;
+        // Rating functions (copied from appointments.html)
+        function setupRatingStars(initialRating = 0) {
+            const starsContainer = document.getElementById('servicer-stars');
+            if (!starsContainer) return;
+
+            starsContainer.innerHTML = '';
+            selectedRating = initialRating;
+
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement('i');
+                star.classList.add('far', 'fa-star', 'star');
+                if (i <= selectedRating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas', 'selected');
+                }
+                star.setAttribute('data-rating', i);
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.getAttribute('data-rating'));
+                    updateStarDisplay();
+                });
+                star.addEventListener('mouseover', function() {
+                    highlightStars(parseInt(this.getAttribute('data-rating')));
+                });
+                star.addEventListener('mouseout', function() {
+                    updateStarDisplay();
+                });
+                starsContainer.appendChild(star);
+            }
+            updateStarDisplay();
         }
 
-        let priceHtml = `
-            <div class="price-comparison">
-                <span class="bargain-price">₹${initialPriceFormatted}</span>
-                <i class="fas fa-arrow-right"></i>
-                <span class="bargain-price">₹${offerPriceFormatted}</span>
-            </div>
-        `;
+        function updateStarDisplay() {
+            const stars = document.querySelectorAll('#servicer-stars .star');
+            stars.forEach(star => {
+                const rating = parseInt(star.getAttribute('data-rating'));
+                if (rating <= selectedRating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas', 'selected');
+                } else {
+                    star.classList.remove('fas', 'selected');
+                    star.classList.add('far');
+                }
+            });
+        }
 
-        let actionButtons = '';
-        const canAct = (appointmentStatus === 'pending' && item.status === 'pending');
+        function highlightStars(hoverRating) {
+            const stars = document.querySelectorAll('#servicer-stars .star');
+            stars.forEach(star => {
+                const rating = parseInt(star.getAttribute('data-rating'));
+                if (rating <= hoverRating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
 
-        if (canAct) {
-            if (isServicer && item.offered_by === 'user') {
-                actionButtons = `
-                    <div class="bargain-actions">
-                        <button class="btn btn-sm btn-success"
-                                onclick="acceptOffer(${item.id})">
-                            <i class="fas fa-check"></i> Accept
-                        </button>
-                        <button class="btn btn-sm btn-danger"
-                                onclick="rejectOffer(${item.id})">
-                            <i class="fas fa-times"></i> Reject
-                        </button>
-                    </div>
-                `;
-            } else if (!isServicer && item.offered_by === 'servicer') {
-                actionButtons = `
-                    <div class="bargain-actions">
-                        <button class="btn btn-sm btn-success"
-                                onclick="acceptOffer(${item.id})">
-                            <i class="fas fa-check"></i> Accept
-                        </button>
-                        <button class="btn btn-sm btn-danger"
-                                onclick="rejectOffer(${item.id})">
-                            <i class="fas fa-times"></i> Reject
-                        </button>
-                    </div>
-                `;
+        function submitRating() {
+            const ratingMessageElem = document.getElementById('rating-message');
+            if (ratingMessageElem) ratingMessageElem.style.display = 'none';
+
+            if (selectedRating === 0) {
+                if (ratingMessageElem) {
+                    ratingMessageElem.textContent = 'Please select a rating before submitting.';
+                    ratingMessageElem.classList.remove('text-success');
+                    ratingMessageElem.classList.add('text-danger');
+                    ratingMessageElem.style.display = 'block';
+                }
+                return;
+            }
+
+            fetch(`/api/appointments/${currentAppointmentId}/rate-servicer/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ rating: selectedRating })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    if (ratingMessageElem) {
+                        ratingMessageElem.textContent = data.message;
+                        ratingMessageElem.classList.remove('text-danger');
+                        ratingMessageElem.classList.add('text-success');
+                        ratingMessageElem.style.display = 'block';
+                    }
+                    document.getElementById('submitRatingBtn').disabled = true;
+                    loadAppointmentDetails(currentAppointmentId);
+                } else {
+                    if (ratingMessageElem) {
+                        ratingMessageElem.textContent = data.error;
+                        ratingMessageElem.classList.remove('text-success');
+                        ratingMessageElem.classList.add('text-danger');
+                        ratingMessageElem.style.display = 'block';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting rating:', error);
+                if (ratingMessageElem) {
+                    ratingMessageElem.textContent = 'Failed to submit rating: ' + error.message;
+                    ratingMessageElem.style.display = 'block';
+                }
+            });
+        }
+
+        // Bargain functions (copied from appointments.html)
+        function prepareBargain(appointmentId, price) {
+            currentAppointmentId = appointmentId;
+            initialPrice = price;
+            const initialPriceElem = document.getElementById('initialPrice');
+            if (initialPriceElem) initialPriceElem.value = '₹' + price;
+            const offerPriceElem = document.getElementById('offerPrice');
+            if (offerPriceElem) offerPriceElem.value = '';
+            const offerMessageElem = document.getElementById('offerMessage');
+            if (offerMessageElem) offerMessageElem.value = '';
+        }
+
+        function submitBargain() {
+            const offerPriceElem = document.getElementById('offerPrice');
+            const offerMessageElem = document.getElementById('offerMessage');
+
+            const offerPrice = offerPriceElem ? offerPriceElem.value : '';
+            const offerMessage = offerMessageElem ? offerMessageElem.value : '';
+
+            if (!offerPrice || isNaN(offerPrice) || parseFloat(offerPrice) <= 0) {
+                alert('Please enter a valid positive price.');
+                return;
+            }
+
+            const payload = {
+                appointment_id: currentAppointmentId,
+                message: offerMessage
+            };
+
+            if (isServicer) {
+                payload.servicer_offer = offerPrice;
+            } else {
+                payload.user_offer = offerPrice;
+            }
+
+            fetch('/api/bargain/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Your offer has been submitted!');
+                    const bargainModalElement = document.getElementById('bargainModal');
+                    const bargainModal = bootstrap.Modal.getInstance(bargainModalElement) || new bootstrap.Modal(bargainModalElement);
+                    bargainModal.hide();
+
+                    loadAppointmentDetails(currentAppointmentId);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error submitting offer:', error);
+                alert('Failed to submit offer: ' + error.message);
+            });
+        }
+
+        function acceptOffer(bargainId) {
+            fetch(`/api/bargain/${bargainId}/accept/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Offer accepted!');
+                    loadAppointmentDetails(currentAppointmentId);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error accepting offer:', error);
+                alert('Failed to accept offer: ' + error.message);
+            });
+        }
+
+        function rejectOffer(bargainId) {
+            if (!confirm('Are you sure you want to reject this offer?')) return;
+
+            fetch(`/api/bargain/${bargainId}/reject/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Offer rejected');
+                    loadAppointmentDetails(currentAppointmentId);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error rejecting offer:', error);
+                alert('Failed to reject offer: ' + error.message);
+            });
+        }
+
+        // OTP/Completion functions (copied from appointments.html)
+        function verifyOtp() {
+            const otpInputElem = document.getElementById('servicer-otp-input');
+            const otpErrorElem = document.getElementById('otp-error');
+            const otpInput = otpInputElem ? otpInputElem.value : '';
+
+            if (otpErrorElem) otpErrorElem.style.display = 'none';
+
+            if (!otpInput) {
+                if (otpErrorElem) {
+                    otpErrorElem.textContent = 'Please enter the OTP.';
+                    otpErrorElem.style.display = 'block';
+                }
+                return;
+            }
+
+            fetch(`/api/appointments/${currentAppointmentId}/verify-otp/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({ otp: otpInput })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || 'Unknown error occurred'); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    const appointmentModalElement = document.getElementById('appointmentModal');
+                    const appointmentModal = bootstrap.Modal.getInstance(appointmentModalElement) || new bootstrap.Modal(appointmentModalElement);
+                    appointmentModal.hide();
+                    location.reload();
+                } else {
+                    if (otpErrorElem) {
+                        otpErrorElem.textContent = data.error;
+                        otpErrorElem.style.display = 'block';
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error verifying OTP:', error);
+                if (otpErrorElem) {
+                    otpErrorElem.textContent = 'Failed to verify OTP: ' + error.message;
+                    otpErrorElem.style.display = 'block';
+                }
+            });
+        }
+
+        // Helper functions for status colors and rendering bargaining history
+        function getStatusColor(status) {
+            switch(status) {
+                case 'pending': return 'warning';
+                case 'accepted': return 'primary';
+                case 'completed': return 'success';
+                case 'cancelled': return 'danger';
+                default: return 'secondary';
             }
         }
 
-        historyItem.innerHTML = `
-            ${priceHtml}
-            <div class="bargain-meta">
-                ${servicerDetailsHtml}
-                Offered by ${item.offered_by === 'servicer' ? 'Servicer' : 'You'}
-                on ${new Date(item.created_at).toLocaleString()}
-                <span class="badge bg-${getBargainStatusColor(item.status)} ms-2">${item.status_display}</span>
-            </div>
-            ${item.message ? `<div class="bargain-message">${item.message}</div>` : ''}
-            ${actionButtons}
-        `;
-        container.appendChild(historyItem);
-    });
-}
+        function getBargainStatusColor(status) {
+            switch(status) {
+                case 'pending': return 'warning';
+                case 'accepted': return 'success';
+                case 'rejected': return 'danger';
+                case 'user_accepted': return 'info';
+                case 'servicer_accepted': return 'primary';
+                default: return 'secondary';
+            }
+        }
 
+        function renderBargainHistory(history, appointmentStatus, currentUserId) {
+            const container = document.getElementById('bargainHistory');
+            if (!container) return;
+            container.innerHTML = '';
 
-</script>
+            history.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = `bargain-item ${item.status.replace('_', '-')}`;
+
+                let offerPrice;
+                if (item.offered_by === 'servicer') {
+                    offerPrice = item.servicer_offer_price;
+                } else {
+                    offerPrice = item.user_offer_price;
+                }
+
+                const initialPriceFormatted = parseFloat(item.initial_price).toFixed(2);
+                const offerPriceFormatted = (offerPrice !== null && offerPrice !== 'None' && offerPrice !== undefined) ? parseFloat(offerPrice).toFixed(2) : 'N/A';
+
+                let servicerDetailsHtml = '';
+                if (item.offered_by === 'servicer' && item.servicer_info) {
+                    servicerDetailsHtml = `
+                        <small class="text-muted">
+                            Servicer: ${item.servicer_info.full_name} (ID: ${item.servicer_info.id})
+                            ${item.servicer_info.rating ? `★ ${item.servicer_info.rating}` : ''}
+                        </small><br>
+                    `;
+                }
+
+                let priceHtml = `
+                    <div class="price-comparison">
+                        <span class="bargain-price">₹${initialPriceFormatted}</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <span class="bargain-price">₹${offerPriceFormatted}</span>
+                    </div>
+                `;
+
+                let actionButtons = '';
+                const canAct = (appointmentStatus === 'pending' && item.status === 'pending');
+
+                if (canAct) {
+                    if (isServicer && item.offered_by === 'user') { // Servicer can accept/reject user's pending offers
+                        actionButtons = `
+                            <div class="bargain-actions">
+                                <button class="btn btn-sm btn-success"
+                                        onclick="acceptOffer(${item.id})">
+                                    <i class="fas fa-check"></i> Accept
+                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="rejectOffer(${item.id})">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            </div>
+                        `;
+                    } else if (!isServicer && item.offered_by === 'servicer') { // User can accept/reject servicer's pending offers
+                        actionButtons = `
+                            <div class="bargain-actions">
+                                <button class="btn btn-sm btn-success"
+                                        onclick="acceptOffer(${item.id})">
+                                    <i class="fas fa-check"></i> Accept
+                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="rejectOffer(${item.id})">
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                            </div>
+                        `;
+                    }
+                }
+
+                historyItem.innerHTML = `
+                    ${priceHtml}
+                    <div class="bargain-meta">
+                        ${servicerDetailsHtml}
+                        Offered by ${item.offered_by === 'servicer' ? 'Servicer' : 'You'}
+                        on ${new Date(item.created_at).toLocaleString()}
+                        <span class="badge bg-${getBargainStatusColor(item.status)} ms-2">${item.status_display}</span>
+                    </div>
+                    ${item.message ? `<div class="bargain-message">${item.message}</div>` : ''}
+                    ${actionButtons}
+                `;
+                container.appendChild(historyItem);
+            });
+        }
+    </script>
 </body>
 </html>

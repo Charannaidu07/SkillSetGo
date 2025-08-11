@@ -131,7 +131,7 @@
 
         .appointment-card {
             transition: all 0.3s;
-            border-left: 4px solid var(--primary-color);
+            border-left: 4_pixel solid var(--primary-color);
         }
 
         .appointment-card:hover {
@@ -161,9 +161,9 @@
             left: 0;
             top: 0;
             height: 100%;
-            width: 4px;
+            width: 4_pixel;
             background-color: var(--primary-color);
-            border-radius: 2px;
+            border-radius: 2_pixel;
         }
 
         .form-label {
@@ -181,7 +181,7 @@
             border-radius: 0.5rem;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            border: 1px solid #e3e6f0;
+            border: 1_pixel solid #e3e6f0;
             max-height: 200px;
             overflow-y: auto;
         }
@@ -230,7 +230,7 @@
     </style>
     <style>
         .bargaining-history {
-            border-top: 1px solid #eee;
+            border-top: 1_pixel solid #eee;
             padding-top: 1rem;
         }
         .bargain-item {
@@ -238,7 +238,7 @@
             border-radius: 8px;
             padding: 1rem;
             margin-bottom: 1rem;
-            border: 1px solid #e0e0e0; /* Subtle border */
+            border: 1_pixel solid #e0e0e0; /* Subtle border */
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Subtle shadow for each item */
         }
         .bargain-price {
@@ -274,7 +274,7 @@
         }
 
         .bargaining-history {
-            border-top: 1px solid #eee;
+            border-top: 1_pixel solid #eee;
             padding-top: 1rem;
             margin-top: 1.5rem;
         }
@@ -284,7 +284,7 @@
             border-radius: 8px;
             padding: 1rem;
             margin-bottom: 1rem;
-            border-left: 3px solid #4e73df;
+            border-left: 3_pixel solid #4e73df;
         }
 
         .gallery-item {
@@ -298,7 +298,7 @@
             font-style: italic;
         }
         .bargain-actions {
-            border-top: 1px solid #eee;
+            border-top: 1_pixel solid #eee;
             padding-top: 1rem;
             text-align: center;
         }
@@ -317,7 +317,7 @@
             border-radius: 8px;
             padding: 1rem;
             margin-bottom: 1rem;
-            border-left: 3px solid #4e73df;
+            border-left: 3_pixel solid #4e73df;
         }
 
         .bargain-item.accepted {
@@ -347,7 +347,7 @@
         .bargain-actions {
             margin-top: 1rem;
             padding-top: 1rem;
-            border-top: 1px solid #eee;
+            border-top: 1_pixel solid #eee;
         }
 
         .btn-sm {
@@ -358,7 +358,7 @@
 
         .otp-section {
             background-color: #f0f8ff;
-            border: 1px solid #cceeff;
+            border: 1_pixel solid #cceeff;
             border-radius: 8px;
             padding: 1.5rem;
             margin-top: 1.5rem;
@@ -377,8 +377,8 @@
             letter-spacing: 0.1em;
             text-align: center;
             padding: 0.5rem;
-            border: 2px dashed #28a745;
-            border-radius: 5px;
+            border: 2_pixel dashed #28a745;
+            border-radius: 5_pixel;
             display: inline-block;
             background-color: #e9ffe9;
         }
@@ -395,13 +395,13 @@
             height: 50px;
             font-size: 1.5rem;
             text-align: center;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
+            border: 1_pixel solid #ced4da;
+            border-radius: 5_pixel;
         }
 
         .total-price-section {
             background-color: #e6ffe6;
-            border: 1px solid #a3e9a4;
+            border: 1_pixel solid #a3e9a4;
             border-radius: 8px;
             padding: 1.5rem;
             margin-top: 1.5rem;
@@ -422,7 +422,7 @@
         /* Rating Section Styles */
         .rating-section {
             background-color: #f7f7f7;
-            border: 1px solid #e0e0e0;
+            border: 1_pixel solid #e0e0e0;
             border-radius: 8px;
             padding: 1.5rem;
             margin-top: 1.5rem;
@@ -729,6 +729,7 @@
                                                 {% endif %}
                                             </p>
                                             <p class="card-text">{{ appointment.description|truncatechars:100 }}</p>
+                                            
                                             <div class="d-flex justify-content-between align-items-center mt-3">
                                                 <div>
                                                     <span class="fw-bold text-primary">₹{{ appointment.expected_amount }}</span>
@@ -739,6 +740,7 @@
                                                         data-bs-toggle="modal" data-bs-target="#appointmentDetailsModal">
                                                     View Details
                                                 </button>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -800,8 +802,6 @@
                         <p><strong>Distance Cost (₹5/km):</strong> <span id="distance-cost"></span></p>
                         <p><strong>Platform Fee (User):</strong> <span id="platform-fee-user"></span></p>
                         <p><strong>Your Total Price:</strong> <strong id="user-total-price"></strong></p>
-                        <p><strong>Platform Fee (Servicer):</strong> <span id="platform-fee-servicer"></span></p>
-                        <p><strong class="servicer-earnings">Servicer Earnings:</strong> <strong id="servicer-earnings"></strong></p>
                     </div>
 
 
@@ -1007,6 +1007,7 @@
 
     let currentAppointmentId = null;
     const isServicer = false; // This is book_appointment.html, so isServicer is always false for the user.
+    const currentUserId = {{ user.id }}; // ADDED THIS LINE
     let selectedRating = 0;
 
     // Rating functionality (These functions are now defined here to fix "not defined" error)
@@ -1132,7 +1133,7 @@
         const detailImages = document.getElementById('detail-images');
         if (detailImages) detailImages.innerHTML = '';
         const bargainHistory = document.getElementById('bargainHistory');
-        if (bargainHistory) bargainHistory.innerHTML = ''; // Fixed typo: bargainingHistory -> bargainHistory
+        if (bargainHistory) bargainHistory.innerHTML = '';
 
 
         fetch(`/api/appointments/${appointmentId}/`)
@@ -1216,8 +1217,8 @@
                         document.getElementById('distance-cost').textContent = data.distance_cost || 'N/A';
                         document.getElementById('platform-fee-user').textContent = data.platform_fee_user || 'N/A';
                         document.getElementById('user-total-price').textContent = data.user_total_price;
-                        document.getElementById('platform-fee-servicer').textContent = data.platform_fee_servicer || 'N/A';
-                        document.getElementById('servicer-earnings').textContent = data.servicer_earnings;
+                        //document.getElementById('platform-fee-servicer').textContent = data.platform_fee_servicer || 'N/A';
+                        //document.getElementById('servicer-earnings').textContent = data.servicer_earnings;
                         totalPriceSection.style.display = 'block';
                     } else {
                         totalPriceSection.style.display = 'none';
@@ -1334,7 +1335,7 @@
                 const bargainHistoryContainer = document.getElementById('bargainHistory');
                 if (bargainHistoryContainer) {
                     if (data.bargaining_history && data.bargaining_history.length > 0) {
-                        renderBargainHistory(data.bargaining_history, data.status);
+                        renderBargainHistory(data.bargaining_history, data.status, currentUserId);
                     } else {
                         bargainHistoryContainer.innerHTML =
                             '<p class="text-muted">No negotiation history yet</p>';
@@ -1509,21 +1510,10 @@
     }
 
     // Function to render bargaining history (used in both appointments.html and book_appointment.html)
-    function renderBargainHistory(history, appointmentStatus) {
+    function renderBargainHistory(history, appointmentStatus, currentUserId) {
         const container = document.getElementById('bargainHistory');
         if (!container) return;
         container.innerHTML = '';
-
-        let latestRelevantPendingOffer = null;
-        if (appointmentStatus === 'pending') {
-            for (let i = 0; i < history.length; i++) {
-                // In book_appointment.html (user view), the user would act on a servicer's pending offer
-                if (history[i].offered_by === 'servicer' && history[i].status === 'pending') {
-                    latestRelevantPendingOffer = history[i];
-                    break;
-                }
-            }
-        }
 
         history.forEach(item => {
             const historyItem = document.createElement('div');
@@ -1563,7 +1553,10 @@
 
             let actionButtons = '';
             // Only show action buttons for the latest pending offer from the other party
-            if (appointmentStatus === 'pending' && latestRelevantPendingOffer && latestRelevantPendingOffer.id === item.id && item.offered_by === 'servicer') {
+            // In book_appointment.html (user view), the user would act on a servicer's pending offer
+            const canAct = (appointmentStatus === 'pending' && item.status === 'pending');
+
+            if (canAct && !isServicer && item.offered_by === 'servicer') {
                 actionButtons = `
                     <div class="bargain-actions">
                         <button class="btn btn-sm btn-success"

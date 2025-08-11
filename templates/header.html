@@ -1,192 +1,192 @@
- {% load static %}
- <style>
- /* BODY & BASE STYLES */
-  body {
-    background-color: #f8f9fa;
-    font-family: 'Inter', sans-serif;
-    margin: 0;
-    min-height: 100vh;
-  }
+{% load static %}
+<style>
+/* BODY & BASE STYLES */
+body {
+  background-color: #f8f9fa;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
 
-  /* NAVBAR STYLES */
-  .navbar {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    padding: 0.8rem 2rem;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-  }
+/* NAVBAR STYLES */
+.navbar {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 0.8rem 2rem;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 
-  /* DROPDOWN FIXES WITH ANIMATION */
-  .dropdown:hover .dropdown-menu {
-    display: block;
-    margin-top: 0;
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
+/* DROPDOWN FIXES WITH ANIMATION */
+.dropdown:hover .dropdown-menu {
+  display: block;
+  margin-top: 0;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
 
-  .dropdown-menu {
-    display: block;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform: translateY(10px);
-    background: white;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
-  }
+.dropdown-menu {
+  display: block;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateY(10px);
+  background: white;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+}
 
-  /* NAVBAR BRAND ANIMATION */
-  .navbar-brand {
-    color: white !important;
-    font-weight: 800;
-    font-size: 1.8rem;
-    letter-spacing: -0.5px;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
+/* NAVBAR BRAND ANIMATION */
+.navbar-brand {
+  color: white !important;
+  font-weight: 800;
+  font-size: 1.8rem;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
 
-  .navbar-brand::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: white;
-    transition: all 0.3s ease;
-  }
+.navbar-brand::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: white;
+  transition: all 0.3s ease;
+}
 
-  .navbar-brand:hover::after {
-    width: 100%;
-  }
+.navbar-brand:hover::after {
+  width: 100%;
+}
 
-  .navbar-brand:hover {
-    transform: translateY(-2px);
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+.navbar-brand:hover {
+  transform: translateY(-2px);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
 
-  /* NAV LINK ANIMATIONS */
-  .nav-link {
-    color: rgba(255, 255, 255, 0.9) !important;
-    font-weight: 600;
-    margin: 0 0.5rem;
-    padding: 0.5rem 1rem !important;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    position: relative;
-  }
+/* NAV LINK ANIMATIONS */
+.nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600;
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
 
-  .nav-link::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 2px;
-    background: white;
-    transition: all 0.3s ease;
-  }
+.nav-link::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background: white;
+  transition: all 0.3s ease;
+}
 
-  .nav-link:hover::before {
-    width: 80%;
-  }
+.nav-link:hover::before {
+  width: 80%;
+}
 
-  .nav-link:hover {
-    transform: translateY(-3px);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
+.nav-link:hover {
+  transform: translateY(-3px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
-  /* DROPDOWN ITEM ANIMATIONS */
-  .dropdown-item {
-    padding: 0.75rem 1.5rem;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: #495057;
-    position: relative;
-    overflow: hidden;
-  }
+/* DROPDOWN ITEM ANIMATIONS */
+.dropdown-item {
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  color: #495057;
+  position: relative;
+  overflow: hidden;
+}
 
-  .dropdown-item::before {
-    content: '';
-    position: absolute;
-    left: -100%;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(106, 17, 203, 0.1), transparent);
-    transition: all 0.4s ease;
-  }
+.dropdown-item::before {
+  content: '';
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(106, 17, 203, 0.1), transparent);
+  transition: all 0.4s ease;
+}
 
-  .dropdown-item:hover::before {
-    left: 100%;
-  }
+.dropdown-item:hover::before {
+  left: 100%;
+}
 
-  .dropdown-item:hover {
-    background: #f8f9fa;
-    color: #6a11cb;
-    padding-left: 1.75rem;
-    transform: translateX(5px);
-  }
+.dropdown-item:hover {
+  background: #f8f9fa;
+  color: #6a11cb;
+  padding-left: 1.75rem;
+  transform: translateX(5px);
+}
 
-  /* BUTTON ANIMATIONS */
-  .btn-outline-success {
-    border-color: white;
-    color: white;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-  }
+/* BUTTON ANIMATIONS */
+.btn-outline-success {
+  border-color: white;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
 
-  .btn-outline-success::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: white;
-    transition: all 0.4s ease;
-    z-index: -1;
-  }
+.btn-outline-success::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: white;
+  transition: all 0.4s ease;
+  z-index: -1;
+}
 
-  .btn-outline-success:hover::before {
-    left: 0;
-  }
+.btn-outline-success:hover::before {
+  left: 0;
+}
 
-  .btn-outline-success:hover {
-    background: transparent;
-    color: #6a11cb;
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-  }
+.btn-outline-success:hover {
+  background: transparent;
+  color: #6a11cb;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
 
-  /* SEARCH INPUT ANIMATION */
-  .form-control {
-    transition: all 0.3s ease;
-    transform-origin: left center;
-  }
+/* SEARCH INPUT ANIMATION */
+.form-control {
+  transition: all 0.3s ease;
+  transform-origin: left center;
+}
 
-  .form-control:focus {
-    transform: scale(1.03);
-    box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
-  }
+.form-control:focus {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
+}
 
-  /* PULSE ANIMATION FOR ACTIVE ITEMS */
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-  }
+/* PULSE ANIMATION FOR ACTIVE ITEMS */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
 
-  .nav-link.active {
-    animation: pulse 2s infinite;
-  }
+.nav-link.active {
+  animation: pulse 2s infinite;
+}
 </style>
- <nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="{% url 'index' %}">SkillSetGo</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -197,49 +197,53 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'service' %}">Service</a>
         </li>
-          {% if user.user_type == 'servicer' %}
-          <li class="nav-item">
-            <a class="nav-link active" href="{% url 'service_provider_dashboard' %}">Dashboard</a>
-          </li>
-        {% else %}
+        {% if user.user_type == 'servicer' %}
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'book_appointment' %}">Book Appointment</a>
-        </li>
-        {% endif %}
-        <ul class="navbar-nav ms-auto">
-        {% if user.is_authenticated %}
-        <li class="nav-item">
-          <span class="nav-link">Hello, <strong>{{ user.first_name }}</strong></span>
+          <a class="nav-link active" href="{% url 'service_provider_dashboard' %}">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a href="{% url 'logout' %}" class="nav-link">
-             Logout
-          </a>
+          <a class="nav-link" href="{% url 'appointments' %}">Appointments</a>
         </li>
         {% else %}
         <li class="nav-item">
-          <a href="{% url 'account_login' %}" class="nav-link">
-             Login
-          </a>
+          <a class="nav-link active" href="{% url 'book_appointment' %}">Reserve</a>
         </li>
         {% endif %}
       </ul>
+      <ul class="navbar-nav ms-auto">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             More
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+            {% if user.user_type == 'servicer' %}
+            <li>
+              <a class="dropdown-item" href="{% url 'bookmarked_appointments' %}">Wishlist</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'my_work' %}">My Work</a>
+            </li>
+            {% endif %}
             <li><a class="dropdown-item" href="#">Cart</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Help</a></li>
           </ul>
         </li>
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a href="{% url 'logout' %}" class="nav-link">
+            Logout
+          </a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a href="{% url 'account_login' %}" class="nav-link">
+            Login
+          </a>
+        </li>
+        {% endif %}
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
     </div>
   </div>
 </nav>
