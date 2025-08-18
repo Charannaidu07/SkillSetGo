@@ -71,6 +71,105 @@
             font-size: 14px;
             text-align: center;
         }
+
+        /* Most Booked Services Section */
+        .popular-services {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .popular-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .popular-header h2 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .popular-header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        .service-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        .service-img {
+            height: 180px;
+            overflow: hidden;
+        }
+        .service-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .service-card:hover .service-img img {
+            transform: scale(1.1);
+        }
+        .service-info {
+            padding: 20px;
+        }
+        .service-info h3 {
+            margin: 0 0 10px;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        .service-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .service-rating {
+            color: #f39c12;
+            font-weight: bold;
+        }
+        .service-description {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .service-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .view-all {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .view-all-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        .view-all-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
+        }
         
         @media (max-width: 768px) {
             .main-container {
@@ -79,18 +178,9 @@
             .skills {
                 justify-content: center;
             }
-        }
-    </style>
-    <style>
-        .w3-container {
-            font-size: 14px;
-        }
-
-        .center {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            .service-cards {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -101,7 +191,7 @@
             <h1>Our Services</h1>
             <h2>Your Skills.Your Schedule</h2>
             <div class="skills">
-                <div class="skill"> <!-- Adjust 200px to your desired height -->
+                <div class="skill">
                     <img style="width: 120px; height:120px" src="{% static 'coding.webp' %}" alt="Technical">
                     <p>Technical(Computer Science)</p>
                 </div>
@@ -140,11 +230,66 @@
             </div>
         </div>
         <div class="image-container">
-            <!-- Replace with your actual image path -->
             <img src="{% static 'main.webp' %}" alt="Person working on laptop">
         </div>
     </div>
    
+    <!-- Most Booked Services Section -->
+    <section class="popular-services">
+        <div class="popular-header">
+            <h2>Most Booked Services</h2>
+            <p>These services are currently trending in your area</p>
+        </div>
+        <div class="service-cards">
+            <div class="service-card">
+                <div class="service-img">
+                    <img src="{% static 'tr22.jpg' %}" alt="Home Cleaning">
+                </div>
+                <div class="service-info">
+                    <h3>Professional Home Cleaning</h3>
+                    <div class="service-meta">
+                        <span class="service-rating">★ 4.9 (128)</span>
+                        <span>500+ bookings</span>
+                    </div>
+                    <p class="service-description">Thorough cleaning service including dusting, mopping, and bathroom sanitization for your home.</p>
+                    <div class="service-price">₹499/hour</div>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-img">
+                    <img src="{% static 'tr33.webp' %}" alt="AC Repair">
+                </div>
+                <div class="service-info">
+                    <h3>AC Repair & Service</h3>
+                    <div class="service-meta">
+                        <span class="service-rating">★ 4.8 (96)</span>
+                        <span>300+ bookings</span>
+                    </div>
+                    <p class="service-description">Expert AC servicing, gas refilling, and repair for all brands with 30-day warranty.</p>
+                    <div class="service-price">₹799/service</div>
+                </div>
+            </div>
+            <div class="service-card">
+                <div class="service-img">
+                    <img src="{% static 'tr55.webp' %}" alt="Home Tutor">
+                </div>
+                <div class="service-info">
+                    <h3>Home Tutoring (Math/Science)</h3>
+                    <div class="service-meta">
+                        <span class="service-rating">★ 4.7 (84)</span>
+                        <span>250+ bookings</span>
+                    </div>
+                    <p class="service-description">Qualified tutors for CBSE/ICSE students from class 6-12 with customized lesson plans.</p>
+                    <div class="service-price">₹399/hour</div>
+                </div>
+            </div>
+        </div>
+        <div class="view-all">
+            <button class="view-all-btn">View All Popular Services</button>
+        </div>
+    </section>
+    
+
     {% include 'footer.html' %}
 </body>
 </html>
