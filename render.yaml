@@ -3,7 +3,7 @@ services:
     name: skillsetgo
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "gunicorn SkillSetGo.wsgi:application"
+    startCommand: "python manage.py migrate --no-input && python manage.py setup_admin && gunicorn SkillSetGo.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
         value: 3.12.3
