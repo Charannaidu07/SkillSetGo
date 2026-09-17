@@ -4,294 +4,444 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | SkillSetGo</title>
+  <title>Sign In | SkillSetGo — Home Services</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
   <style>
     :root {
-      --uc-black: #111827;
-      --uc-gray-dark: #1f2937;
-      --text-dark: #111827;
-      --text-light: #6b7280;
-      --light-gray: #f8f9fa;
-      --white: #ffffff;
-      --border-color: #e5e7eb;
-      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      --primary-dark: #0f172a;
+      --primary-accent: #2563eb;
+      --accent-emerald: #10b981;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --bg-page: #f8fafc;
+      --card-bg: #ffffff;
+      --border-subtle: #e2e8f0;
+      --radius-xl: 20px;
+      --radius-md: 12px;
+      --transition-smooth: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      background-color: #f3f4f6;
-      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem 1rem;
+      padding: 2.5rem 1rem;
+      color: var(--text-main);
     }
-    
-    .login-container {
-      position: relative;
-      z-index: 1;
+
+    .login-card {
       width: 100%;
-      max-width: 1000px;
-      border-radius: 20px;
+      max-width: 1020px;
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
       overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.12);
+      border: 1px solid rgba(226, 232, 240, 0.8);
       display: grid;
-      grid-template-columns: 1fr 1.15fr;
+      grid-template-columns: 1fr 1.2fr;
       min-height: 600px;
-      background: #ffffff;
-      border: 1px solid var(--border-color);
     }
-    
-    .login-illustration {
-      background: #111827;
+
+    /* Left Hero Panel */
+    .hero-panel {
+      background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+      padding: 3.5rem 3rem;
+      color: #ffffff;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
       justify-content: space-between;
-      padding: 3.5rem 3rem;
-      color: white;
       position: relative;
+      overflow: hidden;
     }
-    
-    .login-illustration h2 {
-      font-size: 2rem;
+
+    .hero-panel::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      right: -30%;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .brand-logo-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      margin-bottom: 2rem;
+    }
+
+    .brand-logo-wrap img {
+      height: 42px;
+      width: auto;
+      background: #ffffff;
+      padding: 4px 10px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-logo-wrap .logo-text {
+      font-size: 1.35rem;
       font-weight: 800;
+      color: #ffffff;
       letter-spacing: -0.5px;
+    }
+
+    .badge-pill-urban {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      padding: 0.4rem 0.9rem;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-headline {
+      font-size: 2.1rem;
+      font-weight: 800;
       line-height: 1.25;
-      margin-bottom: 1rem;
+      letter-spacing: -0.75px;
+      margin-bottom: 1.1rem;
     }
-    
-    .login-illustration p {
+
+    .hero-headline span {
+      background: linear-gradient(135deg, #60a5fa 0%, #34d399 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtext {
+      color: #94a3b8;
       font-size: 0.95rem;
-      color: #9ca3af;
       line-height: 1.6;
+      margin-bottom: 2rem;
     }
-    
-    .login-form-container {
-      background: var(--white);
+
+    .value-props {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .value-props li {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    .value-props .check-icon {
+      width: 24px;
+      height: 24px;
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .trust-badge-footer {
+      padding-top: 1.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #94a3b8;
+    }
+
+    /* Right Form Panel */
+    .form-panel {
       padding: 3.5rem 3.5rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      background: #ffffff;
     }
-    
+
     .form-header {
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
-    
-    .form-header h2 {
+
+    .form-header h1 {
       font-size: 1.85rem;
       font-weight: 800;
-      color: var(--text-dark);
+      color: var(--text-main);
       letter-spacing: -0.5px;
       margin-bottom: 0.35rem;
     }
-    
+
     .form-header p {
-      color: var(--text-light);
-      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
     }
-    
-    .form-control {
-      height: 52px;
-      border-radius: 12px;
-      border: 1px solid #e5e7eb;
-      padding-left: 1.25rem;
-      transition: var(--transition);
-      font-size: 0.95rem;
+
+    .input-field-group {
+      margin-bottom: 1.35rem;
+      position: relative;
     }
-    
-    .form-control:focus {
-      border-color: #111827;
-      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.08);
+
+    .input-field-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
     }
-    
-    .form-check-input:checked {
-      background-color: #111827;
-      border-color: #111827;
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
     }
-    
-    .form-check-label {
-      color: var(--text-light);
-      font-size: 0.9rem;
-    }
-    
-    .btn-login {
-      background: #111827;
-      border: 1px solid #111827;
-      color: white;
-      height: 52px;
-      border-radius: 12px;
-      font-weight: 700;
+
+    .input-wrapper .input-icon {
+      position: absolute;
+      left: 1rem;
+      color: #94a3b8;
       font-size: 1rem;
-      transition: var(--transition);
-      width: 100%;
-      margin-top: 1rem;
+      pointer-events: none;
+      transition: var(--transition-smooth);
+    }
+
+    .input-wrapper .form-control {
+      height: 50px;
+      padding-left: 2.75rem;
+      padding-right: 2.75rem;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text-main);
+      background: #ffffff;
+      transition: var(--transition-smooth);
+    }
+
+    .input-wrapper .form-control:focus {
+      border-color: var(--primary-dark);
+      box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
+      outline: none;
+    }
+
+    .password-eye-btn {
+      position: absolute;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-    }
-    
-    .btn-login:hover {
-      background: #1f2937;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-    }
-    
-    .password-toggle {
-      position: absolute;
-      right: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      color: var(--text-light);
-      z-index: 5;
-    }
-    
-    .login-footer {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.95rem;
-      color: var(--text-light);
+      transition: var(--transition-smooth);
     }
 
-    .login-footer a {
-      color: #111827;
+    .password-eye-btn:hover {
+      color: var(--text-main);
+    }
+
+    .btn-signin {
+      width: 100%;
+      height: 52px;
+      background: #0f172a;
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      margin-top: 1.25rem;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    }
+
+    .btn-signin:hover {
+      background: #1e293b;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.22);
+      color: #ffffff;
+    }
+
+    .form-footer {
+      margin-top: 1.75rem;
+      text-align: center;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    .form-footer a {
+      color: var(--primary-dark);
       font-weight: 700;
       text-decoration: none;
     }
 
-    .login-footer a:hover {
+    .form-footer a:hover {
       text-decoration: underline;
     }
-    
+
     @media (max-width: 992px) {
-      .login-container {
+      .login-card {
         grid-template-columns: 1fr;
-        max-width: 500px;
+        max-width: 520px;
       }
-      
-      .login-illustration {
+      .hero-panel {
         display: none;
       }
-      
-      .login-form-container {
-        padding: 2.5rem;
+      .form-panel {
+        padding: 2.75rem 2rem;
       }
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <!-- Illustration / Brand Highlight Section -->
-    <div class="login-illustration">
+
+  <div class="login-card">
+    <!-- Left Hero Section -->
+    <div class="hero-panel">
       <div>
-        <div class="mb-4">
-          <img src="{% static 'logo.png' %}" alt="SkillSetGo" style="height: 46px; width: auto; background: #ffffff; padding: 4px 10px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+        <a href="/" class="brand-logo-wrap">
+          <img src="{% static 'logo.png' %}" alt="SkillSetGo">
+          <span class="logo-text">SkillSetGo</span>
+        </a>
+
+        <div class="badge-pill-urban">
+          <i class="fas fa-shield-halved text-success"></i>
+          <span>Verified Platform</span>
         </div>
-        <span class="badge bg-secondary bg-opacity-25 text-light border border-secondary px-3 py-1 mb-3">URBAN QUALITY ASSURED</span>
-        <h2>Expert home services, on demand.</h2>
-        <p>Log in to manage appointments, negotiate fair market rates with verified technicians, and release secure escrow payments.</p>
+
+        <h2 class="hero-headline">Welcome back to <span>SkillSetGo</span></h2>
+        <p class="hero-subtext">Manage your active service bookings, track assigned experts, negotiate fair quotes, and release secure milestone payments.</p>
+
+        <ul class="value-props">
+          <li>
+            <div class="check-icon"><i class="fas fa-check"></i></div>
+            <span>Verified background-checked technicians</span>
+          </li>
+          <li>
+            <div class="check-icon"><i class="fas fa-check"></i></div>
+            <span>Safe escrow payment protection</span>
+          </li>
+          <li>
+            <div class="check-icon"><i class="fas fa-check"></i></div>
+            <span>Live status updates & support</span>
+          </li>
+        </ul>
       </div>
 
-      <div class="w-100 border-top border-secondary border-opacity-25 pt-4">
-        <div class="d-flex align-items-center gap-3 mb-3 text-white-50 small">
-          <i class="fas fa-circle-check text-success"></i>
-          <span>Background-verified servicers</span>
-        </div>
-        <div class="d-flex align-items-center gap-3 mb-3 text-white-50 small">
-          <i class="fas fa-circle-check text-success"></i>
-          <span>Zero-advance escrow protection</span>
-        </div>
-        <div class="d-flex align-items-center gap-3 text-white-50 small">
-          <i class="fas fa-circle-check text-success"></i>
-          <span>Real-time price negotiation</span>
-        </div>
+      <div class="trust-badge-footer">
+        <span>Trusted by 15,000+ happy households</span>
       </div>
     </div>
-    
-    <!-- Form Section -->
-    <div class="login-form-container">
+
+    <!-- Right Form Section -->
+    <div class="form-panel">
       <div class="form-header">
-        <h2>Sign in to your account</h2>
-        <p>Enter your email and password to proceed</p>
+        <h1>Sign in</h1>
+        <p>Enter your email and password to access your dashboard</p>
       </div>
-      
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger p-2 small mb-3">
+          {{ form.non_field_errors|striptags }}
+        </div>
+      {% endif %}
+
       <form method="post" action="{% url 'account_login' %}">
         {% csrf_token %}
-        
-        <!-- Email Input -->
-        <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="email" name="login" placeholder="name@example.com" required>
-          <label for="email">Email address</label>
-        </div>
-        
-        <!-- Password Input -->
-        <div class="form-floating mb-3 position-relative">
-          <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
-          <label for="password">Password</label>
-          <i class="far fa-eye password-toggle" id="togglePassword"></i>
-        </div>
-        
-        <!-- Remember Me & Forgot Password -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="remember">
-            <label class="form-check-label" for="remember">Remember me</label>
+
+        <div class="input-field-group">
+          <label for="id_login">Email address</label>
+          <div class="input-wrapper">
+            <i class="far fa-envelope input-icon"></i>
+            <input type="email" name="login" id="id_login" class="form-control" placeholder="name@example.com" required autofocus>
           </div>
-          <a href="{% url 'account_reset_password' %}" class="text-dark small fw-semibold text-decoration-none">Forgot password?</a>
         </div>
-        
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-login">
+
+        <div class="input-field-group">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label for="id_password" class="mb-0">Password</label>
+            <a href="{% url 'account_reset_password' %}" class="text-muted small text-decoration-none">Forgot password?</a>
+          </div>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" name="password" id="id_password" class="form-control" placeholder="Enter your password" required>
+            <button type="button" class="password-eye-btn" onclick="togglePasswordVisibility('id_password', this)" tabindex="-1">
+              <i class="far fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="remember" name="remember">
+            <label class="form-check-label text-muted small" for="remember">Keep me logged in</label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-signin">
           <span>Sign In</span>
-          <i class="fas fa-arrow-right small"></i>
+          <i class="fas fa-arrow-right"></i>
         </button>
       </form>
-      
-      <!-- Sign Up Link -->
-      <div class="login-footer">
+
+      <div class="form-footer">
         Don't have an account? <a href="{% url 'account_signup' %}">Create account</a>
       </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Password toggle functionality
-    const togglePassword = document.querySelector('#togglePassword');
-    const password = document.querySelector('#password');
-    
-    togglePassword.addEventListener('click', function() {
-      // Toggle the type attribute
-      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-      password.setAttribute('type', type);
-      
-      // Toggle the icon
-      this.classList.toggle('fa-eye');
-      this.classList.toggle('fa-eye-slash');
-    });
-    
-    // Add animation to form elements
-    document.querySelectorAll('.form-floating').forEach((el, index) => {
-      el.style.animationDelay = `${index * 0.1}s`;
-      el.classList.add('fade-in');
-    });
-    
-    // Add hover effect to social buttons
-    document.querySelectorAll('.social-btn').forEach(btn => {
-      btn.addEventListener('mouseenter', () => {
-        btn.style.transform = 'translateY(-3px)';
-      });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transform = 'translateY(0)';
-      });
-    });
+    function togglePasswordVisibility(fieldId, btn) {
+      const input = document.getElementById(fieldId);
+      if (!input) return;
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
   </script>
 </body>
 </html>

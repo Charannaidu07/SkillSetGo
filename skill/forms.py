@@ -6,14 +6,36 @@ from django.utils import timezone
 
 class CustomSignupForm(SignupForm):
     user_type = forms.ChoiceField(
-        label="Are you a User or Servicer?",
-        choices=(('user', 'User'), ('servicer', 'Servicer')),
+        label="Account Type",
+        choices=(('user', 'Customer / User'), ('servicer', 'Service Professional')),
         widget=forms.RadioSelect,
+        initial='user'
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name, field in self.fields.items():
+            if name != 'user_type':
+                field.widget.attrs.update({
+                    'class': 'form-control',
+                    'placeholder': field.label or name.capitalize()
+                })
+        if 'email' in self.fields:
+            self.fields['email'].widget.attrs.update({
+                'class': 'form-control',
+                'placeholder': 'name@example.com',
+                'autocomplete': 'email'
+            })
+        if 'password' in self.fields:
+            self.fields['password'].widget.attrs.update({
+                'class': 'form-control',
+                'placeholder': 'Enter your password',
+                'autocomplete': 'new-password'
+            })
 
     def save(self, request):
         user = super().save(request)
-        user.user_type = self.cleaned_data['user_type']
+        user.user_type = self.cleaned_data.get('user_type', 'user')
         user.save()
         return user
 
