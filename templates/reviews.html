@@ -1,0 +1,390 @@
+{% extends "header.html" %}
+{% load static %}
+{% block title %}Verified Customer Reviews & Ratings | SkillSetGo{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Header -->
+    <div class="card border-0 mb-5 p-4 p-md-5 text-white" style="background: #111827; border-radius: var(--radius-xl);">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-bold mb-3">
+                    <i class="fas fa-star text-warning me-1"></i> 4.9 out of 5 Stars Average
+                </span>
+                <h1 class="fw-extrabold text-white mb-3" style="font-size: 2.3rem;">Real Reviews by Verified Customers</h1>
+                <p class="text-white-50 mb-4" style="font-size: 1.05rem;">
+                    Over 25,000+ happy homes trust SkillSetGo for certified technicians, transparent bargaining, and 100% satisfaction guarantee.
+                </p>
+                <button type="button" class="btn btn-light fw-bold px-4 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#writeReviewModal">
+                    <i class="fas fa-pen-to-square me-2"></i> Write a Customer Review
+                </button>
+            </div>
+            <div class="col-lg-5 mt-4 mt-lg-0">
+                <!-- Rating Breakdown Card -->
+                <div class="bg-white bg-opacity-10 p-4 rounded-4 border border-white border-opacity-10">
+                    <div class="d-flex align-items-baseline mb-3">
+                        <h2 class="text-white fw-bold me-2 mb-0" style="font-size: 3rem;">4.9</h2>
+                        <div>
+                            <div class="text-warning mb-1">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <small class="text-white-50">Based on 25,480 verified bookings</small>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between text-white-50 small mb-1">
+                            <span>5 Stars (92%)</span>
+                            <span>23,441</span>
+                        </div>
+                        <div class="rating-bar"><div class="rating-bar-fill" style="width: 92%;"></div></div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between text-white-50 small mb-1">
+                            <span>4 Stars (6%)</span>
+                            <span>1,528</span>
+                        </div>
+                        <div class="rating-bar"><div class="rating-bar-fill" style="width: 6%;"></div></div>
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between text-white-50 small mb-1">
+                            <span>3 Stars & Below (2%)</span>
+                            <span>511</span>
+                        </div>
+                        <div class="rating-bar"><div class="rating-bar-fill" style="width: 2%;"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="d-flex flex-wrap gap-2 mb-4 pb-2">
+        <button type="button" class="chip-option active" data-filter="all">All Reviews (25.4k)</button>
+        <button type="button" class="chip-option" data-filter="cleaning">Home Cleaning (8.2k)</button>
+        <button type="button" class="chip-option" data-filter="ac">AC Repair & Service (6.1k)</button>
+        <button type="button" class="chip-option" data-filter="electrician">Electrician (4.5k)</button>
+        <button type="button" class="chip-option" data-filter="plumbing">Plumbing (3.8k)</button>
+        <button type="button" class="chip-option" data-filter="salon">Salon & Spa (2.8k)</button>
+    </div>
+
+    <!-- Reviews Grid -->
+    <div class="row g-4" id="reviewsContainer">
+        
+        <!-- Review 1 -->
+        <div class="col-md-6 col-lg-4 review-item" data-category="cleaning">
+            <div class="review-card">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                                RS
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Rohan Sharma</h6>
+                                <small class="text-muted"><i class="fas fa-location-dot text-danger me-1"></i> Koramangala, Bengaluru</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 small">
+                            <i class="fas fa-check-circle me-1"></i> Verified
+                        </span>
+                    </div>
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Deep Home Cleaning 3BHK</h6>
+                    <p class="text-secondary small mb-3 lh-base">
+                        "The price bargaining feature allowed me to get a fair rate for my 3BHK deep cleaning. The crew arrived on time in full uniform, deep-cleaned every corner including the balcony, and only took payment after I checked everything!"
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top text-muted small">
+                    <span>2 days ago</span>
+                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none like-btn">
+                        <i class="far fa-thumbs-up me-1"></i> Helpful (34)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div class="col-md-6 col-lg-4 review-item" data-category="ac">
+            <div class="review-card">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                                AP
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Ananya Patel</h6>
+                                <small class="text-muted"><i class="fas fa-location-dot text-danger me-1"></i> Andheri West, Mumbai</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 small">
+                            <i class="fas fa-check-circle me-1"></i> Verified
+                        </span>
+                    </div>
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">AC Jet Master Service</h6>
+                    <p class="text-secondary small mb-3 lh-base">
+                        "My AC was barely cooling. The technician identified a refrigerant leak, gave me a clear upfront price with warranty, and used high-pressure foam jet cleaning. My AC is cooling like brand new now!"
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top text-muted small">
+                    <span>4 days ago</span>
+                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none like-btn">
+                        <i class="far fa-thumbs-up me-1"></i> Helpful (28)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div class="col-md-6 col-lg-4 review-item" data-category="electrician">
+            <div class="review-card">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                                VK
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Vikram Kulkarni</h6>
+                                <small class="text-muted"><i class="fas fa-location-dot text-danger me-1"></i> Gachibowli, Hyderabad</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 small">
+                            <i class="fas fa-check-circle me-1"></i> Verified
+                        </span>
+                    </div>
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Full House MCB & Wiring Fix</h6>
+                    <p class="text-secondary small mb-3 lh-base">
+                        "Had an emergency short circuit on Sunday morning. SkillSetGo connected me with a certified electrician within 25 minutes. Super polite, professional tools, and solved the tripping MCB without fuss."
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top text-muted small">
+                    <span>1 week ago</span>
+                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none like-btn">
+                        <i class="far fa-thumbs-up me-1"></i> Helpful (42)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review 4 -->
+        <div class="col-md-6 col-lg-4 review-item" data-category="plumbing">
+            <div class="review-card">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-secondary text-white fw-bold d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                                SM
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Sneha Mukherjee</h6>
+                                <small class="text-muted"><i class="fas fa-location-dot text-danger me-1"></i> Saket, New Delhi</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 small">
+                            <i class="fas fa-check-circle me-1"></i> Verified
+                        </span>
+                    </div>
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Bathroom Concealed Pipe Leak</h6>
+                    <p class="text-secondary small mb-3 lh-base">
+                        "Loved that the servicer carried an official ID card with a verifiable QR code. Replaced the faulty mixer valve in 40 minutes and gave a 30-day rework warranty. 10/10 recommend SkillSetGo!"
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top text-muted small">
+                    <span>1 week ago</span>
+                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none like-btn">
+                        <i class="far fa-thumbs-up me-1"></i> Helpful (19)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review 5 -->
+        <div class="col-md-6 col-lg-4 review-item" data-category="salon">
+            <div class="review-card">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                                PR
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Pooja Reddy</h6>
+                                <small class="text-muted"><i class="fas fa-location-dot text-danger me-1"></i> Anna Nagar, Chennai</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 small">
+                            <i class="fas fa-check-circle me-1"></i> Verified
+                        </span>
+                    </div>
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Bridal Glow & Hair Spa</h6>
+                    <p class="text-secondary small mb-3 lh-base">
+                        "Single-use sealed hygiene kits and branded cosmetics used throughout. The beautician took her time and the massage was heavenly. Loved the seamless OTP completion workflow!"
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top text-muted small">
+                    <span>2 weeks ago</span>
+                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none like-btn">
+                        <i class="far fa-thumbs-up me-1"></i> Helpful (51)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review 6 -->
+        <div class="col-md-6 col-lg-4 review-item" data-category="cleaning">
+            <div class="review-card">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle bg-primary text-white fw-bold d-flex align-items-center justify-content-center me-3" style="width: 42px; height: 42px;">
+                                TG
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0">Tarun Gupta</h6>
+                                <small class="text-muted"><i class="fas fa-location-dot text-danger me-1"></i> Viman Nagar, Pune</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 small">
+                            <i class="fas fa-check-circle me-1"></i> Verified
+                        </span>
+                    </div>
+                    <div class="text-warning mb-2">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <h6 class="fw-bold mb-2">Kitchen Chimney & Hob Degreasing</h6>
+                    <p class="text-secondary small mb-3 lh-base">
+                        "Heavy grease was completely removed using steam tools and food-safe degreasers. The price agreed during dynamic bargaining was honored to the exact rupee."
+                    </p>
+                </div>
+                <div class="d-flex justify-content-between align-items-center pt-3 border-top text-muted small">
+                    <span>2 weeks ago</span>
+                    <button class="btn btn-sm btn-link text-muted p-0 text-decoration-none like-btn">
+                        <i class="far fa-thumbs-up me-1"></i> Helpful (15)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Write Review Modal -->
+<div class="modal fade" id="writeReviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: var(--radius-xl);">
+            <div class="modal-header border-0 pb-0">
+                <div>
+                    <h5 class="modal-title fw-bold">Share Your Experience</h5>
+                    <p class="text-muted small mb-0">Help other homeowners find top-rated services.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <form id="writeReviewForm">
+                    <div class="mb-3 text-center">
+                        <label class="form-label fw-bold small d-block mb-1">Overall Rating</label>
+                        <div class="text-warning fs-3" id="starRatingSelector">
+                            <i class="fas fa-star" data-val="1" style="cursor: pointer;"></i>
+                            <i class="fas fa-star" data-val="2" style="cursor: pointer;"></i>
+                            <i class="fas fa-star" data-val="3" style="cursor: pointer;"></i>
+                            <i class="fas fa-star" data-val="4" style="cursor: pointer;"></i>
+                            <i class="fas fa-star" data-val="5" style="cursor: pointer;"></i>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Service Category</label>
+                        <select class="form-select" required>
+                            <option value="Home Cleaning">Home Cleaning</option>
+                            <option value="AC Repair & Service">AC Repair & Service</option>
+                            <option value="Electrician">Electrician</option>
+                            <option value="Plumber">Plumbing</option>
+                            <option value="Salon & Spa">Salon & Spa</option>
+                            <option value="Pest Control">Pest Control</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Review Headline</label>
+                        <input type="text" class="form-control" placeholder="e.g. Outstanding deep cleaning service!" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Your Detailed Feedback</label>
+                        <textarea class="form-control" rows="4" placeholder="Tell us about the technician's punctuality, service quality, and overall experience..." required></textarea>
+                    </div>
+                    <div id="reviewSuccessAlert" class="alert alert-success d-none py-2 small mb-3">
+                        <strong>Thank you!</strong> Your review has been submitted and will appear on the leaderboard after verification.
+                    </div>
+                    <button type="submit" id="submitReviewBtn" class="btn btn-dark w-100 fw-bold py-2 rounded-pill">
+                        <i class="fas fa-paper-plane me-2"></i> Submit Review
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Filter chips
+    const chips = document.querySelectorAll('.chip-option');
+    const items = document.querySelectorAll('.review-item');
+
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            const filter = chip.getAttribute('data-filter');
+
+            items.forEach(item => {
+                if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Helpful like button
+    document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.classList.toggle('text-primary');
+            btn.classList.toggle('text-muted');
+        });
+    });
+
+    // Review form
+    const reviewForm = document.getElementById('writeReviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const alertBox = document.getElementById('reviewSuccessAlert');
+            const btn = document.getElementById('submitReviewBtn');
+            btn.disabled = true;
+            alertBox.classList.remove('d-none');
+            setTimeout(() => {
+                const modal = bootstrap.Modal.getInstance(document.getElementById('writeReviewModal'));
+                if (modal) modal.hide();
+                reviewForm.reset();
+                alertBox.classList.add('d-none');
+                btn.disabled = false;
+            }, 2500);
+        });
+    }
+});
+</script>
+{% endblock %}

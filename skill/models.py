@@ -175,6 +175,24 @@ class Book_Appointment(models.Model):
                                         choices=[(i, str(i)) for i in range(1, 6)],
                                         verbose_name="Servicer Rating (1-5)") # New rating field
 
+    # Payment details
+    payment_status = models.CharField(
+        max_length=20,
+        choices=[('unpaid', 'Unpaid'), ('paid', 'Paid')],
+        default='unpaid'
+    )
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    razorpay_signature = models.CharField(max_length=200, blank=True, null=True)
+
+    # Payout details
+    payout_status = models.CharField(
+        max_length=20,
+        choices=[('pending', 'Pending Payout'), ('paid', 'Paid/Settled')],
+        default='pending'
+    )
+    payout_transaction_id = models.CharField(max_length=100, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

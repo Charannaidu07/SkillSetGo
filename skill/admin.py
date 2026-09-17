@@ -13,14 +13,17 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 
 class BookAppointmentAdmin(admin.ModelAdmin):
-    list_display = ('booking_id', 'user', 'full_name', 'get_issue_display', 'status', 'expected_time', 'rating', 'created_at') # Added 'rating'
-    list_filter = ('status', 'issue', 'created_at','otp_verified')
+    list_display = ('booking_id', 'user', 'full_name', 'get_issue_display', 'status', 'payment_status', 'payout_status', 'expected_time', 'rating', 'created_at') # Added 'rating', 'payment_status', 'payout_status'
+    list_filter = ('status', 'payment_status', 'payout_status', 'issue', 'created_at','otp_verified')
     search_fields = ('booking_id', 'full_name', 'contact_number', 'user__username')
     readonly_fields = ('booking_id', 'created_at')
     ordering = ('-created_at',)
     fieldsets = (
         ('Booking Information', {
             'fields': ('booking_id', 'user', 'status', 'created_at', 'rating') # Added 'rating'
+        }),
+        ('Payment & Payout Details', {
+            'fields': ('payment_status', 'razorpay_order_id', 'razorpay_payment_id', 'razorpay_signature', 'payout_status', 'payout_transaction_id')
         }),
         ('Customer Details', {
             'fields': ('full_name', 'contact_number')

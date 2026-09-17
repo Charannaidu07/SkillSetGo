@@ -1,0 +1,37 @@
+{% extends "header.html" %}
+{% load static %}
+{% block title %}Privacy Policy & Data Security | SkillSetGo{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 900px;">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <span class="badge bg-dark text-white rounded-pill px-3 py-2 fw-bold mb-2">Security & Privacy</span>
+        <h1 class="fw-extrabold">Privacy Policy & Data Protection</h1>
+        <p class="text-muted">Last Updated: September 2026 | ISO 27001 & 256-Bit SSL Encrypted</p>
+    </div>
+
+    <!-- Content Card -->
+    <div class="card p-4 p-md-5 border mb-5" style="border-radius: var(--radius-xl); background: var(--bg-surface);">
+        <h4 class="fw-bold mb-3">1. Information We Collect</h4>
+        <p class="text-secondary lh-lg mb-4">
+            We collect account profile information (name, phone number, email address), service booking location details, payment transaction records, and communication timestamps required to dispatch technicians accurately.
+        </p>
+
+        <h4 class="fw-bold mb-3">2. How Your Location Data is Used</h4>
+        <p class="text-secondary lh-lg mb-4">
+            Service address information is shared only with the assigned service provider after appointment confirmation to enable route navigation and timely arrival. Exact coordinates are never sold or made public.
+        </p>
+
+        <h4 class="fw-bold mb-3">3. Payment Security & Encryption</h4>
+        <p class="text-secondary lh-lg mb-4">
+            We do not store credit/debit card numbers or bank PINs on our servers. All financial transactions are secured through Razorpay's PCI-DSS Level 1 compliant payment gateway with end-to-end 256-bit encryption.
+        </p>
+
+        <h4 class="fw-bold mb-3">4. Data Retention & Your Rights</h4>
+        <p class="text-secondary lh-lg mb-0">
+            You may review, modify, or request deletion of your personal account data at any time by contacting our privacy compliance officer at <a href="mailto:privacy@skillsetgo.com" class="text-primary fw-bold">privacy@skillsetgo.com</a>.
+        </p>
+    </div>
+</div>
+{% endblock %}

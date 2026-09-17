@@ -1,89 +1,187 @@
 {% load static %}
-<!-- footer.html -->
-<footer class="bg-dark text-white pt-5 pb-4 mt-5">
+<footer class="footer text-white pt-5 pb-4 mt-auto no-print" style="background-color: #0b0f19; border-top: 1px solid #1e293b;">
     <div class="container">
-        <div class="row">
-            <!-- About Section -->
-            <div class="col-md-4 mb-4">
-                <h5 class="text-uppercase mb-4">About SkillSetGo</h5>
-                <p>Connecting skilled professionals with clients who need their services. Fast, reliable, and convenient service booking platform.</p>
-                <div class="mt-3">
-                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="text-white me-3"><i class="fab fa-linkedin-in"></i></a>
+        <!-- Trust Badges Row -->
+        <div class="row g-3 mb-5 pb-4 border-bottom" style="border-color: #1e293b !important;">
+            <div class="col-md-4">
+                <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: #111827; border: 1px solid #1f2937;">
+                    <div style="background: #1e293b; color: #f59e0b; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                        <i class="fas fa-shield-halved text-warning"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-white fw-bold">₹10,000 Shield Guarantee</h6>
+                        <small style="color: #94a3b8;">30-day rework warranty & insurance</small>
+                    </div>
                 </div>
             </div>
-
-            <!-- Quick Links -->
-            <div class="col-md-2 mb-4">
-                <h5 class="text-uppercase mb-4">Quick Links</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="{% url 'index' %}" class="text-white text-decoration-none">Home</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">Services</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">About Us</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">Contact</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">FAQ</a></li>
-                </ul>
+            <div class="col-md-4">
+                <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: #111827; border: 1px solid #1f2937;">
+                    <div style="background: #1e293b; color: #10b981; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                        <i class="fas fa-lock text-success"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-white fw-bold">Razorpay Escrow Lock</h6>
+                        <small style="color: #94a3b8;">Release funds via 6-digit OTP only</small>
+                    </div>
+                </div>
             </div>
-
-            <!-- Services -->
-            <div class="col-md-3 mb-4">
-                <h5 class="text-uppercase mb-4">Our Services</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">Plumbing</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">Electrical</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">Cleaning</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">Technical Support</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none">More Services...</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Info -->
-            <div class="col-md-3 mb-4">
-                <h5 class="text-uppercase mb-4">Contact Us</h5>
-                <address>
-                    <p><i class="fas fa-map-marker-alt me-2"></i> 123 Service St, City</p>
-                    <p><i class="fas fa-phone me-2"></i> +1 234 567 890</p>
-                    <p><i class="fas fa-envelope me-2"></i> info@skillsetgo.com</p>
-                </address>
+            <div class="col-md-4">
+                <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: #111827; border: 1px solid #1f2937;">
+                    <div style="background: #1e293b; color: #38bdf8; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                        <i class="fas fa-handshake-simple text-info"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-white fw-bold">Dynamic Fair Bargaining</h6>
+                        <small style="color: #94a3b8;">Real-time win-win pricing negotiation</small>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <hr class="mb-4">
+        <div class="row g-4 mb-4">
+            <!-- About Section -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="mb-3">
+                    <img src="{% static 'logo.png' %}" alt="SkillSetGo" style="height: 38px; width: auto; background: #ffffff; padding: 4px 8px; border-radius: 8px;">
+                </div>
+                <p style="color: #94a3b8; font-size: 0.875rem; line-height: 1.7;" class="mb-3">
+                    India's premier on-demand home & commercial services marketplace. Certified professionals, dynamic bargaining, and guaranteed satisfaction.
+                </p>
+                <div class="d-flex gap-2">
+                    <a href="https://facebook.com" target="_blank" class="footer-social-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com" target="_blank" class="footer-social-btn"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank" class="footer-social-btn"><i class="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com" target="_blank" class="footer-social-btn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
 
-        <!-- Copyright -->
-        <div class="row align-items-center">
-            <div class="col-md-6 text-center text-md-start">
-                <p class="mb-0">&copy; 2023 SkillSetGo. All rights reserved.</p>
+            <!-- Services Directory -->
+            <div class="col-lg-2 col-md-6 mb-3">
+                <h6 class="text-uppercase fw-bold text-white mb-3" style="letter-spacing: 0.06em; font-size: 0.8rem;">Popular Services</h6>
+                <ul class="list-unstyled mb-0" style="font-size: 0.875rem;">
+                    <li class="mb-2"><a href="{% url 'service' %}" class="footer-link">Deep Home Cleaning</a></li>
+                    <li class="mb-2"><a href="{% url 'service' %}" class="footer-link">AC Master Service</a></li>
+                    <li class="mb-2"><a href="{% url 'service' %}" class="footer-link">Electrician & Wiring</a></li>
+                    <li class="mb-2"><a href="{% url 'service' %}" class="footer-link">Plumbing & Leaks</a></li>
+                    <li class="mb-2"><a href="{% url 'service' %}" class="footer-link">Salon & Spa at Home</a></li>
+                </ul>
+            </div>
+
+            <!-- Explore & Tools -->
+            <div class="col-lg-2 col-md-6 mb-3">
+                <h6 class="text-uppercase fw-bold text-white mb-3" style="letter-spacing: 0.06em; font-size: 0.8rem;">Tools & Programs</h6>
+                <ul class="list-unstyled mb-0" style="font-size: 0.875rem;">
+                    <li class="mb-2"><a href="{% url 'cost_estimator' %}" class="footer-link"><i class="fas fa-calculator me-1 text-warning"></i> Cost Estimator</a></li>
+                    <li class="mb-2"><a href="{% url 'customer_reviews' %}" class="footer-link"><i class="fas fa-star me-1 text-warning"></i> Customer Reviews</a></li>
+                    <li class="mb-2"><a href="{% url 'rewards_program' %}" class="footer-link"><i class="fas fa-gift me-1 text-danger"></i> Plus Rewards & Earn</a></li>
+                    <li class="mb-2"><a href="{% url 'trust_safety' %}" class="footer-link"><i class="fas fa-shield-halved me-1 text-info"></i> Shield Protection</a></li>
+                    <li class="mb-2"><a href="{% url 'about_us' %}" class="footer-link">How It Works</a></li>
+                </ul>
+            </div>
+
+            <!-- Provider Links -->
+            <div class="col-lg-2 col-md-6 mb-3">
+                <h6 class="text-uppercase fw-bold text-white mb-3" style="letter-spacing: 0.06em; font-size: 0.8rem;">For Partner Pros</h6>
+                <ul class="list-unstyled mb-0" style="font-size: 0.875rem;">
+                    <li class="mb-2"><a href="{% url 'service_provider_register' %}" class="footer-link">Register as Partner</a></li>
+                    <li class="mb-2"><a href="{% url 'service_provider_dashboard' %}" class="footer-link">Partner Dashboard</a></li>
+                    <li class="mb-2"><a href="{% url 'my_work' %}" class="footer-link">Active Work Queue</a></li>
+                    <li class="mb-2"><a href="{% url 'bookmarked_appointments' %}" class="footer-link">Bookmarked Leads</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact & Support -->
+            <div class="col-lg-3 col-md-6 mb-3">
+                <h6 class="text-uppercase fw-bold text-white mb-3" style="letter-spacing: 0.06em; font-size: 0.8rem;">24/7 Support Desk</h6>
+                <ul class="list-unstyled mb-0 small" style="color: #cbd5e1;">
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="fas fa-phone-volume text-warning"></i>
+                        <a href="tel:18001234567" class="footer-link fw-bold text-white">1800-123-4567 (Toll-Free)</a>
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="fab fa-whatsapp text-success"></i>
+                        <a href="https://wa.me/919876543210" target="_blank" class="footer-link">WhatsApp 24/7 Desk</a>
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="fas fa-envelope text-info"></i>
+                        <a href="mailto:support@skillsetgo.com" class="footer-link">support@skillsetgo.com</a>
+                    </li>
+                    <li class="mt-3">
+                        <a href="{% url 'help_center' %}" class="btn btn-sm btn-outline-light rounded-pill fw-bold w-100">
+                            <i class="fas fa-circle-question me-1"></i> Visit Help Center
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- City Badges -->
+        <div class="py-3 border-top border-bottom my-3" style="border-color: #1e293b !important;">
+            <div class="d-flex flex-wrap align-items-center gap-2 small" style="color: #94a3b8;">
+                <span class="text-white fw-bold me-2"><i class="fas fa-city text-warning me-1"></i> Serving Major Cities:</span>
+                <span style="color: #cbd5e1;">Bengaluru</span> &bull; 
+                <span style="color: #cbd5e1;">Mumbai</span> &bull; 
+                <span style="color: #cbd5e1;">Delhi NCR</span> &bull; 
+                <span style="color: #cbd5e1;">Hyderabad</span> &bull; 
+                <span style="color: #cbd5e1;">Chennai</span> &bull; 
+                <span style="color: #cbd5e1;">Pune</span> &bull; 
+                <span style="color: #cbd5e1;">Kolkata</span> &bull; 
+                <span style="color: #cbd5e1;">Ahmedabad</span>
+            </div>
+        </div>
+
+        <!-- Copyright & Legal -->
+        <div class="row align-items-center small pt-2" style="color: #94a3b8;">
+            <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                <p class="mb-0">&copy; {% now 'Y' %} SkillSetGo Technologies Private Limited. All rights reserved.</p>
             </div>
             <div class="col-md-6 text-center text-md-end">
-                <a href="#" class="text-white text-decoration-none me-3">Privacy Policy</a>
-                <a href="#" class="text-white text-decoration-none">Terms of Service</a>
+                <a href="{% url 'privacy_policy' %}" class="footer-legal-link">Privacy Policy</a>
+                <a href="{% url 'terms_of_service' %}" class="footer-legal-link">Terms of Service</a>
+                <a href="{% url 'trust_safety' %}" class="footer-legal-link">Shield Guarantee</a>
             </div>
         </div>
     </div>
 </footer>
 
-<!-- Font Awesome for icons -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
-<!-- Additional CSS -->
 <style>
-    footer a:hover {
-        color: #0d6efd !important;
-        transition: color 0.3s ease;
-    }
-    
-    footer .list-unstyled li {
-        transition: transform 0.3s ease;
-    }
-    
-    footer .list-unstyled li:hover {
-        transform: translateX(5px);
-    }
-    
-    footer hr {
-        border-top: 1px solid rgba(255,255,255,0.1);
-    }
+.footer-link {
+    color: #cbd5e1 !important;
+    text-decoration: none !important;
+    transition: color 0.15s ease;
+    font-weight: 500;
+}
+.footer-link:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+}
+
+.footer-legal-link {
+    color: #94a3b8 !important;
+    text-decoration: none !important;
+    margin-left: 1.25rem;
+    transition: color 0.15s ease;
+}
+.footer-legal-link:hover {
+    color: #ffffff !important;
+    text-decoration: underline !important;
+}
+
+.footer-social-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #cbd5e1 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+}
+.footer-social-btn:hover {
+    background: #ffffff;
+    color: #111827 !important;
+}
 </style>

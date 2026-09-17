@@ -23,4 +23,22 @@ urlpatterns=[
     path('api/appointments/<int:appointment_id>/verify-otp/', views.VerifyOtpView.as_view(), name='verify_otp'), # NEW URL
     path('api/appointments/<int:appointment_id>/rate-servicer/', views.RateServicerView.as_view(), name='rate_servicer'), # NEW URL for rating
     path('api/appointments/<int:appointment_id>/bookmark/', views.BookmarkAppointmentView.as_view(), name='bookmark_appointment'), # New API for bookmarking
+    path('api/appointments/<int:appointment_id>/payment/initiate/', views.InitiatePaymentView.as_view(), name='initiate_payment'), # Razorpay initiate
+    path('api/appointments/<int:appointment_id>/payment/verify/', views.VerifyPaymentView.as_view(), name='verify_payment'), # Razorpay verify
+    path('api/appointments/<int:appointment_id>/payout/withdraw/', views.WithdrawPayoutView.as_view(), name='withdraw_payout'), # Servicer withdraw payout
+    
+    # Premium Platform Pages
+    path('help/', views.help_center, name='help_center'),
+    path('reviews/', views.customer_reviews, name='customer_reviews'),
+    path('about/', views.about_us, name='about_us'),
+    path('trust/', views.trust_safety, name='trust_safety'),
+    path('estimator/', views.cost_estimator, name='cost_estimator'),
+    path('rewards/', views.rewards_program, name='rewards_program'),
+    path('terms/', views.terms_of_service, name='terms_of_service'),
+    path('privacy/', views.privacy_policy, name='privacy_policy'),
+    path('invoice/<int:appointment_id>/', views.appointment_invoice, name='appointment_invoice'),
+    
+    # Interactive APIs
+    path('api/support/ticket/', views.api_support_ticket, name='api_support_ticket'),
+    path('api/notifications/', views.api_notifications, name='api_notifications'),
 ]

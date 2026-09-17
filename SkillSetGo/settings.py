@@ -12,40 +12,55 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from decouple import config
 from pathlib import Path
 import os
+import dj_database_url
+
+# Pure-python MySQL adapter fallback if mysqlclient is not natively compiled
+try:
+    import pymysql
+    pymysql.install_as_MySQLdb()
+except Exception:
+    pass
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = "django-insecure-z!@x(aqh^!1bim*=vybh5uf(c^!o7kjjxcu*xpn6!!03j4qho5"
-SECRET_KEY = config('SECRET_KEY')
-# SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = []
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-z!@x(aqh^!1bim*=vybh5uf(c^!o7kjjxcu*xpn6!!03j4qho5')
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = config('DEBUG', default=True, cast=bool)
+
+# Allowed hosts parsed from environment or wildcards
+ALLOWED_HOSTS = [host.strip() for host in config('ALLOWED_HOSTS', default='*').split(',') if host.strip()]
+
+# CSRF Trusted Origins for cloud hosting (Render, PythonAnywhere, Railway, Local)
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip() for origin in config(
+        'CSRF_TRUSTED_ORIGINS',
+        default='https://*.onrender.com,https://*.pythonanywhere.com,https://*.up.railway.app,http://127.0.0.1,http://localhost'
+    ).split(',') if origin.strip()
+]
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
-    'skill',
+    "skill",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # High-performance static files serving
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -56,24 +71,24 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "SkillSetGo.urls"
+
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
-
     # `allauth` specific authentication methods, such as login by email
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR,'templates')],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
-                'django.template.context_processors.request',
                 "django.contrib.messages.context_processors.messages",
             ],
         },
@@ -83,23 +98,40 @@ TEMPLATES = [
 WSGI_APPLICATION = "SkillSetGo.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+# Database Configuration
+# Automatically supports DATABASE_URL (PostgreSQL on Render/Neon/Supabase), MySQL, or SQLite fallback
+DATABASE_URL = config('DATABASE_URL', default=None)
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+elif config('DB_ENGINE', default='').lower() == 'sqlite' or not config('DB_NAME', default=''):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': config('DB_NAME', default='skillsetgodb'),
+            'USER': config('DB_USER', default='root'),
+            'PASSWORD': config('DB_PASSWORD', default=''),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='3306'),
+        }
+    }
 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -118,56 +150,65 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# Static files storage using WhiteNoise
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760   # 10MB
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
+# Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-SITE_ID=1
-LOGIN_REDIRECT_URL='/'
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_REQUIRED = True
-#ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_LOGIN_METHODS = {'email'}
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'charanedamalapati2005@gmail.com'  # your full Gmail address
-# EMAIL_HOST_PASSWORD = 'dowj eafn dwzy lopb'  # the 16-character app password
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = 'charanedamalapati2005@gmail.com'
-# settings.py
-AUTH_USER_MODEL='skill.CustomUser'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='charanedamalapati2005@gmail.com')
+
+# Custom User Model & Forms
+AUTH_USER_MODEL = 'skill.CustomUser'
 ACCOUNT_FORMS = {
-    'signup': 'skill.forms.CustomSignupForm',  # Path to your form
+    'signup': 'skill.forms.CustomSignupForm',
 }
 
 SITE_NAME = "SkillSetGo"
-SITE_URL = "https://SkillSetGo.com"
-SITE_SUPPORT_EMAIL = "SkillSetGo@gmail.com"
+SITE_URL = config('SITE_URL', default="https://skillsetgo.com")
+SITE_SUPPORT_EMAIL = config('SITE_SUPPORT_EMAIL', default="SkillSetGo@gmail.com")
 SITE_LOGO_PATH = os.path.join(BASE_DIR, 'static/logo.jpeg')
+
+# Razorpay Configuration
+RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID', default='rzp_test_TcizwraHmXHdJg')
+RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET', default='V7iz3wfiLHxVxjZalrERMm4F')

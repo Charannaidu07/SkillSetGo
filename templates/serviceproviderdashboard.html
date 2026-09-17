@@ -1,323 +1,287 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servicer Dashboard | SkillSetGo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Your existing styles */
-        /* BODY & BASE STYLES */
-        body {
-            background-color: #f8f9fa;
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            min-height: 100vh;
-        }
+{% extends "header.html" %}
+{% load static %}
 
-        /* Dashboard specific styles */
-        .dashboard-container {
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+{% block title %}Servicer Dashboard | SkillSetGo{% endblock %}
 
-        .profile-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .profile-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border: 4px solid #6a11cb;
-            box-shadow: 0 4px 20px rgba(106, 17, 203, 0.2);
-        }
-
-        .preferences-card, .appointments-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .preferences-card:hover, .appointments-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .badge-preference {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 500;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            display: inline-block;
-        }
-
-        .appointment-item {
-            border-left: 4px solid #6a11cb;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background: #f9f9f9;
-            border-radius: 0 8px 8px 0;
-            transition: all 0.3s ease;
-        }
-
-        .appointment-item:hover {
-            background: #f0f0f0;
-            transform: translateX(5px);
-        }
-
-        .verification-badge {
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-        }
-
-        .id-card-btn {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            border: none;
-            transition: all 0.3s ease;
-        }
-
-        .id-card-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .section-title {
-            color: #6a11cb;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-        }
-
-        /* Keep all your existing navbar styles */
-        /* ... */
-    </style>
-</head>
-<body>
-    {% include 'header.html' %}
-
-    <div class="dashboard-container">
-        <div class="row g-4">
-            <div class="col-lg-3">
-                <div class="profile-card">
-                    <div class="text-center mb-4">
-                        {% if provider.profile_photo %}
-                            <img src="{{ provider.profile_photo.url }}" class="profile-img rounded-circle">
-                        {% else %}
-                            <div class="profile-img rounded-circle bg-light d-flex align-items-center justify-content-center">
-                                <i class="fas fa-user fa-3x text-muted"></i>
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <h4 class="text-center mb-3">{{ provider.full_name }}</h4>
-                    <p class="text-center text-muted mb-4">ID: {{ provider.service_provider_id }}</p>
-
-                   <div class="verification-status mb-4">
-    <h6 class="fw-bold mb-3">Verification Status</h6>
-
-    <div class="d-flex justify-content-between align-items-center mb-2">
-        <span>Profile:</span>
-        <span class="badge {% if provider.is_verified %}bg-success{% else %}bg-warning text-dark{% endif %} verification-badge">
-            {% if provider.is_verified %}
-                <i class="fas fa-check-circle me-1"></i> Verified
-            {% else %}
-                <i class="fas fa-clock me-1"></i> Pending
-            {% endif %}
-        </span>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center mb-2">
-        <span>Bank Details:</span>
-        <span class="badge
-            {% if bank_details and bank_details.is_verified %}
-                bg-success
-            {% else %}
-                bg-warning text-dark
-            {% endif %} verification-badge">
-            {% if bank_details and bank_details.is_verified %}
-                <i class="fas fa-check-circle me-1"></i> Verified
-            {% else %}
-                <i class="fas fa-clock me-1"></i>
-                {% if bank_details %}Pending{% else %}Not Added{% endif %}
-            {% endif %}
-        </span>
-    </div>
-
-    <div class="d-flex justify-content-between align-items-center">
-        <span>Payment Verification:</span>
-        <span class="badge
-            {% if payment_verified %}
-                bg-success
-            {% else %}
-                bg-warning text-dark
-            {% endif %} verification-badge">
-            {% if payment_verified %}
-                <i class="fas fa-check-circle me-1"></i> Verified
-            {% else %}
-                <i class="fas fa-clock me-1"></i>
-                Pending
-            {% endif %}
-        </span>
-    </div>
-</div>
-                    <div class="contact-info mb-4">
-                        <h6 class="fw-bold mb-3">Contact Information</h6>
-                        <p><i class="fas fa-phone me-2"></i> {{ provider.mobile_number }}</p>
-                        {% if provider.whatsapp_number %}
-                            <p><i class="fab fa-whatsapp me-2"></i> {{ provider.whatsapp_number }}</p>
-                        {% endif %}
-                        <p><i class="fas fa-map-marker-alt me-2"></i> {{ provider.get_full_address }}</p>
-                    </div>
-
-                    <div class="text-center">
-    {% if provider.is_verified and bank_details and bank_details.is_verified and payment_verified %}
-        <a href="{% url 'generate_id_card' %}" class="btn id-card-btn text-white">
-            <i class="fas fa-id-card me-2"></i> Download ID Card
-        </a>
-    {% else %}
-        <div class="alert alert-warning small">
-            Complete all verifications to download your ID card
-        </div>
-    {% endif %}
-</div>
+{% block content %}
+<div class="container py-4">
+    <!-- Top Dashboard Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <div>
+                    <h2 class="fw-bold mb-1"><i class="fas fa-gauge-high text-primary me-2"></i> Servicer Command Center</h2>
+                    <p class="text-muted mb-0 small">Manage incoming client jobs, track completed earnings, and withdraw instant payouts.</p>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="{% url 'appointments' %}" class="btn btn-primary shadow-sm">
+                        <i class="fas fa-search me-1"></i> Browse Available Jobs
+                    </a>
+                    <a href="{% url 'my_work' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-handshake me-1"></i> My Accepted Work
+                    </a>
                 </div>
             </div>
 
-            <div class="col-lg-6">
-                {% if provider.is_verified %}
-                <div class="appointments-card">
-                    <h4 class="section-title"><i class="fas fa-calendar-check me-2"></i> Your Appointments</h4>
+            <!-- Stats Overview Row -->
+            <div class="row g-4 mb-4">
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-semibold">Completed Jobs</small>
+                            <h3 class="mb-0 fw-bold">{{ completed_jobs_count|default:"0" }}</h3>
+                        </div>
+                    </div>
+                </div>
 
-                    {% if appointments %}
-                        {% for appointment in appointments %}
-                        <div class="appointment-item">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                {% if appointment.issue == 'others' %}
-                                <h5 class="mb-0">{{ appointment.custom_issue }}</h5>
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon success">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-semibold">Total Revenue</small>
+                            <h3 class="mb-0 fw-bold text-success">₹{{ total_earnings|floatformat:2 }}</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-semibold">Servicer Rating</small>
+                            <h3 class="mb-0 fw-bold">{{ provider.rating|floatformat:1 }} ★</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border: 1px solid #334155;">
+                        <div class="stat-icon" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+                            <i class="fas fa-id-card-clip fs-4"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <small class="text-white-50 fw-bold text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">Certified Pro ID</small>
+                                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25" style="font-size: 0.65rem;">ACTIVE</span>
+                            </div>
+                            <h4 class="mb-0 fw-extrabold text-info font-monospace mt-1" style="letter-spacing: 0.04em;">#{{ provider.service_provider_id }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Dashboard Columns -->
+            <div class="row g-4">
+                <!-- Left: Profile & Verification Card -->
+                <div class="col-lg-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="position-relative d-inline-block mb-3">
+                                {% if provider.profile_photo %}
+                                    <img src="{{ provider.profile_photo.url }}" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover; border: 4px solid #6366f1;">
                                 {% else %}
-                                <h5 class="mb-0">{{ appointment.issue }}</h5>
+                                    <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center shadow" style="width: 120px; height: 120px; border: 4px solid #6366f1;">
+                                        <i class="fas fa-user fa-3x text-muted"></i>
+                                    </div>
                                 {% endif %}
-                                <span class="badge {% if appointment.status == 'completed' %}bg-success{% elif appointment.status == 'pending' %}bg-warning text-dark{% else %}bg-info{% endif %}">
-                                    {{ appointment.get_status_display }}
+                                {% if provider.is_verified %}
+                                    <span class="position-absolute bottom-0 end-0 bg-success text-white p-2 rounded-circle shadow-sm" title="Verified Provider">
+                                        <i class="fas fa-check" style="font-size: 0.75rem;"></i>
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <h4 class="fw-bold mb-1">{{ provider.full_name }}</h4>
+                            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 bg-dark text-white rounded-pill fw-bold border border-secondary shadow-sm mb-2" style="font-size: 0.85rem;">
+                                <i class="fas fa-id-badge text-info"></i>
+                                <span class="text-white-50 small">PRO ID:</span>
+                                <span class="font-monospace text-warning fw-extrabold">{{ provider.service_provider_id }}</span>
+                            </div>
+                            <p class="text-muted small mb-3">{{ provider.city }}, {{ provider.state }}</p>
+
+                            <!-- Verification Checklist -->
+                            <div class="bg-light p-3 rounded-3 text-start mb-4 border">
+                                <h6 class="fw-bold mb-3 small text-uppercase text-muted"><i class="fas fa-shield-halved me-1 text-primary"></i> Verification Status</h6>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-2 small">
+                                    <span>Profile Information:</span>
+                                    <span class="badge {% if provider.is_verified %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                        {% if provider.is_verified %}<i class="fas fa-check me-1"></i> Verified{% else %}Pending{% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-2 small">
+                                    <span>Bank Details:</span>
+                                    <span class="badge {% if bank_details and bank_details.is_verified %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                        {% if bank_details and bank_details.is_verified %}<i class="fas fa-check me-1"></i> Verified{% else %}Pending{% endif %}
+                                    </span>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center small">
+                                    <span>Registration Payment:</span>
+                                    <span class="badge {% if payment_verified %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                                        {% if payment_verified %}<i class="fas fa-check me-1"></i> Verified{% else %}Pending{% endif %}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Skills & Specialties -->
+                            <div class="text-start mb-4">
+                                <h6 class="fw-bold mb-2 small text-uppercase text-muted"><i class="fas fa-tags me-1 text-primary"></i> Registered Skills</h6>
+                                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill me-1 mb-1">
+                                    {{ provider.Preference1 }}
+                                    {% if provider.Preference1 == 'others' and provider.other_preference1 %}({{ provider.other_preference1 }}){% endif %}
                                 </span>
+                                {% if provider.Preference2 %}
+                                <span class="badge bg-info bg-opacity-10 text-info px-3 py-2 rounded-pill me-1 mb-1">
+                                    {{ provider.Preference2 }}
+                                    {% if provider.Preference2 == 'others' and provider.other_preference2 %}({{ provider.other_preference2 }}){% endif %}
+                                </span>
+                                {% endif %}
                             </div>
-                            <p class="mb-1"><i class="fas fa-user me-2"></i> {{ appointment.customer_name }}</p>
-                            <p class="mb-1"><i class="fas fa-clock me-2"></i> {{ appointment.appointment_date }} at {{ appointment.appointment_time }}</p>
-                            <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> {{ appointment.address }}</p>
-                            <div class="d-flex justify-content-end">
-                                <a href="#" class="btn btn-sm btn-outline-primary me-2">Details</a>
-                                {% if appointment.status == 'pending' %}
-                                    <a href="#" class="btn btn-sm btn-success">Accept</a>
+
+                            <!-- ID Card Download -->
+                            <div>
+                                {% if provider.is_verified and bank_details and bank_details.is_verified and payment_verified %}
+                                    <a href="{% url 'generate_id_card' %}" class="btn btn-primary w-100 shadow" target="_blank">
+                                        <i class="fas fa-id-badge me-2"></i> Download Official ID Card (PDF)
+                                    </a>
+                                {% else %}
+                                    <div class="alert alert-warning small mb-0">
+                                        <i class="fas fa-info-circle me-1"></i> Complete all verifications to download your ID badge.
+                                    </div>
                                 {% endif %}
                             </div>
                         </div>
-                        {% endfor %}
-                        <div class="text-center">
-        <a href="{% url 'appointments' %}" class="btn id-card-btn text-white">
-            <i class="fas fa-id-card me-2"></i> View All Appointmnets
-        </a>
-</div>
-                    {% else %}
-                        <div class="text-center py-4">
-                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
-                            <h5>No Appointments Yet</h5>
-                            <p class="text-muted">Your upcoming appointments will appear here</p>
-                        </div>
-                    {% endif %}
-                </div>
-                {% else %}
-                <div class="appointments-card">
-                    <h4 class="section-title"><i class="fas fa-lock me-2"></i> Appointments</h4>
-                    <div class="text-center py-4">
-                        <i class="fas fa-user-shield fa-3x text-muted mb-3"></i>
-                        <h5>Account Verification Required</h5>
-                        <p class="text-muted">Please complete your profile verification to view and accept appointments</p>
-                        <a href="#" class="btn btn-primary mt-2">Complete Verification</a>
                     </div>
                 </div>
-                {% endif %}
+
+                <!-- Right: Active Appointments & Jobs -->
+                <div class="col-lg-8">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-list-check text-primary me-2"></i> Assigned Jobs & Appointments</span>
+                            <a href="{% url 'appointments' %}" class="btn btn-sm btn-outline-primary">Browse All Jobs</a>
+                        </div>
+                        <div class="card-body">
+                            {% if appointments %}
+                                <div class="list-group list-group-flush">
+                                    {% for appointment in appointments %}
+                                    <div class="list-group-item p-3 mb-2 rounded-3 border bg-light">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="fw-bold mb-0 text-dark">
+                                                {% if appointment.issue == 'others' %}{{ appointment.custom_issue }}{% else %}{{ appointment.get_issue_display }}{% endif %}
+                                            </h6>
+                                            <span class="appointment-status status-{{ appointment.status }}">{{ appointment.get_status_display }}</span>
+                                        </div>
+                                        <div class="row g-2 small text-muted mb-2">
+                                            <div class="col-sm-6"><i class="fas fa-user me-1 text-primary"></i> Customer: {{ appointment.customer_name|default:appointment.full_name }}</div>
+                                            <div class="col-sm-6"><i class="fas fa-clock me-1 text-primary"></i> {{ appointment.appointment_date }} at {{ appointment.appointment_time }}</div>
+                                            <div class="col-12"><i class="fas fa-map-marker-alt me-1 text-primary"></i> {{ appointment.address }}</div>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                            <span class="fw-bold text-primary fs-6">Expected: ₹{{ appointment.expected_amount }}</span>
+                                            <a href="{% url 'appointments' %}" class="btn btn-sm btn-outline-primary">Open in Job Center</a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="empty-state p-4 text-center my-3 border-0">
+                                    <i class="far fa-calendar-check fa-3x text-muted mb-2"></i>
+                                    <h5>No Assigned Appointments</h5>
+                                    <p class="text-muted small mb-3">You don't have any active jobs assigned right now. Browse public job posts to negotiate and accept client offers.</p>
+                                    <a href="{% url 'appointments' %}" class="btn btn-primary btn-sm">Find New Appointments</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-lg-3">
-                <div class="preferences-card">
-                    <h4 class="section-title"><i class="fas fa-tags me-2"></i> Your Services</h4>
-
-                    <div class="mb-4">
-                        <h6 class="fw-bold">Primary Service</h6>
-                        <span class="badge-preference">
-                            {{ provider.Preference1 }}
-                            {% if provider.Preference1 == 'others' and provider.other_preference1 %}
-                                ({{ provider.other_preference1 }})
-                            {% endif %}
-                        </span>
-                    </div>
-
-                    {% if provider.Preference2 %}
-                    <div class="mb-4">
-                        <h6 class="fw-bold">Secondary Service</h6>
-                        <span class="badge-preference">
-                            {{ provider.Preference2 }}
-                            {% if provider.Preference2 == 'others' and provider.other_preference2 %}
-                                ({{ provider.other_preference2 }})
-                            {% endif %}
-                        </span>
-                    </div>
-                    {% endif %}
-
-                    <div class="availability mt-4">
-                        <h6 class="fw-bold mb-3">Availability</h6>
-                        <div class="form-check form-switch mb-2">
-                            <input class="form-check-input" type="checkbox" id="availableSwitch" checked>
-                            <label class="form-check-label" for="availableSwitch">Currently Available</label>
+            <!-- Dynamic Earnings & Payout Ledger -->
+            <div class="row g-4 mt-2">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0 rounded-4">
+                        <div class="card-header bg-white py-3">
+                            <h5 class="fw-bold mb-0 text-dark"><i class="fas fa-coins text-warning me-2"></i> Completed Work Earnings & Payout Ledger</h5>
                         </div>
-                        <small class="text-muted">Toggle to pause new appointment requests</small>
-                    </div>
-
-                    <div class="stats mt-4">
-                        <h6 class="fw-bold mb-3">Your Stats</h6>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Completed Jobs:</span>
-                            <span class="fw-bold">24</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Rating:</span>
-                            <span class="fw-bold">{{ provider.rating|floatformat:1 }} <i class="fas fa-star text-warning"></i></span>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <span>Earnings:</span>
-                            <span class="fw-bold">₹12,500</span>
+                        <div class="card-body p-0">
+                            {% csrf_token %}
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr class="small text-muted text-uppercase">
+                                            <th class="ps-4">Booking ID</th>
+                                            <th>Service Category</th>
+                                            <th>Agreed Price</th>
+                                            <th>Distance Allowance</th>
+                                            <th>Platform Fee (10%)</th>
+                                            <th>Net Earnings</th>
+                                            <th>Payout Status</th>
+                                            <th class="pe-4 text-end">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% if payout_list %}
+                                            {% for item in payout_list %}
+                                                <tr>
+                                                    <td class="ps-4"><strong class="text-dark">{{ item.appointment.booking_id }}</strong></td>
+                                                    <td>
+                                                        {% if item.appointment.issue == 'others' %}
+                                                            {{ item.appointment.custom_issue }}
+                                                        {% else %}
+                                                            {{ item.appointment.get_issue_display }}
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>₹{{ item.final_price|floatformat:2 }}</td>
+                                                    <td>₹{{ item.distance_cost|floatformat:2 }}</td>
+                                                    <td class="text-danger">-₹{{ item.platform_fee|floatformat:2 }}</td>
+                                                    <td class="fw-bold text-success">₹{{ item.earnings|floatformat:2 }}</td>
+                                                    <td>
+                                                        {% if item.payout_status_raw == 'paid' %}
+                                                            <span class="badge bg-success">
+                                                                <i class="fas fa-check-circle me-1"></i> Settled
+                                                            </span>
+                                                            <div class="text-muted small mt-1" style="font-size: 0.725rem;">
+                                                                Ref: {{ item.payout_transaction_id }}
+                                                            </div>
+                                                        {% else %}
+                                                            <span class="badge bg-warning text-dark">
+                                                                <i class="fas fa-clock me-1"></i> Available for Withdrawal
+                                                            </span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="pe-4 text-end">
+                                                        {% if item.payout_status_raw == 'pending' %}
+                                                            <button class="btn btn-sm btn-primary shadow-sm" onclick="withdrawPayout({{ item.appointment.id }}, this)">
+                                                                <i class="fas fa-arrow-down me-1"></i> Withdraw
+                                                            </button>
+                                                        {% else %}
+                                                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                                <i class="fas fa-check-double me-1"></i> Completed
+                                                            </button>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="8" class="text-center py-5 text-muted">
+                                                    <i class="fas fa-wallet fa-3x mb-2 text-muted opacity-50"></i>
+                                                    <h6 class="fw-bold">No Completed Payouts Yet</h6>
+                                                    <p class="small mb-0">Once you complete jobs and verify the customer OTP, earnings will appear here for one-click withdrawal.</p>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -325,22 +289,57 @@
         </div>
     </div>
 
-    {% include 'footer.html' %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Add any interactive functionality here
-        document.addEventListener('DOMContentLoaded', function() {
-            // Example: Toggle availability status
-            const availabilitySwitch = document.getElementById('availableSwitch');
-            if (availabilitySwitch) {
-                availabilitySwitch.addEventListener('change', function() {
-                    // Here you would typically make an AJAX call to update the status
-                    const status = this.checked ? 'available' : 'unavailable';
-                    console.log('Availability status changed to:', status);
-                    // You would add AJAX call here to update server
-                });
-            }
-        });
+        function withdrawPayout(appointmentId, btn) {
+            if (!confirm("Are you sure you want to withdraw these earnings to your verified bank/UPI account?")) return;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Withdrawing...';
+            
+            const getCsrfToken = () => {
+                const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+                if (csrfInput) return csrfInput.value;
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, 10) === ('csrftoken=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(10));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue || '';
+            };
+
+            fetch(`/api/appointments/${appointmentId}/payout/withdraw/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Payout request failed');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Withdrawal Successful!\nTransaction ID: ' + data.payout_transaction_id + '\nFunds have been sent to your bank account / UPI.');
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-arrow-down me-1"></i> Withdraw';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('An error occurred. Please try again.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-arrow-down me-1"></i> Withdraw';
+            });
+        }
     </script>
-</body>
-</html>
+{% endblock %}

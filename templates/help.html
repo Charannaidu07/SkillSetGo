@@ -1,0 +1,324 @@
+{% extends "header.html" %}
+{% load static %}
+{% block title %}Help Center & 24/7 Support | SkillSetGo{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Support Banner -->
+    <div class="card border-0 mb-5 p-4 p-md-5 text-white" style="background: #111827; border-radius: var(--radius-xl);">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-bold mb-3">
+                    <i class="fas fa-headset me-1 text-primary"></i> 24/7 Concierge Support
+                </span>
+                <h1 class="fw-extrabold text-white mb-3" style="font-size: 2.3rem;">How can we assist you today?</h1>
+                <p class="text-white-50 mb-4" style="font-size: 1.05rem;">
+                    Find instant answers to common questions, track your booking issues, or raise a priority support ticket with our concierge team.
+                </p>
+                <div class="position-relative">
+                    <input type="text" id="faqSearchInput" class="form-control form-control-lg border-0 ps-5" placeholder="Search keywords (e.g. refund, reschedule, OTP, price bargaining)..." style="border-radius: 50px; font-size: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                    <i class="fas fa-search position-absolute text-muted" style="top: 50%; left: 20px; transform: translateY(-50%);"></i>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                <div class="bg-white bg-opacity-10 p-4 rounded-4 border border-white border-opacity-10">
+                    <i class="fas fa-shield-halved fa-3x text-warning mb-3"></i>
+                    <h5 class="fw-bold text-white mb-2">SkillSetGo Shield Protection</h5>
+                    <p class="small text-white-50 mb-3">Every booking is backed by our ₹10,000 damage protection and 30-day rework warranty.</p>
+                    <a href="{% url 'trust_safety' %}" class="btn btn-sm btn-light rounded-pill fw-bold">Read Warranty Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Help Channels -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border" style="border-radius: var(--radius-lg); background: var(--bg-surface);">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background: #ecfdf5; color: #059669;">
+                        <i class="fab fa-whatsapp fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">WhatsApp Support</h6>
+                        <small class="text-muted">Instant response in &lt; 2 mins</small>
+                    </div>
+                </div>
+                <p class="small text-muted mb-4">Connect directly with our 24/7 dedicated support desk for instant booking help.</p>
+                <a href="https://wa.me/919876543210?text=Hi%20SkillSetGo,%20I%20need%20assistance" target="_blank" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
+                    <i class="fab fa-whatsapp me-2 text-success"></i> Chat on WhatsApp
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border" style="border-radius: var(--radius-lg); background: var(--bg-surface);">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background: #eff6ff; color: #2563eb;">
+                        <i class="fas fa-phone-volume fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">Toll-Free Helpline</h6>
+                        <small class="text-muted">Mon - Sun (8 AM - 10 PM)</small>
+                    </div>
+                </div>
+                <p class="small text-muted mb-4">Call our customer resolution executives for immediate on-site emergencies.</p>
+                <a href="tel:18001234567" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
+                    <i class="fas fa-phone me-2"></i> 1800-123-4567
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 p-4 border" style="border-radius: var(--radius-lg); background: var(--bg-surface);">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 48px; height: 48px; background: #fef2f2; color: #dc2626;">
+                        <i class="fas fa-ticket fa-lg"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0">Raise Support Ticket</h6>
+                        <small class="text-muted">Tracked via unique ticket ID</small>
+                    </div>
+                </div>
+                <p class="small text-muted mb-4">Submit specific booking queries or refund requests with attached evidence.</p>
+                <button type="button" class="btn btn-dark w-100 fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#ticketModal">
+                    <i class="fas fa-plus me-2"></i> Create New Ticket
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frequently Asked Questions -->
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <h3 class="fw-bold mb-4">Frequently Asked Questions</h3>
+            <div class="accordion" id="faqAccordion">
+                
+                <!-- Category 1: Booking & Bargaining -->
+                <div class="accordion-item border rounded-3 mb-3 overflow-hidden shadow-xs">
+                    <h2 class="accordion-header" id="faqHeading1">
+                        <button class="accordion-button fw-bold py-3 text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1">
+                            <i class="fas fa-handshake me-2 text-primary"></i> How does Dynamic Price Bargaining work on SkillSetGo?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary lh-lg">
+                            When you request a service, you can propose your initial expected budget. Verified service providers in your neighborhood review your request and can either accept directly or submit a reasonable counter-offer. You can negotiate in real time, and once both sides agree on the price, the appointment is confirmed!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 2: Payments & Escrow -->
+                <div class="accordion-item border rounded-3 mb-3 overflow-hidden shadow-xs">
+                    <h2 class="accordion-header" id="faqHeading2">
+                        <button class="accordion-button collapsed fw-bold py-3 text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2">
+                            <i class="fas fa-lock me-2 text-success"></i> Is my online payment secure? When is money released to the servicer?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary lh-lg">
+                            All online payments are securely processed through Razorpay and held in SkillSetGo escrow. Your money is <strong>never released</strong> to the service provider until the service is fully completed and you share the secret 6-digit OTP at your doorstep.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 3: OTP Verification -->
+                <div class="accordion-item border rounded-3 mb-3 overflow-hidden shadow-xs">
+                    <h2 class="accordion-header" id="faqHeading3">
+                        <button class="accordion-button collapsed fw-bold py-3 text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3">
+                            <i class="fas fa-key me-2 text-warning"></i> What is the 6-Digit Completion OTP and why is it required?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary lh-lg">
+                            The completion OTP is your safety safeguard. Once the technician finishes the job to your complete satisfaction, you provide the 6-digit code displayed on your Appointments page. When the technician enters this OTP in their work queue, the appointment is marked complete.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 4: Cancellations & Refunds -->
+                <div class="accordion-item border rounded-3 mb-3 overflow-hidden shadow-xs">
+                    <h2 class="accordion-header" id="faqHeading4">
+                        <button class="accordion-button collapsed fw-bold py-3 text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4">
+                            <i class="fas fa-rotate-left me-2 text-danger"></i> What is the cancellation and refund policy?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary lh-lg">
+                            You can cancel any booking free of charge before the service provider arrives at your location. If you paid online via Razorpay, the full refund is automatically credited back to your original payment method within 3-5 business days.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 5: Servicer Verification -->
+                <div class="accordion-item border rounded-3 mb-3 overflow-hidden shadow-xs">
+                    <h2 class="accordion-header" id="faqHeading5">
+                        <button class="accordion-button collapsed fw-bold py-3 text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5">
+                            <i class="fas fa-id-card me-2 text-info"></i> How are SkillSetGo service professionals vetted?
+                        </button>
+                    </h2>
+                    <div id="faqCollapse5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary lh-lg">
+                            Every service professional undergoes mandatory government ID verification, in-person trade skill assessment, background security checks, and carries an official SkillSetGo digital badge with a verifiable QR code.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Sidebar Contact Card -->
+        <div class="col-lg-4">
+            <div class="card p-4 border" style="border-radius: var(--radius-xl); background: var(--bg-surface);">
+                <h5 class="fw-bold mb-3">Need Immediate Help?</h5>
+                <p class="text-muted small mb-4">Our customer success executives are online and ready to resolve your queries.</p>
+
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-envelope text-primary me-3 fa-lg"></i>
+                    <div>
+                        <div class="small fw-bold">Email Support</div>
+                        <a href="mailto:support@skillsetgo.com" class="text-muted small">support@skillsetgo.com</a>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center mb-4">
+                    <i class="fas fa-location-dot text-danger me-3 fa-lg"></i>
+                    <div>
+                        <div class="small fw-bold">Corporate Headquarters</div>
+                        <span class="text-muted small">Indiranagar 100ft Road, Bengaluru, KA 560038</span>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h6 class="fw-bold mb-2">Service Hours</h6>
+                <div class="d-flex justify-content-between text-muted small mb-1">
+                    <span>Monday - Saturday</span>
+                    <span class="fw-semibold text-dark">7:00 AM - 10:00 PM</span>
+                </div>
+                <div class="d-flex justify-content-between text-muted small">
+                    <span>Sunday & Holidays</span>
+                    <span class="fw-semibold text-dark">8:00 AM - 9:00 PM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Support Ticket Modal -->
+<div class="modal fade" id="ticketModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0" style="border-radius: var(--radius-xl);">
+            <div class="modal-header border-0 pb-0">
+                <div>
+                    <h5 class="modal-title fw-bold">Raise a Support Ticket</h5>
+                    <p class="text-muted small mb-0">We will respond within 15 minutes with a solution.</p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <form id="supportTicketForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Your Full Name</label>
+                        <input type="text" id="tktName" class="form-control" value="{% if user.is_authenticated %}{{ user.username }}{% endif %}" required placeholder="e.g. Rahul Sharma">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Email Address</label>
+                        <input type="email" id="tktEmail" class="form-control" value="{% if user.is_authenticated %}{{ user.email }}{% endif %}" required placeholder="name@example.com">
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-bold small">Query Category</label>
+                            <select id="tktCategory" class="form-select">
+                                <option value="Payment & Refund">Payment & Refund</option>
+                                <option value="Booking Issue">Booking Issue</option>
+                                <option value="Price Bargaining">Price Bargaining</option>
+                                <option value="Service Quality / Rework">Service Quality / Rework</option>
+                                <option value="Account & Login">Account & Login</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-bold small">Urgency Level</label>
+                            <select id="tktUrgency" class="form-select">
+                                <option value="Normal">Normal (&lt; 2 hours)</option>
+                                <option value="High">High (Immediate assistance)</option>
+                                <option value="Emergency">Emergency (Active technician on-site)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Describe your issue in detail</label>
+                        <textarea id="tktMessage" class="form-control" rows="4" required placeholder="Please describe what happened, booking ID (if applicable), and how we can help..."></textarea>
+                    </div>
+                    <div id="ticketResultAlert" class="alert d-none py-2 mb-3 small"></div>
+                    <button type="submit" id="submitTicketBtn" class="btn btn-dark w-100 fw-bold py-2 rounded-pill">
+                        <i class="fas fa-paper-plane me-2"></i> Submit Priority Ticket
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const faqSearch = document.getElementById('faqSearchInput');
+    if (faqSearch) {
+        faqSearch.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            document.querySelectorAll('#faqAccordion .accordion-item').forEach(item => {
+                const text = item.innerText.toLowerCase();
+                item.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    }
+
+    const ticketForm = document.getElementById('supportTicketForm');
+    if (ticketForm) {
+        ticketForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitTicketBtn');
+            const alertBox = document.getElementById('ticketResultAlert');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Submitting...';
+
+            try {
+                const res = await fetch('/api/support/ticket/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: document.getElementById('tktName').value,
+                        email: document.getElementById('tktEmail').value,
+                        category: document.getElementById('tktCategory').value,
+                        urgency: document.getElementById('tktUrgency').value,
+                        message: document.getElementById('tktMessage').value,
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alertBox.className = 'alert alert-success py-2 mb-3 small';
+                    alertBox.innerHTML = `<strong>Success!</strong> ${data.message}`;
+                    alertBox.classList.remove('d-none');
+                    ticketForm.reset();
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('ticketModal'));
+                        if (modal) modal.hide();
+                    }, 3500);
+                } else {
+                    alertBox.className = 'alert alert-danger py-2 mb-3 small';
+                    alertBox.innerText = data.error || 'Failed to submit ticket.';
+                    alertBox.classList.remove('d-none');
+                }
+            } catch (err) {
+                alertBox.className = 'alert alert-danger py-2 mb-3 small';
+                alertBox.innerText = 'Network error. Please try again.';
+                alertBox.classList.remove('d-none');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i> Submit Priority Ticket';
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

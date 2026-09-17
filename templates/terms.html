@@ -1,0 +1,46 @@
+{% extends "header.html" %}
+{% load static %}
+{% block title %}Terms of Service & Cancellation Policy | SkillSetGo{% endblock %}
+
+{% block content %}
+<div class="container py-4" style="max-width: 900px;">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <span class="badge bg-dark text-white rounded-pill px-3 py-2 fw-bold mb-2">Legal & Transparency</span>
+        <h1 class="fw-extrabold">Terms of Service & Platform Guidelines</h1>
+        <p class="text-muted">Last Updated: September 2026 | Applicable to all Users & Partner Pros</p>
+    </div>
+
+    <!-- Content Card -->
+    <div class="card p-4 p-md-5 border mb-5" style="border-radius: var(--radius-xl); background: var(--bg-surface);">
+        <h4 class="fw-bold mb-3">1. Overview & Platform Role</h4>
+        <p class="text-secondary lh-lg mb-4">
+            SkillSetGo operates an interactive digital marketplace facilitating connections between autonomous verified service professionals ("Providers") and homeowners/consumers ("Users"). By accessing or utilizing the platform, you agree to these Terms of Service.
+        </p>
+
+        <h4 class="fw-bold mb-3">2. Dynamic Price Bargaining & Fair Dealings</h4>
+        <p class="text-secondary lh-lg mb-4">
+            The SkillSetGo dynamic bargaining feature allows Users and Providers to negotiate fair pricing. Once both parties accept a final price quote through the system, it represents a binding service agreement. Providers agree never to solicit unofficial off-platform cash surcharges beyond the agreed scope.
+        </p>
+
+        <h4 class="fw-bold mb-3">3. Payments, Razorpay Escrow & Completion OTP</h4>
+        <p class="text-secondary lh-lg mb-4">
+            All online transactions are held in escrow via Razorpay until the service is delivered. Escrow funds are released to the service provider exclusively when the customer provides their confidential 6-digit Completion OTP at the doorstep upon satisfactory service inspection.
+        </p>
+
+        <h4 class="fw-bold mb-3">4. Cancellation & Refund Policy</h4>
+        <div class="bg-light p-3 rounded-3 mb-4 text-secondary small lh-lg border">
+            <ul class="mb-0 ps-3">
+                <li><strong>Free Cancellation:</strong> Bookings cancelled prior to the service provider reaching the doorstep receive a 100% full refund with zero cancellation fee.</li>
+                <li><strong>Refund Processing:</strong> Refunds for online payments are processed instantly to the original payment source within 3-5 business days.</li>
+                <li><strong>Provider No-Show:</strong> If a provider fails to arrive within 45 minutes of the appointment window, an alternative pro will be dispatched with a ₹150 apology credit.</li>
+            </ul>
+        </div>
+
+        <h4 class="fw-bold mb-3">5. SkillSetGo Shield Protection Plan & Warranty</h4>
+        <p class="text-secondary lh-lg mb-0">
+            All appointments booked through SkillSetGo include 30-day rework protection. In the rare event of verified accidental damage caused during service execution, SkillSetGo covers up to ₹10,000 under the Shield Protection Guarantee subject to claim verification.
+        </p>
+    </div>
+</div>
+{% endblock %}

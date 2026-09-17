@@ -1,40 +1,273 @@
+{% extends "header.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-</head>
-<body>
-    {% include 'header.html' %}
+
+{% block title %}My Profile | SkillSetGo{% endblock %}
 
 {% block content %}
-<div class="profile-container">
-    <h2>User Profile</h2>
-    
-    <div class="profile-info">
-        <p><strong>Username:</strong> {{ user.username }}</p>
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Account Type:</strong> {{ user_type_display }}</p>
-        
-        {% if user.user_type == 'servicer' %}
-            <div class="worker-features">
-                <h3>Worker Features</h3>
-                <!-- Special content for workers -->
+<div class="container py-4">
+    <!-- Profile Hero Banner (Urban Company Style) -->
+            <div class="uc-profile-hero mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center gap-4 flex-wrap">
+                            {% if provider and provider.profile_photo %}
+                                <img src="{{ provider.profile_photo.url }}" alt="Profile Photo" class="rounded-circle" style="width: 84px; height: 84px; object-fit: cover; border: 3px solid #374151;">
+                            {% else %}
+                                <div class="rounded-circle bg-white text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 84px; height: 84px; font-size: 2.25rem;">
+                                    {{ user.username|first|upper }}
+                                </div>
+                            {% endif %}
+                            <div>
+                                <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                                    <h2 class="text-white mb-0 fw-bold">{{ user.get_full_name|default:user.username }}</h2>
+                                    <span class="badge bg-light text-dark fw-bold px-3 py-1 rounded-pill" style="font-size: 0.75rem;">
+                                        <i class="fas fa-certificate text-warning me-1"></i> {{ user_type_display }}
+                                    </span>
+                                </div>
+                                <p class="text-muted mb-2"><i class="fas fa-envelope me-2"></i>{{ user.email }}</p>
+                                <small class="text-muted"><i class="fas fa-calendar-check me-1"></i> Member Since {{ user.date_joined|date:"F Y" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        {% if user.user_type == 'servicer' %}
+                            <a href="{% url 'generate_id_card' %}" class="btn btn-light text-dark fw-bold me-2 mb-2" target="_blank">
+                                <i class="fas fa-id-badge text-dark me-1"></i> View ID Card
+                            </a>
+                            <a href="{% url 'service_provider_dashboard' %}" class="btn btn-outline-light mb-2">
+                                <i class="fas fa-chart-line me-1"></i> Partner Dashboard
+                            </a>
+                        {% else %}
+                            <a href="{% url 'book_appointment' %}" class="btn btn-light text-dark fw-bold me-2 mb-2">
+                                <i class="fas fa-plus me-1"></i> Book Service
+                            </a>
+                            <a href="{% url 'appointments' %}" class="btn btn-outline-light mb-2">
+                                <i class="fas fa-clock-rotate-left me-1"></i> My Bookings
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-        {% else %}
-            <div class="user-features">
-                <h3>User Features</h3>
-                <!-- Special content for regular users -->
+
+            <!-- Stats Overview Row -->
+            <div class="row g-3 mb-4">
+                {% if user.user_type == 'servicer' %}
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-icon primary">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Total Assigned Jobs</small>
+                                <h3 class="mb-0 fw-bold text-dark">{{ total_jobs|default:"0" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <i class="fas fa-check-double"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Completed Jobs</small>
+                                <h3 class="mb-0 fw-bold text-dark">{{ completed_jobs|default:"0" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-icon warning">
+                                <i class="fas fa-indian-rupee-sign"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Net Earnings</small>
+                                <h3 class="mb-0 fw-bold text-dark">₹{{ earnings|default:"0.00" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-icon warning">
+                                <i class="fas fa-star text-warning"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Average Rating</small>
+                                <h3 class="mb-0 fw-bold text-dark">{{ provider.rating|default:"5.0" }} ★</h3>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-icon primary">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Total Bookings</small>
+                                <h3 class="mb-0 fw-bold text-dark">{{ total_appointments|default:"0" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-icon primary">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Active Bookings</small>
+                                <h3 class="mb-0 fw-bold text-dark">{{ active_appointments|default:"0" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <i class="fas fa-circle-check"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Completed Services</small>
+                                <h3 class="mb-0 fw-bold text-dark">{{ completed_appointments|default:"0" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="stat-card">
+                            <div class="stat-icon warning">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted fw-semibold">Total Spent</small>
+                                <h3 class="mb-0 fw-bold text-dark">₹{{ total_spent|default:"0.00" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
-        {% endif %}
+
+            <!-- Detailed Profile Grid -->
+            <div class="row g-4">
+                <!-- Account Information -->
+                <div class="col-lg-5">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-dark"><i class="fas fa-user-gear me-2"></i> Account Details</span>
+                            <span class="badge bg-light text-dark border">ID #{{ user.id }}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="detail-row mb-3">
+                                <div class="text-muted small">Username</div>
+                                <div class="fw-bold text-dark">{{ user.username }}</div>
+                            </div>
+                            <div class="detail-row mb-3">
+                                <div class="text-muted small">Email Address</div>
+                                <div class="fw-bold text-dark">{{ user.email }}</div>
+                            </div>
+                            <div class="detail-row mb-3">
+                                <div class="text-muted small">Account Role</div>
+                                <div>
+                                    <span class="badge bg-dark text-white">{{ user_type_display }}</span>
+                                </div>
+                            </div>
+
+                            {% if provider %}
+                                <div class="p-3 rounded-3 mb-3" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; border: 1px solid #334155;">
+                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                        <div class="small fw-bold text-white-50 text-uppercase" style="letter-spacing: 0.05em; font-size: 0.72rem;">
+                                            <i class="fas fa-shield-halved text-info me-1"></i> Certified Servicer ID
+                                        </div>
+                                        <a href="{% url 'generate_id_card' %}" target="_blank" class="btn btn-outline-light btn-sm py-0 px-2 fw-bold" style="font-size: 0.7rem;">
+                                            <i class="fas fa-id-card me-1"></i> PDF Badge
+                                        </a>
+                                    </div>
+                                    <div class="fs-4 fw-extrabold text-warning font-monospace" style="letter-spacing: 0.05em;">
+                                        #{{ provider.service_provider_id }}
+                                    </div>
+                                </div>
+                                <div class="detail-row mb-3">
+                                    <div class="text-muted small">Contact Number</div>
+                                    <div class="fw-bold text-dark">{{ provider.mobile_number }}</div>
+                                </div>
+                                <div class="detail-row mb-3">
+                                    <div class="text-muted small">WhatsApp</div>
+                                    <div class="fw-bold text-dark">{{ provider.whatsapp_number }}</div>
+                                </div>
+                                <div class="detail-row mb-3">
+                                    <div class="text-muted small">Verification Status</div>
+                                    <div>
+                                        {% if provider.is_verified %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i> Verified Partner</span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark"><i class="fas fa-clock me-1"></i> Pending Verification</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="detail-row mb-3">
+                                    <div class="text-muted small">Service Location</div>
+                                    <div class="fw-bold text-dark">{{ provider.address }}, {{ provider.city }}, {{ provider.state }} - {{ provider.pincode }}</div>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="mt-4 pt-3 border-top d-flex gap-2">
+                                <a href="{% url 'account_reset_password' %}" class="btn btn-outline-dark btn-sm flex-grow-1">
+                                    <i class="fas fa-key me-1"></i> Reset Password
+                                </a>
+                                <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-sign-out-alt me-1"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity / Appointments -->
+                <div class="col-lg-7">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-dark"><i class="fas fa-list-check me-2"></i> Recent Activity</span>
+                            {% if user.user_type == 'servicer' %}
+                                <a href="{% url 'my_work' %}" class="btn btn-sm btn-link text-dark text-decoration-none p-0 fw-bold">View All Jobs &rarr;</a>
+                            {% else %}
+                                <a href="{% url 'appointments' %}" class="btn btn-sm btn-link text-dark text-decoration-none p-0 fw-bold">View All &rarr;</a>
+                            {% endif %}
+                        </div>
+                        <div class="card-body p-0">
+                            {% if recent_activity %}
+                                <div class="list-group list-group-flush">
+                                    {% for item in recent_activity %}
+                                    <div class="list-group-item p-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                        <div>
+                                            <h6 class="mb-1 fw-bold text-dark">
+                                                {% if item.issue == 'others' %}{{ item.custom_issue }}{% else %}{{ item.get_issue_display }}{% endif %}
+                                            </h6>
+                                            <small class="text-muted">
+                                                <i class="far fa-calendar me-1"></i> {{ item.created_at|date:"M d, Y" }}
+                                                • <i class="fas fa-location-dot ms-1 me-1"></i> {{ item.city }}
+                                            </small>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="fw-bold text-dark">₹{{ item.expected_amount }}</span>
+                                            <span class="appointment-status status-{{ item.status }}">{{ item.get_status_display }}</span>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="empty-state p-4 text-center my-4 border-0">
+                                    <i class="far fa-clipboard fa-3x text-muted mb-2"></i>
+                                    <h6>No recent activity found</h6>
+                                    <p class="text-muted small mb-3">You haven't booked or accepted any service appointments yet.</p>
+                                    {% if user.user_type == 'servicer' %}
+                                    <a href="{% url 'appointments' %}" class="btn btn-primary btn-sm">Browse Available Jobs</a>
+                                    {% else %}
+                                    <a href="{% url 'book_appointment' %}" class="btn btn-primary btn-sm">Book Your First Service</a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    {% include 'footer.html' %}
-</body>
-</html>

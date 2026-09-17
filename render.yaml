@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: skillsetgo
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn SkillSetGo.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://*.onrender.com,https://*.pythonanywhere.com,http://127.0.0.1,http://localhost"
+      - key: DB_ENGINE
+        value: "sqlite"

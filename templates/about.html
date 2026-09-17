@@ -1,0 +1,163 @@
+{% extends "header.html" %}
+{% load static %}
+{% block title %}About Us & How It Works | SkillSetGo{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Hero Banner -->
+    <div class="card border-0 mb-5 p-4 p-md-5 text-white" style="background: #111827; border-radius: var(--radius-xl);">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <span class="badge bg-white text-dark px-3 py-2 rounded-pill fw-bold mb-3">
+                    <i class="fas fa-sparkles text-primary me-1"></i> The SkillSetGo Vision
+                </span>
+                <h1 class="fw-extrabold text-white mb-3" style="font-size: 2.5rem;">Transforming Home Services with Fair Pricing & Certified Trust</h1>
+                <p class="text-white-50 mb-4" style="font-size: 1.1rem; line-height: 1.7;">
+                    SkillSetGo is India's leading on-demand services platform combining real-time dynamic bargaining, background-verified professionals, and secure escrow payments.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'service' %}" class="btn btn-light fw-bold px-4 py-2 rounded-pill">
+                        <i class="fas fa-compass me-2 text-primary"></i> Explore All Services
+                    </a>
+                    <a href="{% url 'service_provider_register' %}" class="btn btn-outline-light fw-bold px-4 py-2 rounded-pill">
+                        <i class="fas fa-id-badge me-2"></i> Join as a Partner Pro
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="bg-white bg-opacity-10 p-3 rounded-4 border border-white border-opacity-10 text-center">
+                            <h3 class="fw-extrabold text-white mb-1">50,000+</h3>
+                            <small class="text-white-50">Homes Served</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-white bg-opacity-10 p-3 rounded-4 border border-white border-opacity-10 text-center">
+                            <h3 class="fw-extrabold text-warning mb-1">4.9 ★</h3>
+                            <small class="text-white-50">Average Rating</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-white bg-opacity-10 p-3 rounded-4 border border-white border-opacity-10 text-center">
+                            <h3 class="fw-extrabold text-white mb-1">5,000+</h3>
+                            <small class="text-white-50">Certified Pros</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-white bg-opacity-10 p-3 rounded-4 border border-white border-opacity-10 text-center">
+                            <h3 class="fw-extrabold text-success mb-1">100%</h3>
+                            <small class="text-white-50">Escrow Protected</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4-Step How It Works -->
+    <div class="mb-5 pb-3">
+        <div class="text-center mb-5">
+            <span class="badge bg-dark text-white rounded-pill px-3 py-2 fw-bold mb-2">Simplicity & Transparency</span>
+            <h2 class="fw-extrabold">How SkillSetGo Works in 4 Steps</h2>
+            <p class="text-muted">From booking to completion in minutes</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 p-4 border text-center" style="border-radius: var(--radius-xl); background: var(--bg-surface);">
+                    <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.25rem;">
+                        1
+                    </div>
+                    <h5 class="fw-bold mb-2">Choose Service</h5>
+                    <p class="small text-muted mb-0">Select from home cleaning, AC repair, electricians, plumbers, salon and appliance fixes.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 p-4 border text-center" style="border-radius: var(--radius-xl); background: var(--bg-surface);">
+                    <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.25rem;">
+                        2
+                    </div>
+                    <h5 class="fw-bold mb-2">Dynamic Bargaining</h5>
+                    <p class="small text-muted mb-0">Propose your budget. Verified local experts counter-offer until both sides agree on a win-win fair price.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 p-4 border text-center" style="border-radius: var(--radius-xl); background: var(--bg-surface);">
+                    <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.25rem;">
+                        3
+                    </div>
+                    <h5 class="fw-bold mb-2">Doorstep Pro Arrives</h5>
+                    <p class="small text-muted mb-0">Certified technician arrives on time in uniform with high-grade tools and official QR digital ID card.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 p-4 border text-center" style="border-radius: var(--radius-xl); background: var(--bg-surface);">
+                    <div class="rounded-circle bg-dark text-white fw-bold d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 54px; height: 54px; font-size: 1.25rem;">
+                        4
+                    </div>
+                    <h5 class="fw-bold mb-2">OTP & Escrow Release</h5>
+                    <p class="small text-muted mb-0">Inspect the work and release escrow payment securely by sharing your 6-digit completion OTP.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The SkillSetGo Difference Comparison Matrix -->
+    <div class="card p-4 p-md-5 border mb-5" style="border-radius: var(--radius-xl); background: var(--bg-surface);">
+        <h3 class="fw-bold mb-4 text-center">The SkillSetGo Difference</h3>
+        <div class="table-responsive">
+            <table class="table align-middle text-center mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-start py-3">Feature / Standard</th>
+                        <th class="py-3 text-dark fw-bold" style="width: 35%;"><i class="fas fa-crown text-warning me-1"></i> SkillSetGo Experience</th>
+                        <th class="py-3 text-muted" style="width: 35%;">Traditional Local Contractors</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-start fw-semibold py-3">Pricing & Quotation</td>
+                        <td class="text-success fw-bold"><i class="fas fa-check-circle me-1"></i> Transparent & Dynamic Bargaining</td>
+                        <td class="text-danger"><i class="fas fa-xmark me-1"></i> Opaque with hidden surprise charges</td>
+                    </tr>
+                    <tr>
+                        <td class="text-start fw-semibold py-3">Payment Safety</td>
+                        <td class="text-success fw-bold"><i class="fas fa-shield-check me-1"></i> Escrow Held — Released via OTP Only</td>
+                        <td class="text-danger"><i class="fas fa-xmark me-1"></i> Upfront cash with zero protection</td>
+                    </tr>
+                    <tr>
+                        <td class="text-start fw-semibold py-3">Technician Background</td>
+                        <td class="text-success fw-bold"><i class="fas fa-id-card me-1"></i> 7-Point Background & Police Checked</td>
+                        <td class="text-danger"><i class="fas fa-xmark me-1"></i> Unverified and unknown identity</td>
+                    </tr>
+                    <tr>
+                        <td class="text-start fw-semibold py-3">Damage & Rework Warranty</td>
+                        <td class="text-success fw-bold"><i class="fas fa-check-circle me-1"></i> ₹10,000 Shield + 30-Day Free Rework</td>
+                        <td class="text-danger"><i class="fas fa-xmark me-1"></i> No warranty or accountability</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Active Cities Grid -->
+    <div class="text-center py-4">
+        <h4 class="fw-bold mb-3">Serving 25+ Major Metropolitan Cities</h4>
+        <p class="text-muted mb-4">Expanding rapidly across India with neighborhood rapid dispatch hubs.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="fas fa-location-dot text-danger me-1"></i> Bengaluru</span>
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="fas fa-location-dot text-danger me-1"></i> Mumbai</span>
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="fas fa-location-dot text-danger me-1"></i> Delhi NCR</span>
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="fas fa-location-dot text-danger me-1"></i> Hyderabad</span>
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="fas fa-location-dot text-danger me-1"></i> Chennai</span>
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="fas fa-location-dot text-danger me-1"></i> Pune</span>
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="fas fa-location-dot text-danger me-1"></i> Kolkata</span>
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="fas fa-location-dot text-danger me-1"></i> Ahmedabad</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

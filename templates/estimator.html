@@ -1,0 +1,398 @@
+{% extends "header.html" %}
+{% load static %}
+{% block title %}Instant Cost Estimator & Price Calculator | SkillSetGo{% endblock %}
+
+{% block content %}
+<style>
+/* ==========================================================================
+   PIXEL-PERFECT ESTIMATOR STYLING (URBAN COMPANY STANDARD)
+   ========================================================================== */
+.estimator-container-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 2.25rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Reset buttons and format as sleek pill chips */
+.chip-option {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.55rem 1.15rem !important;
+    border-radius: 50px !important;
+    border: 1.5px solid #e5e7eb !important;
+    background: #ffffff !important;
+    color: #1f2937 !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    user-select: none !important;
+    line-height: 1.4 !important;
+}
+
+[data-theme="dark"] .chip-option {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+}
+
+.chip-option:hover {
+    border-color: #111827 !important;
+    transform: translateY(-1px) !important;
+    color: #111827 !important;
+}
+
+[data-theme="dark"] .chip-option:hover {
+    border-color: #f8fafc !important;
+    color: #ffffff !important;
+}
+
+.chip-option.active {
+    background: #111827 !important;
+    color: #ffffff !important;
+    border-color: #111827 !important;
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.2) !important;
+}
+
+[data-theme="dark"] .chip-option.active {
+    background: #ffffff !important;
+    color: #111827 !important;
+    border-color: #ffffff !important;
+}
+
+/* Add-on selection card */
+.addon-label-card {
+    background: var(--bg-surface);
+    border: 1.5px solid var(--border-color);
+    border-radius: 14px;
+    padding: 1rem 1.15rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.addon-label-card:hover {
+    border-color: #111827;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Sticky Results Box (Deep Charcoal Navy) */
+.estimate-result-box {
+    background: #0f172a !important;
+    color: #ffffff !important;
+    border-radius: 20px !important;
+    padding: 2.25rem !important;
+    position: sticky !important;
+    top: 85px !important;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.35) !important;
+    border: 1px solid #1e293b !important;
+    z-index: 10 !important;
+}
+
+.estimate-result-box h2,
+.estimate-result-box h3,
+.estimate-result-box h4,
+.estimate-result-box h5,
+.estimate-result-box h6 {
+    color: #ffffff !important;
+}
+
+.estimate-ai-box {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 14px !important;
+    padding: 1.15rem !important;
+}
+
+.btn-book-estimate {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    border-radius: 50px !important;
+    padding: 0.85rem 1.5rem !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-book-estimate:hover {
+    background: #f8fafc !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+    color: #000000 !important;
+}
+</style>
+
+<div class="container py-4">
+    <!-- Header Banner -->
+    <div class="card border-0 mb-4 p-4 p-md-5 text-white" style="background: #111827; border-radius: var(--radius-xl);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-3 small">
+                    <i class="fas fa-calculator me-1"></i> Transparent AI Pricing Tool
+                </span>
+                <h1 class="fw-extrabold text-white mb-2" style="font-size: 2.3rem;">Instant Service Cost Estimator</h1>
+                <p class="text-white-50 mb-0" style="font-size: 1.05rem;">
+                    Calculate recommended market estimates for your home services and discover the optimal bargaining price range.
+                </p>
+            </div>
+            <div class="col-lg-4 text-center mt-3 mt-lg-0">
+                <div class="bg-white bg-opacity-10 p-3 rounded-4 border border-white border-opacity-10 text-white">
+                    <small class="text-white-50 d-block mb-1">Average Savings with Bargaining</small>
+                    <h3 class="fw-bold text-success mb-0">15% - 25% Off</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Calculator Form -->
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="estimator-container-card">
+                
+                <!-- 1. Category -->
+                <h5 class="fw-bold mb-3">1. Select Service Category</h5>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <button type="button" class="chip-option active service-btn" data-service="cleaning" data-base="1200">
+                        <i class="fas fa-broom me-2 text-primary"></i> Deep Home Cleaning
+                    </button>
+                    <button type="button" class="chip-option service-btn" data-service="ac" data-base="650">
+                        <i class="fas fa-snowflake me-2 text-info"></i> AC Repair & Gas
+                    </button>
+                    <button type="button" class="chip-option service-btn" data-service="electrician" data-base="350">
+                        <i class="fas fa-bolt me-2 text-warning"></i> Electrician Fix
+                    </button>
+                    <button type="button" class="chip-option service-btn" data-service="plumbing" data-base="300">
+                        <i class="fas fa-wrench me-2 text-secondary"></i> Plumbing
+                    </button>
+                    <button type="button" class="chip-option service-btn" data-service="salon" data-base="800">
+                        <i class="fas fa-spa me-2 text-danger"></i> Salon & Grooming
+                    </button>
+                </div>
+
+                <!-- 2. Home Configuration -->
+                <h5 class="fw-bold mb-3">2. Home Configuration / Units</h5>
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <button type="button" class="chip-option active unit-btn" data-multiplier="1.0">1 BHK / 1 Unit</button>
+                    <button type="button" class="chip-option unit-btn" data-multiplier="1.6">2 BHK / 2 Units</button>
+                    <button type="button" class="chip-option unit-btn" data-multiplier="2.2">3 BHK / 3 Units</button>
+                    <button type="button" class="chip-option unit-btn" data-multiplier="3.0">4+ BHK / Villa</button>
+                </div>
+
+                <!-- 3. Add-ons -->
+                <h5 class="fw-bold mb-3">3. Optional Add-ons & Upgrades</h5>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="addon-label-card">
+                            <div class="d-flex align-items-center">
+                                <input type="checkbox" class="form-check-input me-3 addon-chk" value="350" id="addonBalcony">
+                                <div>
+                                    <h6 class="fw-bold mb-0" style="font-size: 0.92rem;">Balcony / Wash Area</h6>
+                                    <small class="text-muted">+₹350</small>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="addon-label-card">
+                            <div class="d-flex align-items-center">
+                                <input type="checkbox" class="form-check-input me-3 addon-chk" value="450" id="addonKitchen">
+                                <div>
+                                    <h6 class="fw-bold mb-0" style="font-size: 0.92rem;">Kitchen Chimney & Hob</h6>
+                                    <small class="text-muted">+₹450</small>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="addon-label-card">
+                            <div class="d-flex align-items-center">
+                                <input type="checkbox" class="form-check-input me-3 addon-chk" value="250" id="addonSanitization">
+                                <div>
+                                    <h6 class="fw-bold mb-0" style="font-size: 0.92rem;">Antiviral Sanitization</h6>
+                                    <small class="text-muted">+₹250</small>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="addon-label-card">
+                            <div class="d-flex align-items-center">
+                                <input type="checkbox" class="form-check-input me-3 addon-chk" value="200" id="addonExpress">
+                                <div>
+                                    <h6 class="fw-bold mb-0" style="font-size: 0.92rem;">Priority 2-Hr Dispatch</h6>
+                                    <small class="text-muted">+₹200</small>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 4. Hours Slider -->
+                <h5 class="fw-bold mb-3">4. Custom Hours / Extra Effort</h5>
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between small text-muted mb-2">
+                        <span>Standard Session (1.5 Hours)</span>
+                        <span id="sliderValueText" class="fw-bold text-dark">Standard (1.5 hrs)</span>
+                    </div>
+                    <input type="range" class="form-range" min="1" max="5" step="1" value="1" id="timeSlider">
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Results Card (High Contrast Deep Charcoal) -->
+        <div class="col-lg-5">
+            <div class="estimate-result-box">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-success text-white rounded-pill px-3 py-1.5 fw-bold" style="font-size: 0.78rem;">
+                        <i class="fas fa-check-circle me-1"></i> Live Calculation
+                    </span>
+                    <small style="color: #94a3b8;">Taxes included</small>
+                </div>
+
+                <div class="mb-4">
+                    <span style="color: #94a3b8; font-size: 0.85rem;" class="d-block mb-1">Standard Market Rate</span>
+                    <h2 class="fw-extrabold text-white mb-0" id="totalEstimatePrice" style="font-size: 2.75rem;">₹1,200</h2>
+                </div>
+
+                <!-- AI Bargaining Target Box -->
+                <div class="estimate-ai-box mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-robot text-warning me-2"></i>
+                        <h6 class="fw-bold text-white mb-0" style="font-size: 0.95rem;">AI Bargaining Target Range</h6>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center small">
+                        <div>
+                            <span style="color: #94a3b8;" class="d-block">Suggested Offer</span>
+                            <span class="fw-bold text-warning fs-5" id="suggestedOfferText">₹1,000</span>
+                        </div>
+                        <div class="text-end">
+                            <span style="color: #94a3b8;" class="d-block">Fair Range</span>
+                            <span class="fw-bold text-white" id="fairRangeText">₹950 - ₹1,150</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Itemized Breakdown -->
+                <div class="border-top pt-3 mb-4 small" style="border-color: rgba(255,255,255,0.15) !important; color: #cbd5e1;">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Base Service Fee</span>
+                        <span class="text-white fw-bold" id="breakdownBase">₹1,200</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Add-ons Total</span>
+                        <span class="text-white fw-bold" id="breakdownAddons">₹0</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Safety & Insurance Shield</span>
+                        <span class="text-success fw-bold">FREE (₹0)</span>
+                    </div>
+                </div>
+
+                <!-- Action CTA -->
+                <a href="{% url 'book_appointment' %}" id="bookWithEstimateBtn" class="btn-book-estimate">
+                    <i class="fas fa-calendar-check text-primary"></i> Book with this Estimate
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let currentBase = 1200;
+    let currentMultiplier = 1.0;
+    let timeExtra = 0;
+    let currentService = 'cleaning';
+
+    const totalEl = document.getElementById('totalEstimatePrice');
+    const baseEl = document.getElementById('breakdownBase');
+    const addonsEl = document.getElementById('breakdownAddons');
+    const offerEl = document.getElementById('suggestedOfferText');
+    const fairRangeEl = document.getElementById('fairRangeText');
+    const sliderText = document.getElementById('sliderValueText');
+    const bookBtn = document.getElementById('bookWithEstimateBtn');
+
+    function calculate() {
+        let addonsTotal = 0;
+        document.querySelectorAll('.addon-chk:checked').forEach(chk => {
+            addonsTotal += parseInt(chk.value);
+        });
+
+        const subtotal = Math.round(currentBase * currentMultiplier) + addonsTotal + timeExtra;
+        const suggested = Math.round(subtotal * 0.85);
+        const minRange = Math.round(subtotal * 0.80);
+        const maxRange = Math.round(subtotal * 0.95);
+
+        totalEl.innerText = `₹${subtotal.toLocaleString('en-IN')}`;
+        baseEl.innerText = `₹${Math.round(currentBase * currentMultiplier).toLocaleString('en-IN')}`;
+        addonsEl.innerText = `₹${addonsTotal.toLocaleString('en-IN')}`;
+        offerEl.innerText = `₹${suggested.toLocaleString('en-IN')}`;
+        fairRangeEl.innerText = `₹${minRange.toLocaleString('en-IN')} - ₹${maxRange.toLocaleString('en-IN')}`;
+
+        if (bookBtn) {
+            bookBtn.href = `/book_appointment?issue=${currentService}&amount=${suggested}`;
+        }
+    }
+
+    // Service select
+    document.querySelectorAll('.service-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.service-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentBase = parseInt(btn.getAttribute('data-base'));
+            currentService = btn.getAttribute('data-service');
+            calculate();
+        });
+    });
+
+    // Unit select
+    document.querySelectorAll('.unit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMultiplier = parseFloat(btn.getAttribute('data-multiplier'));
+            calculate();
+        });
+    });
+
+    // Addons
+    document.querySelectorAll('.addon-chk').forEach(chk => {
+        chk.addEventListener('change', calculate);
+    });
+
+    // Slider
+    const slider = document.getElementById('timeSlider');
+    if (slider) {
+        slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            const hrs = (val * 1.5).toFixed(1);
+            sliderText.innerText = `${hrs} hrs (+₹${(val - 1) * 200})`;
+            timeExtra = (val - 1) * 200;
+            calculate();
+        });
+    }
+
+    calculate();
+});
+</script>
+{% endblock %}

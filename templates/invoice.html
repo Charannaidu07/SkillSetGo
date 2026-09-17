@@ -1,0 +1,134 @@
+{% extends "header.html" %}
+{% load static %}
+{% block title %}Tax Invoice #{{ invoice_number }} | SkillSetGo{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print" style="max-width: 850px; margin: 0 auto 1.5rem auto;">
+        <a href="{% url 'appointments' %}" class="btn btn-outline-dark fw-bold rounded-pill">
+            <i class="fas fa-arrow-left me-2"></i> Back to Appointments
+        </a>
+        <button onclick="window.print()" class="btn btn-dark fw-bold rounded-pill px-4">
+            <i class="fas fa-print me-2"></i> Print / Save as PDF
+        </button>
+    </div>
+
+    <!-- Printable Invoice Container -->
+    <div class="invoice-container">
+        <!-- Invoice Header -->
+        <div class="d-flex justify-content-between align-items-start border-bottom pb-4 mb-4">
+            <div>
+                <img src="{% static 'logo.png' %}" alt="SkillSetGo" style="height: 42px; width: auto; object-fit: contain; margin-bottom: 0.5rem;">
+                <small class="text-muted d-block">India's Premier On-Demand Home Services</small>
+                <small class="text-muted d-block">GSTIN: 29AABCS1429B1Z8 | CIN: U74999KA2026PTC109823</small>
+                <small class="text-muted">Indiranagar 100ft Rd, Bengaluru, Karnataka 560038</small>
+            </div>
+            <div class="text-end">
+                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 fs-6 px-3 py-2 rounded-pill fw-bold mb-2">
+                    <i class="fas fa-check-circle me-1"></i> PAID INVOICE
+                </span>
+                <div class="fw-bold text-dark fs-5">{{ invoice_number }}</div>
+                <small class="text-muted">Issued: {{ appointment.appointment_date|default:"Today" }}</small>
+            </div>
+        </div>
+
+        <!-- Billed To & Service Details -->
+        <div class="row g-4 mb-4">
+            <div class="col-sm-6">
+                <h6 class="fw-bold text-uppercase text-muted small mb-2">Billed To (Customer):</h6>
+                <div class="fw-bold text-dark">{{ appointment.user.get_full_name|default:appointment.user.username }}</div>
+                <div class="text-secondary small">{{ appointment.user.email }}</div>
+                <div class="text-secondary small">{{ appointment.address }}, {{ appointment.city }} - {{ appointment.pincode }}</div>
+            </div>
+            <div class="col-sm-6 text-sm-end">
+                <h6 class="fw-bold text-uppercase text-muted small mb-2">Service Provider:</h6>
+                <div class="fw-bold text-dark">
+                    {% if appointment.servicer_assigned %}
+                        {{ appointment.servicer_assigned.user.get_full_name|default:appointment.servicer_assigned.user.username }}
+                    {% else %}
+                        SkillSetGo Certified Network Pro
+                    {% endif %}
+                </div>
+                <div class="text-secondary small">Service: {{ appointment.service_type }}</div>
+                <div class="text-secondary small">Booking Ref: #{{ appointment.booking_id|default:appointment.id }}</div>
+            </div>
+        </div>
+
+        <!-- Itemized Table -->
+        <div class="table-responsive mb-4">
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th class="py-3">Description</th>
+                        <th class="py-3 text-center">HSN/SAC Code</th>
+                        <th class="py-3 text-end">Rate</th>
+                        <th class="py-3 text-end">Amount (INR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="py-3">
+                            <strong>{{ appointment.service_type }}</strong>
+                            <div class="small text-muted">Doorstep labor, diagnostics & specialized equipment execution</div>
+                        </td>
+                        <td class="py-3 text-center text-muted small">998713</td>
+                        <td class="py-3 text-end">₹{{ base_amount }}</td>
+                        <td class="py-3 text-end fw-bold">₹{{ base_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td class="py-3">
+                            <strong>Platform Convenience & Safety Shield</strong>
+                            <div class="small text-muted">₹10,000 damage protection guarantee & escrow safeguard</div>
+                        </td>
+                        <td class="py-3 text-center text-muted small">998314</td>
+                        <td class="py-3 text-end">₹{{ platform_fee }}</td>
+                        <td class="py-3 text-end fw-bold">₹{{ platform_fee }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totals & Taxes -->
+        <div class="row justify-content-end mb-4">
+            <div class="col-md-6 col-lg-5">
+                <div class="bg-light p-3 rounded-3 border">
+                    <div class="d-flex justify-content-between text-secondary small mb-2">
+                        <span>Taxable Value:</span>
+                        <span>₹{{ base_amount }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-secondary small mb-2">
+                        <span>CGST (9%):</span>
+                        <span>₹{{ gst_amount|floatformat:2|default:"0.00" }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-secondary small mb-2">
+                        <span>SGST (9%):</span>
+                        <span>₹{{ gst_amount|floatformat:2|default:"0.00" }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-secondary small mb-2">
+                        <span>Platform Shield Fee:</span>
+                        <span>₹{{ platform_fee }}</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between text-dark fw-bold fs-5">
+                        <span>Total Paid:</span>
+                        <span>₹{{ total_amount }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Details & Trust Stamp -->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pt-3 border-top text-muted small">
+            <div>
+                <div><strong>Payment Method:</strong> Razorpay Online / Escrow Verified</div>
+                <div><strong>Transaction ID:</strong> {{ appointment.razorpay_payment_id|default:"TXN-RZP-VERIFIED-2026" }}</div>
+            </div>
+            <div class="text-end mt-2 mt-sm-0">
+                <span class="badge bg-dark text-white p-2 rounded-2">
+                    <i class="fas fa-shield-check text-warning me-1"></i> Authorized Digital Invoice
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
