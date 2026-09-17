@@ -60,7 +60,7 @@ def generate_id_card(request):
         # Configuration with defaults
         site_config = {
             'name': getattr(settings, 'SITE_NAME', 'SkillSetGo'),
-            'url': getattr(settings, 'SITE_URL', 'https://skillsetgo.com').replace('https://', '').replace('http://', ''),
+            'url': getattr(settings, 'SITE_URL', 'https://skillsetgo-1-x9e7.onrender.com').replace('https://', '').replace('http://', ''),
             'email': getattr(settings, 'SITE_SUPPORT_EMAIL', 'support@skillsetgo.com')
         }
 

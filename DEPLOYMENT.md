@@ -57,7 +57,8 @@ Scroll down to the **Environment Variables** section and click **Add Environment
 | `DEBUG` | `False` | Turn off debug mode for production |
 | `SECRET_KEY` | *(Click "Generate" or paste a random string)* | Security key |
 | `ALLOWED_HOSTS` | `*` | Allows Render subdomains |
-| `CSRF_TRUSTED_ORIGINS` | `https://*.onrender.com,http://127.0.0.1,http://localhost` | Fixes CSRF form submission errors |
+| `CSRF_TRUSTED_ORIGINS` | `https://skillsetgo-1-x9e7.onrender.com,https://*.onrender.com,http://127.0.0.1,http://localhost` | Fixes CSRF form submission errors |
+| `SITE_URL` | `https://skillsetgo-1-x9e7.onrender.com` | Base site domain |
 | `DB_ENGINE` | `sqlite` | Uses built-in SQLite (or provide `DATABASE_URL` for PostgreSQL) |
 | `EMAIL_HOST_USER` | `charanedamalapati2005@gmail.com` *(Optional)* | For email notifications |
 | `EMAIL_HOST_PASSWORD` | `dowj eafn dwzy lopb` *(Optional)* | Gmail App Password |

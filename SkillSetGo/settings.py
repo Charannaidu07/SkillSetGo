@@ -40,7 +40,7 @@ ALLOWED_HOSTS = [host.strip() for host in config('ALLOWED_HOSTS', default='*').s
 CSRF_TRUSTED_ORIGINS = [
     origin.strip() for origin in config(
         'CSRF_TRUSTED_ORIGINS',
-        default='https://*.onrender.com,https://*.pythonanywhere.com,https://*.up.railway.app,http://127.0.0.1,http://localhost'
+        default='https://skillsetgo-1-x9e7.onrender.com,https://*.onrender.com,https://*.pythonanywhere.com,https://*.up.railway.app,http://127.0.0.1,http://localhost'
     ).split(',') if origin.strip()
 ]
 
@@ -205,7 +205,7 @@ ACCOUNT_FORMS = {
 }
 
 SITE_NAME = "SkillSetGo"
-SITE_URL = config('SITE_URL', default="https://skillsetgo.com")
+SITE_URL = config('SITE_URL', default="https://skillsetgo-1-x9e7.onrender.com")
 SITE_SUPPORT_EMAIL = config('SITE_SUPPORT_EMAIL', default="SkillSetGo@gmail.com")
 SITE_LOGO_PATH = os.path.join(BASE_DIR, 'static/logo.jpeg')
 
